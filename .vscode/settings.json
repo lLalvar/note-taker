@@ -3,5 +3,14 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "workbench.colorCustomizations": {
+    "sash.hoverBorder": "#f87230",
+    "statusBar.background": "#ed5408",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#f87230",
+    "statusBarItem.remoteBackground": "#ed5408",
+    "statusBarItem.remoteForeground": "#e7e7e7"
+  },
+  "peacock.color": "#ed5408"
 }

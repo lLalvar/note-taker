@@ -5,6 +5,7 @@ import { HelloWave } from '@/components/HelloWave'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 export default function HomeScreen() {
   return (
@@ -18,7 +19,10 @@ export default function HomeScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type='title'>Welcome!</ThemedText>
+        <ThemedText type='title' className='bg-red-300 dark:bg-blue-800'>
+          Welcome!
+        </ThemedText>
+        <ThemeToggle />
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -51,7 +55,18 @@ export default function HomeScreen() {
             npm run reset-project
           </ThemedText>{' '}
           to get a fresh <ThemedText type='defaultSemiBold'>app</ThemedText>{' '}
-          directory. This will move the current{' '}
+          directory. This will move the current Lorem ipsum dolor, sit amet
+          consectetur adipisicing elit. Obcaecati, perspiciatis? Vero commodi at
+          eaque quos labore saepe eos facilis eum amet aspernatur est,
+          voluptatum, quis reprehenderit, recusandae corrupti. Eligendi in
+          distinctio ducimus beatae quisquam, quasi quae id necessitatibus
+          eaque, saepe nam cumque praesentium commodi quis dicta doloribus ex
+          fuga enim minima, iste excepturi esse. At saepe illo minus quibusdam
+          fugit odio suscipit qui, necessitatibus laboriosam! Corrupti error
+          magni quos excepturi accusamus, blanditiis sed voluptas recusandae
+          consectetur ratione explicabo quae eius voluptatibus quibusdam fuga?
+          Amet, perspiciatis libero adipisci sint, at quod debitis iure iste
+          repellendus in tenetur vel neque mollitia aspernatur.
           <ThemedText type='defaultSemiBold'>app</ThemedText> to{' '}
           <ThemedText type='defaultSemiBold'>app-example</ThemedText>.
         </ThemedText>
