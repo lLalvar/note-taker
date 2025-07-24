@@ -1,26 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { Eye, EyeOff } from 'lucide-react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/FormField'
-import {
-  useGoogleSignInMutation,
-  useSignInMutation,
-} from '@/hooks/useAuthMutations'
+// import {
+//   useGoogleSignInMutation,
+//   useSignInMutation,
+// } from '@/hooks/useAuthMutations'
 import { SignInFormData, signInSchema } from '@/lib/validationSchemas'
-import { useGoogleAuth } from '@/services/authService'
+// import { useGoogleAuth } from '@/services/authService'
 
 export default function SignInScreen() {
   const [showPassword, setShowPassword] = useState(false)
-  const signInMutation = useSignInMutation()
-  const googleSignInMutation = useGoogleSignInMutation()
-  const { request, response, promptAsync } = useGoogleAuth()
+  // const signInMutation = useSignInMutation()
+  // const googleSignInMutation = useGoogleSignInMutation()
+  // const { request, response, promptAsync } = useGoogleAuth()
 
   const {
     control,
@@ -35,21 +34,23 @@ export default function SignInScreen() {
     mode: 'onChange',
   })
 
-  useEffect(() => {
-    if (response?.type === 'success') {
-      const { id_token } = response.params
-      if (id_token) {
-        googleSignInMutation.mutate(id_token)
-      }
-    }
-  }, [response])
+  // useEffect(() => {
+  //   if (response?.type === 'success') {
+  //     const { id_token } = response.params
+  //     if (id_token) {
+  //       // googleSignInMutation.mutate(id_token)
+  //       console.log('Google Sign-In successful with token:', id_token)
+  //     }
+  //   }
+  // }, [response])
 
   const onSubmit = (data: SignInFormData) => {
-    signInMutation.mutate(data)
+    // signInMutation.mutate(data)
+    console.log('Sign In Data:', data)
   }
 
   const handleGoogleSignIn = () => {
-    promptAsync()
+    // promptAsync()
   }
 
   return (
@@ -115,13 +116,13 @@ export default function SignInScreen() {
             />
 
             <View className='items-end'>
-              <Link href='/forgot-password' asChild>
+              {/* <Link href='/forgot' asChild>
                 <TouchableOpacity>
                   <Text className='text-blue-600 text-sm font-medium'>
                     Forgot Password?
                   </Text>
                 </TouchableOpacity>
-              </Link>
+              </Link> */}
             </View>
           </View>
 
@@ -131,7 +132,8 @@ export default function SignInScreen() {
             disabled={!isValid}
             className='mb-4'
           >
-            {signInMutation.isPending ? 'Signing In...' : 'Sign In'}
+            {/* {signInMutation.isPending ? 'Signing In...' : 'Sign In'} */}
+            Sign In
           </Button>
 
           {/* Divider */}
@@ -146,7 +148,7 @@ export default function SignInScreen() {
             variant='outline'
             onPress={handleGoogleSignIn}
             // loading={googleSignInMutation.isPending}
-            disabled={!request}
+            // disabled={!request}
             className='mb-6'
           >
             Continue with Google
@@ -157,11 +159,11 @@ export default function SignInScreen() {
             <Text className='text-gray-600 dark:text-gray-400'>
               Don&apos;t have an account?{' '}
             </Text>
-            <Link href='/sign-up' asChild>
+            {/* <Link href='/sign-up' asChild>
               <TouchableOpacity>
                 <Text className='text-blue-600 font-medium'>Sign Up</Text>
               </TouchableOpacity>
-            </Link>
+            </Link> */}
           </View>
         </View>
       </ScrollView>

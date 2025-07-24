@@ -10,11 +10,11 @@ import { StatusBar } from 'expo-status-bar'
 import 'react-native-reanimated'
 import '~/global.css'
 
-import { AuthInitializer } from '@/components/AuthInitializer'
+// import { AuthInitializer } from '@/components/AuthInitializer'
 import { NAV_THEME } from '@/lib/constants'
 import { queryClient } from '@/lib/queryClient'
 import { useColorScheme } from '@/lib/useColorScheme'
-import { useAuthStore } from '@/store/authStore'
+// import { useAuthStore } from '@/store/authStore'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Platform } from 'react-native'
@@ -40,7 +40,7 @@ const useIsomorphicLayoutEffect =
 
 export default function RootLayout() {
   const hasMounted = useRef(false)
-  const { isAuthenticated } = useAuthStore()
+  // const { isAuthenticated } = useAuthStore()
   const { isDarkColorScheme } = useColorScheme()
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
   const [loaded] = useFonts({
@@ -71,20 +71,22 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthInitializer>
-        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-          <Stack.Protected guard={isAuthenticated}>
-            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-            <Stack.Screen name='+not-found' />
-          </Stack.Protected>
+      {/* <AuthInitializer> */}
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        {/* <Stack.Protected guard={isAuthenticated}> */}
+        <Stack.Protected guard={false}>
+          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+          <Stack.Screen name='+not-found' />
+        </Stack.Protected>
 
-          <Stack.Protected guard={!isAuthenticated}>
-            <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-            <Stack.Screen
-              name='(auth)/sign-in'
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
+        {/* <Stack.Protected guard={!isAuthenticated}> */}
+        <Stack.Protected guard={true}>
+          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+          <Stack.Screen
+            name='(auth)/sign-in'
+            options={{ headerShown: false }}
+          />
+          {/* <Stack.Screen
               name='(auth)/sign-up'
               options={{ headerShown: false }}
             />
@@ -99,11 +101,11 @@ export default function RootLayout() {
             <Stack.Screen
               name='(auth)/email-verification'
               options={{ headerShown: false }}
-            />
-          </Stack.Protected>
-          <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-        </ThemeProvider>
-      </AuthInitializer>
+            /> */}
+        </Stack.Protected>
+        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+      </ThemeProvider>
+      {/* </AuthInitializer> */}
     </QueryClientProvider>
   )
 }
