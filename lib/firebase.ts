@@ -1,17 +1,24 @@
-// lib/firebase.ts
 import { initializeApp } from 'firebase/app'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 
+// Optionally import the services that you want to use
+// import {...} from 'firebase/auth';
+// import {...} from 'firebase/database';
+// import {...} from 'firebase/firestore';
+// import {...} from 'firebase/functions';
+// import {...} from 'firebase/storage';
+
+// Initialize Firebase
 const firebaseConfig = {
-  // Replace with your Firebase config
-  apiKey: 'your-api-key',
-  authDomain: 'your-auth-domain',
-  projectId: 'your-project-id',
-  storageBucket: 'your-storage-bucket',
-  messagingSenderId: 'your-messaging-sender-id',
-  appId: 'your-app-id',
+  apiKey: 'api-key',
+  authDomain: 'project-id.firebaseapp.com',
+  databaseURL: 'https://project-id.firebaseio.com',
+  projectId: 'project-id',
+  storageBucket: 'project-id.appspot.com',
+  messagingSenderId: 'sender-id',
+  appId: 'app-id',
+  measurementId: 'G-measurement-id',
 }
 
 const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
-export const googleProvider = new GoogleAuthProvider()
+// For more information on how to access Firebase in your project,
+// see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
