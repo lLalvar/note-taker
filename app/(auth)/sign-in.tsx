@@ -15,7 +15,7 @@ import { FormField } from '@/components/ui/FormField'
 import { SignInFormData, signInSchema } from '@/lib/validationSchemas'
 // import { useGoogleAuth } from '@/services/authService'
 
-export default function SignInScreen() {
+export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
   // const signInMutation = useSignInMutation()
   // const googleSignInMutation = useGoogleSignInMutation()

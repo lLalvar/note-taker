@@ -40,7 +40,11 @@ const useIsomorphicLayoutEffect =
 
 export default function RootLayout() {
   const hasMounted = useRef(false)
-  // const { isAuthenticated } = useAuthStore()
+  // TODO: Replace with actual auth state
+  // const { isAuthenticated, isLoading } = useAuthStore()
+  const isAuthenticated = true // Temporary: set to true to test protected routes
+  const isLoading = false // Temporary: set to false since we're not using real auth
+
   const { isDarkColorScheme } = useColorScheme()
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
   const [loaded] = useFonts({
@@ -60,52 +64,27 @@ export default function RootLayout() {
     hasMounted.current = true
   }, [])
 
-  if (!isColorSchemeLoaded) {
-    return null
-  }
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
+  if (!isColorSchemeLoaded || !loaded || isLoading) {
     return null
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* <AuthInitializer> */}
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        {/* <Stack.Protected guard={isAuthenticated}> */}
-        <Stack.Protected guard={false}>
-          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-          <Stack.Screen name='+not-found' />
-        </Stack.Protected>
+        <Stack>
+          {/* Protected Routes - only accessible when authenticated */}
+          <Stack.Protected guard={!isAuthenticated}>
+            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+            <Stack.Screen name='+not-found' />
+          </Stack.Protected>
 
-        {/* <Stack.Protected guard={!isAuthenticated}> */}
-        <Stack.Protected guard={true}>
-          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-          <Stack.Screen
-            name='(auth)/sign-in'
-            options={{ headerShown: false }}
-          />
-          {/* <Stack.Screen
-              name='(auth)/sign-up'
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name='(auth)/forgot-password'
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name='(auth)/reset-password'
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name='(auth)/email-verification'
-              options={{ headerShown: false }}
-            /> */}
-        </Stack.Protected>
+          {/* Public/Auth Routes - only accessible when not authenticated */}
+          <Stack.Protected guard={isAuthenticated}>
+            <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+          </Stack.Protected>
+        </Stack>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       </ThemeProvider>
-      {/* </AuthInitializer> */}
     </QueryClientProvider>
   )
 }
