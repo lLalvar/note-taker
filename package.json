@@ -26,6 +26,7 @@
     "expo": "53.0.20",
     "expo-auth-session": "~6.2.1",
     "expo-blur": "~14.1.5",
+    "expo-build-properties": "~0.14.8",
     "expo-constants": "~17.1.7",
     "expo-crypto": "~14.1.5",
     "expo-dev-client": "~5.2.4",
@@ -57,11 +58,11 @@
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.0.5",
-    "zustand": "^5.0.6",
-    "expo-build-properties": "~0.14.8"
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/react": "~19.0.10",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",

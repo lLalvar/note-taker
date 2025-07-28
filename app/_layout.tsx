@@ -1,23 +1,25 @@
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
 import {
   DarkTheme,
   DefaultTheme,
   Theme,
   ThemeProvider,
 } from '@react-navigation/native'
+// import { useAuthStore } from '@/store/authStore'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
-import { Stack } from 'expo-router'
+import { Slot, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import { Platform, Text, View } from 'react-native'
 import 'react-native-reanimated'
 import '~/global.css'
 
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 // import { AuthInitializer } from '@/components/AuthInitializer'
 import { NAV_THEME } from '@/lib/constants'
 import { queryClient } from '@/lib/queryClient'
 import { useColorScheme } from '@/lib/useColorScheme'
-// import { useAuthStore } from '@/store/authStore'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Platform } from 'react-native'
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -72,17 +74,21 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <Stack>
-          {/* Protected Routes - only accessible when authenticated */}
           <Stack.Protected guard={!isAuthenticated}>
             <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
             <Stack.Screen name='+not-found' />
           </Stack.Protected>
 
-          {/* Public/Auth Routes - only accessible when not authenticated */}
           <Stack.Protected guard={isAuthenticated}>
             <Stack.Screen name='(auth)' options={{ headerShown: false }} />
           </Stack.Protected>
         </Stack>
+        <View className='absolute bottom-4 end-4'>
+          {/* <Text className='mb-4 text-center text-2xl font-bold text-foreground'>
+            Welcome to Note Taker!
+          </Text> */}
+          <ThemeToggle />
+        </View>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
       </ThemeProvider>
     </QueryClientProvider>
