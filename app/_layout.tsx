@@ -84,9 +84,6 @@ export default function RootLayout() {
           </Stack.Protected>
         </Stack>
         <View className='absolute bottom-4 end-4'>
-          {/* <Text className='mb-4 text-center text-2xl font-bold text-foreground'>
-            Welcome to Note Taker!
-          </Text> */}
           <ThemeToggle />
         </View>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
