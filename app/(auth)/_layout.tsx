@@ -1,11 +1,16 @@
-import { Slot } from 'expo-router'
 import React from 'react'
-import { Text, View } from 'react-native'
+
+import { Slot } from 'expo-router'
+import { View } from 'react-native'
+
+import { Text } from '@/components/ui/text'
 
 export default function AuthLayout() {
   return (
     <View>
-      <Text className='text-blue-500'>Auth Layout</Text>
+      <Text variant='h2' className='text-blue-500'>
+        Auth Layout
+      </Text>
       <Slot />
     </View>
   )

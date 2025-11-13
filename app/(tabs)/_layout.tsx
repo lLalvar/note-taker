@@ -1,22 +1,28 @@
 import React from 'react'
 
 import { Tabs } from 'expo-router'
+import { useColorScheme } from 'nativewind'
 
 // import { Platform } from 'react-native'
 
 import { HapticTab } from '@/components/HapticTab'
 import { IconSymbol } from '@/components/ui/IconSymbol'
 // import TabBarBackground from '@/components/ui/TabBarBackground'
-import { colors } from '@/constants/colors'
-import { useColorScheme } from '@/hooks/use-color-scheme'
+import { THEME } from '@/lib/theme'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
+  const { colorScheme } = useColorScheme()
 
+  console.log(
+    "🚀 ~ :16 ~ THEME[colorScheme ?? 'light'].primary:",
+    THEME[colorScheme ?? 'light'].primary
+  )
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors[colorScheme ?? 'light'].tint,
+        // tabBarActiveTintColor: '#ef4444',
+        tabBarActiveTintColor: 'hsl(0, 84.2%, 60.2%)',
+        // tabBarActiveTintColor: THEME[colorScheme ?? 'light'].destructive,
         headerShown: false,
         tabBarButton: HapticTab,
         // tabBarBackground: TabBarBackground,

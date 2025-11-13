@@ -1,12 +1,14 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+
+import { Text } from '@/components/ui/text'
 
 export default function SignIn() {
   return (
     <SafeAreaView>
       <View className=''>
-        <Text className='text-foreground'>SignIn</Text>
-        <Text className='text-foreground'>
+        <Text variant='h1'>SignIn</Text>
+        <Text variant='p'>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. A neque est,
           unde at illo sequi, maxime fugiat necessitatibus temporibus veniam ut
           aut explicabo aliquid quam aliquam tempore, adipisci praesentium

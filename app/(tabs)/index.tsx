@@ -3,8 +3,8 @@ import { Platform, StyleSheet } from 'react-native'
 
 import { HelloWave } from '@/components/HelloWave'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
-import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
+import { Text } from '@/components/ui/text'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 export default function HomeScreen() {
@@ -19,42 +19,42 @@ export default function HomeScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type='title' className='bg-red-300 dark:bg-blue-800'>
+        <Text variant='h1' className='bg-red-300 dark:bg-blue-800'>
           Welcome!
-        </ThemedText>
+        </Text>
         <ThemeToggle />
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type='subtitle'>Step 1: Try it</ThemedText>
-        <ThemedText>
+        <Text variant='h3'>Step 1: Try it</Text>
+        <Text variant='p'>
           Edit{' '}
-          <ThemedText type='defaultSemiBold'>app/(tabs)/index.tsx</ThemedText>{' '}
+          <Text variant='p' className='font-medium'>app/(tabs)/index.tsx</Text>{' '}
           to see changes. Press{' '}
-          <ThemedText type='defaultSemiBold'>
+          <Text variant='p' className='font-medium'>
             {Platform.select({
               ios: 'cmd + d',
               android: 'cmd + m',
               web: 'F12',
             })}
-          </ThemedText>{' '}
+          </Text>{' '}
           to open developer tools.
-        </ThemedText>
+        </Text>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type='subtitle'>Step 2: Explore</ThemedText>
-        <ThemedText>
+        <Text variant='h3'>Step 2: Explore</Text>
+        <Text variant='p'>
           {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
+        </Text>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type='subtitle'>Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
+        <Text variant='h3'>Step 3: Get a fresh start</Text>
+        <Text variant='p'>
           {`When you're ready, run `}
-          <ThemedText type='defaultSemiBold'>
+          <Text variant='p' className='font-medium'>
             npm run reset-project
-          </ThemedText>{' '}
-          to get a fresh <ThemedText type='defaultSemiBold'>app</ThemedText>{' '}
+          </Text>{' '}
+          to get a fresh <Text variant='p' className='font-medium'>app</Text>{' '}
           directory. This will move the current Lorem ipsum dolor, sit amet
           consectetur adipisicing elit. Obcaecati, perspiciatis? Vero commodi at
           eaque quos labore saepe eos facilis eum amet aspernatur est,
@@ -67,9 +67,9 @@ export default function HomeScreen() {
           consectetur ratione explicabo quae eius voluptatibus quibusdam fuga?
           Amet, perspiciatis libero adipisci sint, at quod debitis iure iste
           repellendus in tenetur vel neque mollitia aspernatur.
-          <ThemedText type='defaultSemiBold'>app</ThemedText> to{' '}
-          <ThemedText type='defaultSemiBold'>app-example</ThemedText>.
-        </ThemedText>
+          <Text variant='p' className='font-medium'>app</Text> to{' '}
+          <Text variant='p' className='font-medium'>app-example</Text>.
+        </Text>
       </ThemedView>
     </ParallaxScrollView>
   )

@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils'
 import {
-  Text,
   TextInput,
   TextInputProps,
   TouchableOpacity,
   View,
 } from 'react-native'
+import { Text } from '@/components/ui/text'
 
 interface FormFieldProps extends TextInputProps {
   label: string
@@ -24,7 +24,7 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <View className='space-y-2'>
-      <Text className='text-sm font-medium text-gray-900 dark:text-gray-100'>
+      <Text variant='small' className='font-medium text-gray-900 dark:text-gray-100'>
         {label}
       </Text>
       <View className='relative'>
@@ -47,7 +47,7 @@ export function FormField({
           </TouchableOpacity>
         )}
       </View>
-      {error && <Text className='text-sm text-red-500'>{error}</Text>}
+      {error && <Text variant='small' className='text-red-500'>{error}</Text>}
     </View>
   )
 }

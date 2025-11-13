@@ -1,16 +1,19 @@
+import React, { useState } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff } from 'lucide-react-native'
-import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
-import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/FormField'
+import { Button } from '@/components/ui/button'
+import { Text } from '@/components/ui/text'
 // import {
 //   useGoogleSignInMutation,
 //   useSignInMutation,
 // } from '@/hooks/useAuthMutations'
 import { SignInFormData, signInSchema } from '@/lib/validationSchemas'
+
 // import { useGoogleAuth } from '@/services/authService'
 
 export default function SignIn() {
@@ -61,16 +64,22 @@ export default function SignIn() {
     //   >
     <View className='flex-1 justify-center px-6 py-8'>
       <View className='mb-8'>
-        <Text className='text-3xl font-bold text-gray-900 dark:text-white text-center mb-2'>
+        <Text
+          variant='h1'
+          className='mb-2 text-center text-gray-900 dark:text-white'
+        >
           Welcome Back
         </Text>
-        <Text className='text-gray-600 dark:text-gray-400 text-center'>
+        <Text
+          variant='p'
+          className='text-center text-gray-600 dark:text-gray-400'
+        >
           Sign in to your account
         </Text>
       </View>
 
       {/* Form */}
-      <View className='space-y-4 mb-6'>
+      <View className='mb-6 space-y-4'>
         <Controller
           control={control}
           name='email'
@@ -135,10 +144,12 @@ export default function SignIn() {
       </Button>
 
       {/* Divider */}
-      <View className='flex-row items-center mb-4'>
-        <View className='flex-1 h-px bg-gray-300 dark:bg-gray-600' />
-        <Text className='mx-4 text-gray-500 dark:text-gray-400'>or</Text>
-        <View className='flex-1 h-px bg-gray-300 dark:bg-gray-600' />
+      <View className='mb-4 flex-row items-center'>
+        <View className='h-px flex-1 bg-gray-300 dark:bg-gray-600' />
+        <Text variant='small' className='mx-4 text-gray-500 dark:text-gray-400'>
+          or
+        </Text>
+        <View className='h-px flex-1 bg-gray-300 dark:bg-gray-600' />
       </View>
 
       <Button
@@ -152,7 +163,7 @@ export default function SignIn() {
       </Button>
 
       <View className='flex-row justify-center'>
-        <Text className='text-gray-600 dark:text-gray-400'>
+        <Text variant='p' className='text-gray-600 dark:text-gray-400'>
           Don&apos;t have an account?{' '}
         </Text>
         {/* <Link href='/sign-up' asChild>
