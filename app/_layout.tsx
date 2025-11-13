@@ -1,34 +1,18 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import {
-  DarkTheme,
-  DefaultTheme,
-  Theme,
-  ThemeProvider,
-} from '@react-navigation/native'
-// import { useAuthStore } from '@/store/authStore'
+import { ThemeProvider } from '@react-navigation/native'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
-import { Slot, Stack } from 'expo-router'
+import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { Platform, Text, View } from 'react-native'
+import { useColorScheme } from 'nativewind'
+import { Platform, View } from 'react-native'
 import 'react-native-reanimated'
 import '~/global.css'
 
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
-// import { AuthInitializer } from '@/components/AuthInitializer'
-import { NAV_THEME } from '@/lib/constants'
 import { queryClient } from '@/lib/queryClient'
-import { useColorScheme } from '@/lib/useColorScheme'
-
-const LIGHT_THEME: Theme = {
-  ...DefaultTheme,
-  colors: NAV_THEME.light,
-}
-const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
-}
+import { NAV_THEME } from '@/lib/theme'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,10 +28,10 @@ export default function RootLayout() {
   const hasMounted = useRef(false)
   // TODO: Replace with actual auth state
   // const { isAuthenticated, isLoading } = useAuthStore()
+  const { colorScheme } = useColorScheme()
   const isAuthenticated = true // Temporary: set to true to test protected routes
   const isLoading = false // Temporary: set to false since we're not using real auth
 
-  const { isDarkColorScheme } = useColorScheme()
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -72,7 +56,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+      <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
         <Stack>
           <Stack.Protected guard={!isAuthenticated}>
             <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
@@ -86,7 +70,7 @@ export default function RootLayout() {
         <View className='absolute bottom-4 end-4'>
           <ThemeToggle />
         </View>
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       </ThemeProvider>
     </QueryClientProvider>
   )
