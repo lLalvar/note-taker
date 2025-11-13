@@ -13,10 +13,6 @@ import { THEME } from '@/lib/theme'
 export default function TabLayout() {
   const { colorScheme } = useColorScheme()
 
-  console.log(
-    "🚀 ~ :16 ~ THEME[colorScheme ?? 'light'].primary:",
-    THEME[colorScheme ?? 'light'].primary
-  )
   return (
     <Tabs
       screenOptions={{
