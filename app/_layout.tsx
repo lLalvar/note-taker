@@ -1,93 +1,34 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-
 import {
   DarkTheme,
   DefaultTheme,
-  Theme,
   ThemeProvider,
 } from '@react-navigation/native'
-// import { useAuthStore } from '@/store/authStore'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { useFonts } from 'expo-font'
-import { Slot, Stack } from 'expo-router'
+import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { Platform, Text, View } from 'react-native'
 import 'react-native-reanimated'
+import { PortalHost } from '@rn-primitives/portal'
 import '~/global.css'
 
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
-// import { AuthInitializer } from '@/components/AuthInitializer'
-import { NAV_THEME } from '@/lib/constants'
-import { queryClient } from '@/lib/queryClient'
-import { useColorScheme } from '@/lib/useColorScheme'
+import { useColorScheme } from '@/hooks/use-color-scheme'
 
-const LIGHT_THEME: Theme = {
-  ...DefaultTheme,
-  colors: NAV_THEME.light,
+export const unstable_settings = {
+  anchor: '(tabs)',
 }
-const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
-}
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router'
-
-const useIsomorphicLayoutEffect =
-  Platform.OS === 'web' && typeof window === 'undefined'
-    ? useEffect
-    : useLayoutEffect
 
 export default function RootLayout() {
-  const hasMounted = useRef(false)
-  // TODO: Replace with actual auth state
-  // const { isAuthenticated, isLoading } = useAuthStore()
-  const isAuthenticated = true // Temporary: set to true to test protected routes
-  const isLoading = false // Temporary: set to false since we're not using real auth
-
-  const { isDarkColorScheme } = useColorScheme()
-  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  })
-
-  useIsomorphicLayoutEffect(() => {
-    if (hasMounted.current) {
-      return
-    }
-
-    if (Platform.OS === 'web') {
-      // Adds the background color to the html element to prevent white background on overscroll.
-      document.documentElement.classList.add('bg-background')
-    }
-    setIsColorSchemeLoaded(true)
-    hasMounted.current = true
-  }, [])
-
-  if (!isColorSchemeLoaded || !loaded || isLoading) {
-    return null
-  }
+  const colorScheme = useColorScheme()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <Stack>
-          <Stack.Protected guard={!isAuthenticated}>
-            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-            <Stack.Screen name='+not-found' />
-          </Stack.Protected>
-
-          <Stack.Protected guard={isAuthenticated}>
-            <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-          </Stack.Protected>
-        </Stack>
-        <View className='absolute bottom-4 end-4'>
-          <ThemeToggle />
-        </View>
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+        <Stack.Screen
+          name='modal'
+          options={{ presentation: 'modal', title: 'Modal' }}
+        />
+      </Stack>
+      <StatusBar style='auto' />
+      <PortalHost />
+    </ThemeProvider>
   )
 }
