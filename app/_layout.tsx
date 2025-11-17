@@ -52,24 +52,16 @@ export default function RootLayout() {
   //   return null
   // }
 
-  const SCREEN_OPTIONS = {
-    title: 'React Native Reusables',
-    headerTransparent: true,
-    headerRight: () => <ThemeToggle />,
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
         <Stack>
-          <Stack.Screen options={SCREEN_OPTIONS} />
-
-          <Stack.Protected guard={!isAuthenticated}>
+          <Stack.Protected guard={isAuthenticated}>
             <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
             <Stack.Screen name='+not-found' />
           </Stack.Protected>
 
-          <Stack.Protected guard={isAuthenticated}>
+          <Stack.Protected guard={!isAuthenticated}>
             <Stack.Screen name='(auth)' options={{ headerShown: false }} />
           </Stack.Protected>
         </Stack>

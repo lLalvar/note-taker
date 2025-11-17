@@ -1,0 +1,71 @@
+---
+description: Firebase Firestore operations and data structure patterns
+globs:
+  - '**/services/**'
+  - '**/lib/firebase.ts'
+alwaysApply: false
+---
+
+# Firebase & Firestore Patterns
+
+## Firestore Structure
+
+- Use subcollections: `users/{userId}/notes/{noteId}`
+- Store user-specific data under user document
+- Use proper Firestore types (Timestamp, etc.)
+- Implement proper security rules
+- Handle offline capabilities
+
+## Service Layer Pattern
+
+- Create service functions in `/services` directory
+- Use TanStack Query mutations/queries (not direct Firebase calls in components)
+- Return typed data from service functions
+- Handle errors at service level
+- Use Firebase v9+ modular SDK
+
+## Example Service Function
+
+```typescript
+import { Timestamp, addDoc, collection } from 'firebase/firestore'
+
+import { db } from '@/lib/firebase'
+
+export interface Note {
+  id: string
+  title: string
+  content: string
+  createdAt: Timestamp
+  updatedAt: Timestamp
+  userId: string
+}
+
+export async function createNote(
+  userId: string,
+  noteData: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<Note> {
+  const notesRef = collection(db, `users/${userId}/notes`)
+  const newNote = {
+    ...noteData,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  }
+  const docRef = await addDoc(notesRef, newNote)
+  return { id: docRef.id, ...newNote }
+}
+```
+
+## TanStack Query Integration
+
+- Use `useQuery` for fetching data
+- Use `useMutation` for create/update/delete operations
+- Use query keys: `['notes', userId]` for caching
+- Invalidate queries after mutations
+- Handle loading and error states
+
+## Firebase Storage
+
+- Use Firebase Storage for images/files
+- Upload files before saving note references
+- Use proper file paths: `users/{userId}/notes/{noteId}/images/{imageId}`
+- Handle upload progress and errors

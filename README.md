@@ -1,8 +1,56 @@
-# Welcome to your Expo app 👋
+# Note Taker App 📝
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern note-taking mobile app built with React Native (Expo) to learn mobile development.
 
-## Get started
+## Tech Stack
+
+- **Framework**: React Native with Expo Router
+- **Styling**: NativeWind (Tailwind CSS)
+- **State Management**: Zustand
+- **Data Fetching**: TanStack Query (React Query)
+- **Backend**: Firebase (Auth, Firestore, Storage)
+- **Forms**: React Hook Form + Zod
+- **UI Components**: React Native Reusables
+- **Performance**: FlashList, React Native Reanimated
+- **UI Libraries**: @gorhom/bottom-sheet
+- **Storage**: react-native-mmkv
+- **i18n**: Lingui (optional)
+- **Language**: TypeScript
+
+## Project Structure
+
+```
+/app              - Expo Router pages (file-based routing)
+/components       - Reusable UI components
+/lib              - Utilities and configurations
+/services         - Firebase operations and API layer
+/store            - Zustand stores for global state
+/hooks            - Custom React hooks
+/constants        - App constants and theme configs
+```
+
+## Planning Documents
+
+- **[FEATURES.md](./FEATURES.md)** - Feature checklist and implementation phases
+- **[CURSOR_PROMPT.md](./CURSOR_PROMPT.md)** - Optional: Manual prompt template reference (not needed if using rules)
+- **[.cursor/rules/](./.cursor/rules/)** - Cursor project rules (MDC format) - **Recommended: Auto-applies context**
+
+## Cursor Rules
+
+This project includes Cursor rules in `.cursor/rules/` directory following the [official Cursor documentation](https://cursor.com/docs/context/rules#project-rules). These rules provide persistent context for the AI assistant:
+
+- **project-overview.mdc** - Project overview and tech stack (Always Apply)
+- **react-native-patterns.mdc** - React Native & Expo Router patterns (Always Apply)
+- **firebase-firestore.mdc** - Firebase operations patterns (Apply to services)
+- **authentication.mdc** - Auth patterns (Apply to auth files)
+- **notes-features.mdc** - Note features patterns (Apply to notes files)
+- **styling-ui.mdc** - Styling and UI patterns (Apply to components)
+- **performance-ui-libraries.mdc** - FlashList, Bottom Sheet, MMKV, Reanimated patterns (Apply to components)
+- **typescript-types.mdc** - TypeScript patterns (Always Apply)
+
+**Note**: The `.cursor/rules/` approach is recommended as it automatically applies context. `CURSOR_PROMPT.md` is optional and only useful if you want manual prompt templates.
+
+## Get Started
 
 1. Install dependencies
 
@@ -10,30 +58,54 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Install additional packages (if not already installed)
 
    ```bash
+   # Performance & UI libraries
+   npm install @shopify/flash-list @gorhom/bottom-sheet react-native-mmkv
+
+   # Internationalization (optional)
+   npm install @lingui/react @lingui/core
+
+   # Note: react-native-reanimated is already installed
+   ```
+
+3. Configure Firebase
+   - Update `lib/firebase.ts` with your Firebase config
+   - Uncomment and configure auth services in `services/authService.ts`
+   - Uncomment and configure auth store in `store/authStore.ts`
+
+4. Start the app
+
+   ```bash
+   npm start
+   # or
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. Open the app
+   - Press `i` for iOS simulator
+   - Press `a` for Android emulator
+   - Scan QR code with Expo Go app
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Development Workflow
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+1. Check [FEATURES.md](./FEATURES.md) for planned features
+2. Use [CURSOR_PROMPT.md](./CURSOR_PROMPT.md) as a template when asking Cursor to build features
+3. Build incrementally - start with MVP features
+4. Test frequently on both iOS and Android
 
-## Get a fresh project
+## Current Status
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- ✅ Project setup complete
+- ✅ Firebase configuration ready (needs activation)
+- ✅ Auth screens created (sign-in, sign-up, forgot-password)
+- ✅ TanStack Query configured
+- ✅ Zustand store structure ready
+- ✅ NativeWind styling configured
+- ✅ React Native Reanimated installed
+- ⏳ Additional packages need installation (FlashList, Bottom Sheet, MMKV, Lingui)
+- ⏳ Note-taking features - To be implemented
 
 ## Learn more
 

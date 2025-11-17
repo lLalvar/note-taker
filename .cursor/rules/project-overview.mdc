@@ -1,0 +1,68 @@
+---
+description: Note Taker app project overview and tech stack
+alwaysApply: true
+---
+
+# Note Taker App - Project Overview
+
+This is a React Native note-taking app built with Expo to learn mobile development.
+
+## Tech Stack
+
+- **Framework**: React Native with Expo Router (file-based routing)
+- **Styling**: NativeWind (Tailwind CSS)
+- **State Management**: Zustand (for global UI state only)
+- **Data Fetching**: TanStack Query (React Query) for all server state
+- **Backend**: Firebase (Auth, Firestore, Storage)
+- **Forms**: React Hook Form + Zod validation
+- **UI Components**: React Native Reusables
+- **Performance**: FlashList (high-performance lists)
+- **Animations**: React Native Reanimated (smooth, performant animations)
+- **UI Libraries**: @gorhom/bottom-sheet (bottom sheets)
+- **Storage**: react-native-mmkv (fast key-value storage)
+- **i18n**: Lingui (internationalization, if needed)
+- **Language**: TypeScript (strict mode)
+
+## Project Structure
+
+```text
+/app              - Expo Router pages (file-based routing)
+/components       - Reusable UI components
+/lib              - Utilities, configs, validation schemas
+/services         - Firebase operations and API layer
+/store            - Zustand stores for global state
+/hooks            - Custom React hooks
+/constants        - App constants and theme configs
+```
+
+## Architecture Principles
+
+- Use Expo Router file-based routing for navigation
+- Use TanStack Query for ALL data fetching (Firebase operations)
+- Use Zustand ONLY for global UI state (not server state)
+- Follow React Native best practices and patterns
+- Use TypeScript strictly with proper types (avoid `any`)
+- Implement proper error handling and loading states
+- Use component composition patterns
+- Style with NativeWind (Tailwind CSS classes)
+- Use React Hook Form + Zod for all form validation
+- Use React Native Reanimated for all animations (prefer over Animated API)
+
+## Current State
+
+- Firebase is configured but auth services are commented out (need activation)
+- Basic auth screens exist (sign-in, sign-up, forgot-password)
+- TanStack Query client is set up in `lib/queryClient.ts`
+- Zustand store structure exists but needs implementation
+- NativeWind is configured and working
+
+## Learning Focus
+
+This is a learning project. Focus on:
+
+- Understanding React Native fundamentals
+- Learning Expo Router navigation patterns
+- Mastering TanStack Query for data fetching
+- Understanding Firebase integration
+- Building mobile-first UI/UX
+- Creating smooth animations with React Native Reanimated
