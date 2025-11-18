@@ -12,5 +12,6 @@
     "statusBarItem.remoteBackground": "#ed5408",
     "statusBarItem.remoteForeground": "#e7e7e7"
   },
-  "peacock.color": "#ed5408"
+  "peacock.color": "#ed5408",
+  "cSpell.words": ["gorhom"]
 }
