@@ -72,14 +72,17 @@ check('Git tag does not already exist', () => {
   }
 })
 
-// Check 5: On correct branch (optional - can be main or develop)
-check('On release branch', () => {
+// Check 5: On correct branch (releases only from main)
+check('On release branch (main)', () => {
   const branch = execSync('git rev-parse --abbrev-ref HEAD', {
     encoding: 'utf8',
   }).trim()
-  const allowedBranches = ['main', 'master', 'develop']
+  const allowedBranches = ['main', 'master']
   if (!allowedBranches.includes(branch)) {
-    throw new Error(`Not on a release branch. Current branch: ${branch}`)
+    throw new Error(
+      `Releases must be created from main branch. Current branch: ${branch}\n` +
+        `   Workflow: dev → stage → main (then release)`
+    )
   }
 })
 
