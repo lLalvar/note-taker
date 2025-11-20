@@ -2,7 +2,7 @@
   "expo": {
     "name": "note-taker",
     "slug": "note-taker",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "note-taker",
@@ -12,7 +12,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.lalvar.notetaker",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "10000"
+      "buildNumber": "10100"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +22,7 @@
       "edgeToEdgeEnabled": true,
       "package": "com.lalvar.notetaker",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 10000
+      "versionCode": 10100
     },
     "web": {
       "bundler": "metro",
