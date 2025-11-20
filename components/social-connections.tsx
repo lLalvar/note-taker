@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const SOCIAL_CONNECTION_STRATEGIES = [
-  // {
-  //   type: 'oauth_apple',
-  //   source: { uri: 'https://img.clerk.com/static/apple.png?width=160' },
-  //   useTint: true,
-  // },
+  {
+    type: 'oauth_apple',
+    source: { uri: 'https://img.clerk.com/static/apple.png?width=160' },
+    useTint: true,
+  },
   {
     type: 'oauth_google',
     source: { uri: 'https://img.clerk.com/static/google.png?width=160' },

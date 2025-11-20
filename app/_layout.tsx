@@ -9,6 +9,7 @@ import { useColorScheme } from 'nativewind'
 import { Text as RNText, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import 'react-native-reanimated'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import '~/global.css'
 
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
@@ -64,37 +65,39 @@ export default function RootLayout() {
   // }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <QueryClientProvider client={queryClient}>
-          <I18nProvider i18n={i18n} defaultComponent={TransText}>
-            <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-              <Stack>
-                <Stack.Protected guard={isAuthenticated}>
-                  <Stack.Screen
-                    name='(tabs)'
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name='+not-found' />
-                </Stack.Protected>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheetModalProvider>
+          <QueryClientProvider client={queryClient}>
+            <I18nProvider i18n={i18n} defaultComponent={TransText}>
+              <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
+                <Stack>
+                  <Stack.Protected guard={isAuthenticated}>
+                    <Stack.Screen
+                      name='(tabs)'
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name='+not-found' />
+                  </Stack.Protected>
 
-                <Stack.Protected guard={!isAuthenticated}>
-                  <Stack.Screen
-                    name='(auth)'
-                    options={{ headerShown: false }}
-                  />
-                </Stack.Protected>
-              </Stack>
-              <View className='absolute bottom-4 end-4 flex-row gap-2'>
-                <LanguageSelector />
-                <ThemeToggle />
-              </View>
-              <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-              <PortalHost />
-            </ThemeProvider>
-          </I18nProvider>
-        </QueryClientProvider>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+                  <Stack.Protected guard={!isAuthenticated}>
+                    <Stack.Screen
+                      name='(auth)'
+                      options={{ headerShown: false }}
+                    />
+                  </Stack.Protected>
+                </Stack>
+                <View className='absolute bottom-4 end-4 flex-row gap-2'>
+                  <LanguageSelector />
+                  <ThemeToggle />
+                </View>
+                <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+                <PortalHost />
+              </ThemeProvider>
+            </I18nProvider>
+          </QueryClientProvider>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   )
 }

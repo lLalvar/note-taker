@@ -44,6 +44,9 @@
           "ios": {
             "useFrameworks": "static"
           }
+          // "android": {
+          //   "windowSoftInputMode": "adjustResize"
+          // }
         }
       ],
       "@react-native-firebase/app",

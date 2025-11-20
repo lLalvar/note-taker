@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import {
+  BottomSheetBackdrop,
+  type BottomSheetBackdropProps,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet'
 import { Languages } from 'lucide-react-native'
+import { useColorScheme } from 'nativewind'
 import { Pressable } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
+import { THEME } from '@/lib/theme'
 import { cn } from '@/lib/utils'
 import { useLanguageStore } from '@/store/languageStore'
 
@@ -17,7 +24,8 @@ const LOCALES = [
 
 export function LanguageSelector() {
   const { locale, setLocale } = useLanguageStore()
-  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null)
+  const { colorScheme } = useColorScheme()
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   const handleOpenSheet = () => {
     bottomSheetModalRef.current?.present()
@@ -27,6 +35,21 @@ export function LanguageSelector() {
     setLocale(code)
     bottomSheetModalRef.current?.dismiss()
   }
+
+  const theme = colorScheme ?? 'light'
+  const handleColor = THEME[theme].mutedForeground
+
+  const renderBackdrop = React.useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        pressBehavior='close'
+      />
+    ),
+    []
+  )
 
   return (
     <>
@@ -40,11 +63,15 @@ export function LanguageSelector() {
       </Button>
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        snapPoints={['25%']}
+        // snapPoints={['25%']}
         enablePanDownToClose
-        backgroundStyle={{ backgroundColor: 'transparent' }}
+        backgroundStyle={{ backgroundColor: THEME[theme].background }}
+        handleIndicatorStyle={{ backgroundColor: handleColor }}
+        backdropComponent={renderBackdrop}
       >
-        <BottomSheetView className='rounded-t-3xl bg-background'>
+        <BottomSheetView
+        // className='rounded-t-3xl bg-background'
+        >
           {LOCALES.map((loc) => (
             <Pressable
               key={loc.code}

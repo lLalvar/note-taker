@@ -12,19 +12,19 @@ const catalogs = {
   ru: ruMessages,
 } as const
 
+i18n.loadAndActivate({ locale: 'en', messages: catalogs.en })
+
 export async function loadCatalog(locale: string) {
   try {
     const messages = catalogs[locale as keyof typeof catalogs]
     if (!messages) {
       throw new Error(`No catalog found for locale: ${locale}`)
     }
-    i18n.load(locale, messages)
-    i18n.activate(locale)
+    i18n.loadAndActivate({ locale, messages })
   } catch (error) {
     console.error(`Failed to load catalog for locale ${locale}:`, error)
     if (locale !== 'en') {
-      i18n.load('en', catalogs.en)
-      i18n.activate('en')
+      i18n.loadAndActivate({ locale: 'en', messages: catalogs.en })
     }
   }
 }

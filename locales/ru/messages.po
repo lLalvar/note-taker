@@ -13,49 +13,46 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: app/(auth)/sign-in.tsx:191
+#: app/(auth)/sign-in.tsx:292
 msgid "Continue"
 msgstr "Продолжить"
 
-#: app/(auth)/sign-in.tsx:198
-msgid "Don't have an account? <0><1><2>Sign up</2></1></0>"
-msgstr ""
+#: app/(auth)/sign-in.tsx:301
+msgid "Don't have an account?"
+msgstr "Нет аккаунта?"
 
-#~ msgid "Don't have an account? <0>Sign up</0>"
-#~ msgstr "Нет аккаунта? <0>Зарегистрироваться</0>"
-
-#: app/(auth)/sign-in.tsx:94
+#: app/(auth)/sign-in.tsx:208
 msgid "Email"
 msgstr "Электронная почта"
 
-#: app/(auth)/sign-in.tsx:150
+#: app/(auth)/sign-in.tsx:246
 msgid "Enter your password"
 msgstr "Введите пароль"
 
-#: app/(auth)/sign-in.tsx:137
+#: app/(auth)/sign-in.tsx:237
 msgid "Forgot your password?"
 msgstr "Забыли пароль?"
 
-#: app/(auth)/sign-in.tsx:103
+#: app/(auth)/sign-in.tsx:209
 msgid "m@example.com"
 msgstr "m@example.com"
 
-#: app/(auth)/sign-in.tsx:214
+#: app/(auth)/sign-in.tsx:316
 msgid "or"
 msgstr "или"
 
-#: app/(auth)/sign-in.tsx:128
+#: app/(auth)/sign-in.tsx:232
 msgid "Password"
 msgstr "Пароль"
 
-#: app/(auth)/sign-in.tsx:83
+#: app/(auth)/sign-in.tsx:137
 msgid "Sign in to your app"
 msgstr "Войдите в приложение"
 
-#: app/(auth)/sign-in.tsx:201
-#~ msgid "Sign up"
-#~ msgstr "Зарегистрироваться"
+#: app/(auth)/sign-in.tsx:306
+msgid "Sign up"
+msgstr "Зарегистрироваться"
 
-#: app/(auth)/sign-in.tsx:86
+#: app/(auth)/sign-in.tsx:140
 msgid "Welcome back! Please sign in to continue"
 msgstr "С возвращением! Пожалуйста, войдите, чтобы продолжить"
