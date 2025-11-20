@@ -137,61 +137,7 @@ export default function SignIn() {
                 <Trans>Sign in to your app</Trans>
               </CardTitle>
               <CardDescription className='text-center sm:text-left'>
-                <Trans>
-                  Welcome back! Please sign in to continue
-                  {/* Lorem ipsum dolor sit
-                  amet consectetur adipisicing elit. Doloremque debitis officia
-                  non sint. Neque sapiente numquam deserunt dolorum ipsum libero
-                  repudiandae error fuga debitis recusandae placeat harum illum
-                  quia, facilis saepe laboriosam maxime iure. Similique, impedit
-                  quaerat! Temporibus excepturi consequatur perspiciatis
-                  molestias sequi itaque tenetur. Quod provident nesciunt fuga
-                  totam ex pariatur reprehenderit adipisci omnis architecto
-                  itaque sit excepturi tenetur voluptatem, consectetur mollitia
-                  nisi. Error aspernatur cumque aliquam deleniti sit! Libero
-                  praesentium perferendis ipsum quod illo necessitatibus ut
-                  repudiandae, consequuntur magnam, iusto rem nulla optio.
-                  Pariatur eveniet beatae earum incidunt facere quae at vitae
-                  blanditiis quas, iste ullam alias unde labore sequi illum quos
-                  amet aspernatur repellendus omnis consectetur, animi quidem
-                  magnam mollitia minus? Amet incidunt, quos vero, ratione
-                  praesentium quod reiciendis in eum rerum eius nobis
-                  accusantium explicabo nostrum enim ab molestiae quaerat odit
-                  eaque dolorem odio, at saepe quis! Corporis, ex a porro quod
-                  corrupti quas dicta dolorem tenetur obcaecati, cumque, ipsum
-                  ab iste libero eos distinctio sint nostrum facilis possimus
-                  dolorum eligendi. Fugit, expedita sit molestias suscipit
-                  debitis commodi harum deserunt, voluptatibus possimus beatae
-                  fugiat sed illum perspiciatis. Maiores, quo corporis. Magnam
-                  sed eveniet quidem sunt dolor. Deleniti rerum quos pariatur
-                  molestiae incidunt ratione explicabo iure quae, eos unde,
-                  doloremque numquam asperiores libero cumque corporis harum
-                  eius, voluptate natus! Consequatur impedit, maxime iusto
-                  ratione exercitationem assumenda quaerat quidem corporis quo
-                  optio, accusantium repellendus tempora. Accusantium ut vel
-                  suscipit quod praesentium illo aliquid doloribus. Magnam amet
-                  itaque reprehenderit tenetur! Atque cum adipisci incidunt
-                  impedit quidem ab delectus aperiam numquam ea recusandae, fuga
-                  alias illo, tempore dolores est. Quae necessitatibus doloribus
-                  officia quos error aliquam deleniti harum aliquid, corrupti
-                  deserunt! Voluptatem inventore quos necessitatibus assumenda,
-                  tenetur sint accusantium, aut laudantium odio cum perspiciatis
-                  alias aliquam tempora, minus quam nobis ad repudiandae neque
-                  et harum ducimus. Modi saepe consequuntur magni, odit quisquam
-                  excepturi laborum minima adipisci ullam corrupti obcaecati
-                  esse nihil repellendus debitis sit, veniam eum reiciendis
-                  suscipit? Repellat architecto velit eaque, magnam provident,
-                  cum molestiae sunt voluptatum doloremque, dicta id possimus
-                  beatae at unde fugit omnis iusto adipisci debitis laboriosam
-                  fuga molestias quae consectetur illum. At sit beatae ea alias
-                  perferendis, nulla nihil, obcaecati sed, mollitia adipisci
-                  natus itaque laborum pariatur voluptate voluptatem totam
-                  tempore! Similique rerum ea ab sit voluptatem blanditiis
-                  itaque fugit at iusto animi, totam eveniet accusantium sed
-                  recusandae, neque architecto hic dolorem eaque ratione. Fugiat
-                  obcaecati minus dolore vitae rem ipsum nesciunt nisi magni
-                  consequuntur! */}
-                </Trans>
+                <Trans>Welcome back! Please sign in to continue</Trans>
               </CardDescription>
             </CardHeader>
             <CardContent className='gap-6'>

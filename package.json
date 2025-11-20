@@ -10,7 +10,16 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "extract": "lingui extract --clean",
-    "compile": "lingui compile --typescript"
+    "compile": "lingui compile --typescript",
+    "commit": "git-cz",
+    "commitlint": "commitlint --edit",
+    "version:patch": "npm version patch --no-git-tag-version && node scripts/version-sync.js",
+    "version:minor": "npm version minor --no-git-tag-version && node scripts/version-sync.js",
+    "version:major": "npm version major --no-git-tag-version && node scripts/version-sync.js",
+    "pre-release": "node scripts/pre-release-check.js",
+    "release": "node scripts/release.js",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "prepare": "husky install || true"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -78,12 +87,30 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/react": "~19.1.10",
+    "commitizen": "^4.3.1",
+    "conventional-changelog-cli": "^4.1.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-plugin-lingui": "^0.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.6.2",
+    "standard-version": "^9.5.0",
     "typescript": "~5.9.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings=0",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "private": true
 }
