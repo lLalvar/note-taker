@@ -45,6 +45,8 @@ try {
     `   3. Commit the version sync if needed: git add app.json && git commit --amend --no-edit`
   )
   console.log(`   4. Push to remote: git push --follow-tags origin main`)
+  console.log(`\n⚠️  Note: Releases should only be created from main branch.`)
+  console.log(`   Workflow: dev → stage → main (then release)`)
   console.log(`   5. Create a GitHub release with the generated notes\n`)
 } catch (error) {
   console.error('❌ Error during release:', error.message)
