@@ -2,6 +2,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { I18nProvider, type TransRenderProps } from '@lingui/react'
 import { ThemeProvider } from '@react-navigation/native'
 import { PortalHost } from '@rn-primitives/portal'
+import * as Sentry from '@sentry/react-native'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -33,7 +34,7 @@ export {
 //     ? useEffect
 //     : useLayoutEffect
 
-export default function RootLayout() {
+export default Sentry.wrap(function RootLayout() {
   const { colorScheme } = useColorScheme()
   useI18n()
   // const hasMounted = useRef(false)
@@ -100,4 +101,4 @@ export default function RootLayout() {
       </GestureHandlerRootView>
     </SafeAreaProvider>
   )
-}
+})

@@ -45,3 +45,4 @@ app-example
 # firebase config files
 GoogleService-Info.plist
 google-services.json
+.env.local
