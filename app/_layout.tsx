@@ -18,6 +18,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { i18n, useI18n } from '@/lib/i18n'
 import { queryClient } from '@/lib/queryClient'
 import { NAV_THEME } from '@/lib/theme'
+import { useAuthStore } from '@/store/authStore'
 
 // Wrapper component for Trans defaultComponent
 const TransText = ({ translation }: TransRenderProps) => {
@@ -29,41 +30,16 @@ export {
   ErrorBoundary,
 } from 'expo-router'
 
-// const useIsomorphicLayoutEffect =
-//   Platform.OS === 'web' && typeof window === 'undefined'
-//     ? useEffect
-//     : useLayoutEffect
-
 export default Sentry.wrap(function RootLayout() {
   const { colorScheme } = useColorScheme()
   useI18n()
-  // const hasMounted = useRef(false)
-  // TODO: Replace with actual auth state
-  // const { isAuthenticated, isLoading } = useAuthStore()
-  const isAuthenticated = false // Temporary: set to true to test protected routes
-  // const isLoading = false // Temporary: set to false since we're not using real auth
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const isLoading = useAuthStore((state) => state.isLoading)
 
-  // const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
-  // const [loaded] = useFonts({
-  //   SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  // })
-
-  // useIsomorphicLayoutEffect(() => {
-  //   if (hasMounted.current) {
-  //     return
-  //   }
-
-  //   if (Platform.OS === 'web') {
-  //     // Adds the background color to the html element to prevent white background on overscroll.
-  //     document.documentElement.classList.add('bg-background')
-  //   }
-  //   setIsColorSchemeLoaded(true)
-  //   hasMounted.current = true
-  // }, [])
-
-  // if (!isColorSchemeLoaded || !loaded || isLoading) {
-  //   return null
-  // }
+  // Show loading state while checking auth
+  if (isLoading) {
+    return null
+  }
 
   return (
     <SafeAreaProvider>

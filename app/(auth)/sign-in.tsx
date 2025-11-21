@@ -2,10 +2,12 @@ import React, { useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Link } from 'expo-router'
+import { useMutation } from '@tanstack/react-query'
+import { Link, router } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -14,10 +16,6 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-// import {
-//   useGoogleSignInMutation,
-//   useSignInMutation,
-// } from '@/hooks/useAuthMutations'
 import { z } from 'zod'
 
 import { SocialConnections } from '@/components/social-connections'
@@ -41,6 +39,7 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
+import { AuthCredentials, AuthService } from '@/services/authService'
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -51,16 +50,12 @@ const signInSchema = z.object({
 })
 
 type SignInFormData = z.infer<typeof signInSchema>
-// import { useGoogleAuth } from '@/services/authService'
 
 export default function SignIn() {
   const { t } = useLingui()
   const [showPassword, setShowPassword] = useState(false)
   const passwordInputRef = React.useRef<TextInput>(null)
   const scrollViewRef = useRef<ScrollView>(null)
-  // const signInMutation = useSignInMutation()
-  // const googleSignInMutation = useGoogleSignInMutation()
-  // const { request, response, promptAsync } = useGoogleAuth()
 
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -76,19 +71,42 @@ export default function SignIn() {
     formState: { isSubmitting },
   } = form
 
-  // useEffect(() => {
-  //   if (response?.type === 'success') {
-  //     const { id_token } = response.params
-  //     if (id_token) {
-  //       // googleSignInMutation.mutate(id_token)
-  //       console.log('Google Sign-In successful with token:', id_token)
-  //     }
-  //   }
-  // }, [response])
+  const signInMutation = useMutation({
+    mutationFn: (credentials: AuthCredentials) =>
+      AuthService.signIn(credentials),
+    onSuccess: () => {
+      // Firebase auth state listener will handle the state update
+      router.replace('/(tabs)')
+    },
+    onError: (error: any) => {
+      let message = 'An error occurred during sign in'
+
+      switch (error.code) {
+        case 'auth/user-not-found':
+          message = 'No account found with this email address'
+          break
+        case 'auth/wrong-password':
+          message = 'Incorrect password'
+          break
+        case 'auth/invalid-email':
+          message = 'Invalid email address'
+          break
+        case 'auth/too-many-requests':
+          message = 'Too many failed attempts. Please try again later'
+          break
+        case 'auth/invalid-credential':
+          message = 'Invalid email or password'
+          break
+        default:
+          message = error.message || message
+      }
+
+      Alert.alert('Sign In Failed', message)
+    },
+  })
 
   const onSubmit = (data: SignInFormData) => {
-    // signInMutation.mutate(data)
-    console.log('Sign In Data:', data)
+    signInMutation.mutate(data)
   }
 
   function onEmailSubmitEditing() {
@@ -232,10 +250,14 @@ export default function SignIn() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || signInMutation.isPending}
                   >
                     <Text>
-                      <Trans>Continue</Trans>
+                      {signInMutation.isPending ? (
+                        <Trans>Signing in...</Trans>
+                      ) : (
+                        <Trans>Continue</Trans>
+                      )}
                     </Text>
                   </Button>
                 </View>

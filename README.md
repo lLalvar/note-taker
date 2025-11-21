@@ -19,7 +19,7 @@ A modern note-taking mobile app built with React Native (Expo) to learn mobile d
 
 ## Project Structure
 
-```
+```text
 /app              - Expo Router pages (file-based routing)
 /components       - Reusable UI components
 /lib              - Utilities and configurations
@@ -40,13 +40,8 @@ A modern note-taking mobile app built with React Native (Expo) to learn mobile d
 This project includes Cursor rules in `.cursor/rules/` directory following the [official Cursor documentation](https://cursor.com/docs/context/rules#project-rules). These rules provide persistent context for the AI assistant:
 
 - **project-overview.mdc** - Project overview and tech stack (Always Apply)
-- **react-native-patterns.mdc** - React Native & Expo Router patterns (Always Apply)
 - **firebase-firestore.mdc** - Firebase operations patterns (Apply to services)
 - **authentication.mdc** - Auth patterns (Apply to auth files)
-- **notes-features.mdc** - Note features patterns (Apply to notes files)
-- **styling-ui.mdc** - Styling and UI patterns (Apply to components)
-- **performance-ui-libraries.mdc** - FlashList, Bottom Sheet, MMKV, Reanimated patterns (Apply to components)
-- **typescript-types.mdc** - TypeScript patterns (Always Apply)
 
 **Note**: The `.cursor/rules/` approach is recommended as it automatically applies context. `CURSOR_PROMPT.md` is optional and only useful if you want manual prompt templates.
 

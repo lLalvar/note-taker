@@ -1,132 +1,123 @@
-// import { auth } from '@/lib/firebase'
-// import AsyncStorage from '@react-native-async-storage/async-storage'
-// import { User, onAuthStateChanged } from 'firebase/auth'
-// import { create } from 'zustand'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import type { User } from 'firebase/auth'
+import { onAuthStateChanged } from 'firebase/auth'
+import { create } from 'zustand'
 
-// interface AuthState {
-//   user: User | null
-//   isLoading: boolean
-//   isAuthenticated: boolean
-//   isInitialized: boolean
+import { auth } from '@/lib/firebase'
 
-//   // Actions
-//   setUser: (user: User | null) => void
-//   setLoading: (loading: boolean) => void
-//   initialize: () => void
-//   signOut: () => Promise<void>
-// }
+interface AuthState {
+  user: User | null
+  isLoading: boolean
+  isAuthenticated: boolean
+  isInitialized: boolean
 
-// export const useAuthStore = create<AuthState>((set, get) => ({
-//   user: null,
-//   isLoading: true,
-//   isAuthenticated: false,
-//   isInitialized: false,
+  // Actions
+  setUser: (user: User | null) => void
+  setLoading: (loading: boolean) => void
+  initialize: () => () => void // Returns unsubscribe function
+  signOut: () => Promise<void>
+}
 
-//   setUser: (user: User | null) => {
-//     set({
-//       user,
-//       isAuthenticated: !!user,
-//       isLoading: false,
-//     })
-//   },
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  isLoading: true,
+  isAuthenticated: false,
+  isInitialized: false,
 
-//   setLoading: (loading: boolean) => {
-//     set({ isLoading: loading })
-//   },
+  setUser: (user: User | null) => {
+    set({
+      user,
+      isAuthenticated: !!user,
+      isLoading: false,
+    })
+  },
 
-//   initialize: () => {
-//     const { isInitialized } = get()
+  setLoading: (loading: boolean) => {
+    set({ isLoading: loading })
+  },
 
-//     if (isInitialized) return
+  initialize: () => {
+    const { isInitialized } = get()
 
-//     set({ isInitialized: true })
+    if (isInitialized) {
+      // Return a no-op unsubscribe function if already initialized
+      return () => {}
+    }
 
-//     // Set up Firebase auth state listener
-//     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-//       if (user) {
-//         // User is signed in
-//         try {
-//           const token = await user.getIdToken()
-//           await AsyncStorage.setItem('userToken', token)
-//           await AsyncStorage.setItem(
-//             'userData',
-//             JSON.stringify({
-//               uid: user.uid,
-//               email: user.email,
-//               displayName: user.displayName,
-//               photoURL: user.photoURL,
-//             })
-//           )
+    set({ isInitialized: true })
 
-//           set({
-//             user,
-//             isAuthenticated: true,
-//             isLoading: false,
-//           })
-//         } catch (error) {
-//           console.error('Error storing user data:', error)
-//           set({
-//             user: null,
-//             isAuthenticated: false,
-//             isLoading: false,
-//           })
-//         }
-//       } else {
-//         // User is signed out
-//         try {
-//           await AsyncStorage.removeItem('userToken')
-//           await AsyncStorage.removeItem('userData')
-//         } catch (error) {
-//           console.error('Error removing user data:', error)
-//         }
+    // Set up Firebase auth state listener
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in
+        try {
+          const token = await user.getIdToken()
+          await AsyncStorage.setItem('userToken', token)
+          await AsyncStorage.setItem(
+            'userData',
+            JSON.stringify({
+              uid: user.uid,
+              email: user.email,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+            })
+          )
 
-//         set({
-//           user: null,
-//           isAuthenticated: false,
-//           isLoading: false,
-//         })
-//       }
-//     })
+          set({
+            user,
+            isAuthenticated: true,
+            isLoading: false,
+          })
+        } catch (error) {
+          console.error('Error storing user data:', error)
+          set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
+          })
+        }
+      } else {
+        // User is signed out
+        try {
+          await AsyncStorage.removeItem('userToken')
+          await AsyncStorage.removeItem('userData')
+        } catch (error) {
+          console.error('Error removing user data:', error)
+        }
 
-//     // Store the unsubscribe function for cleanup if needed
-//     return unsubscribe
-//   },
+        set({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        })
+      }
+    })
 
-//   signOut: async () => {
-//     try {
-//       set({ isLoading: true })
-//       await auth.signOut()
-//       // The onAuthStateChanged listener will handle the state update
-//     } catch (error) {
-//       console.error('Error signing out:', error)
-//       set({ isLoading: false })
-//       throw error
-//     }
-//   },
-// }))
+    return unsubscribe
+  },
 
-// // Initialize auth store immediately when imported
-// // This ensures auth state is ready before Stack.Protected evaluates
-// let isAutoInitialized = false
-// export const initializeAuth = () => {
-//   if (!isAutoInitialized) {
-//     useAuthStore.getState().initialize()
-//     isAutoInitialized = true
-//   }
-// }
+  signOut: async () => {
+    try {
+      set({ isLoading: true })
+      await auth.signOut()
+      // The onAuthStateChanged listener will handle the state update
+    } catch (error) {
+      console.error('Error signing out:', error)
+      set({ isLoading: false })
+      throw error
+    }
+  },
+}))
 
-// // Auto-initialize on import
-// initializeAuth()
+// Initialize auth store immediately when imported
+// This ensures auth state is ready before Stack.Protected evaluates
+let isAutoInitialized = false
+export const initializeAuth = () => {
+  if (!isAutoInitialized) {
+    useAuthStore.getState().initialize()
+    isAutoInitialized = true
+  }
+}
 
-// // Selectors for specific pieces of state (performance optimization)
-// export const useAuthUser = () => useAuthStore((state) => state.user)
-// export const useAuthLoading = () => useAuthStore((state) => state.isLoading)
-// export const useAuthStatus = () =>
-//   useAuthStore((state) => ({
-//     isAuthenticated: state.isAuthenticated,
-//     isLoading: state.isLoading,
-//   }))
-
-// // Selector specifically for Stack.Protected guard
-// export const useIsAuthenticated = () =>
-//   useAuthStore((state) => state.isAuthenticated)
+// Auto-initialize on import
+initializeAuth()
