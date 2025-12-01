@@ -29,6 +29,9 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "extra": {
+      "googleClientIdWeb": "611802169319-3reqf7lhaaep2fcc35olk7c37imah0sp.apps.googleusercontent.com"
+    },
     "plugins": [
       "expo-router",
       [
@@ -55,7 +58,8 @@
           "project": "react-native",
           "organization": "lalvar"
         }
-      ]
+      ],
+      "expo-apple-authentication"
     ],
     "experiments": {
       "typedRoutes": true

@@ -39,7 +39,7 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
-import { AuthCredentials, AuthService } from '@/services/authService'
+import { AuthCredentials, AuthService } from '@/services/auth-service'
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -113,21 +113,21 @@ export default function SignIn() {
     passwordInputRef.current?.focus()
   }
 
-  function onEmailFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
+  // function onEmailFocus() {
+  //   if (Platform.OS === 'android') {
+  //     setTimeout(() => {
+  //       scrollViewRef.current?.scrollToEnd({ animated: true })
+  //     }, 300)
+  //   }
+  // }
 
-  function onPasswordFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
+  // function onPasswordFocus() {
+  //   if (Platform.OS === 'android') {
+  //     setTimeout(() => {
+  //       scrollViewRef.current?.scrollToEnd({ animated: true })
+  //     }, 300)
+  //   }
+  // }
 
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
@@ -177,7 +177,7 @@ export default function SignIn() {
                         // value={field.value}
                         // onChange={field.onChange}
                         // onBlur={field.onBlur}
-                        onFocus={onEmailFocus}
+                        // onFocus={onEmailFocus}
                         onSubmitEditing={onEmailSubmitEditing}
                         returnKeyType='next'
                         submitBehavior='submit'
@@ -212,7 +212,7 @@ export default function SignIn() {
                             // value={field.value}
                             // onChangeText={field.onChange}
                             // onBlur={field.onBlur}
-                            onFocus={onPasswordFocus}
+                            // onFocus={onPasswordFocus}
                             returnKeyType='send'
                             onSubmitEditing={handleSubmit(onSubmit)}
                             className='pr-10'
@@ -248,7 +248,7 @@ export default function SignIn() {
 
                   {/* Sign In Button */}
                   <Button
-                    className='w-full'
+                    className='w-full bg-primary'
                     onPress={handleSubmit(onSubmit)}
                     disabled={isSubmitting || signInMutation.isPending}
                   >

@@ -57,14 +57,6 @@ export default function ForgotPassword() {
     console.log('Forgot Password Data:', data)
   }
 
-  function onEmailFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
       <KeyboardAvoidingView
@@ -125,7 +117,6 @@ export default function ForgotPassword() {
                         keyboardType='email-address'
                         autoComplete='email'
                         autoCapitalize='none'
-                        onFocus={onEmailFocus}
                         returnKeyType='send'
                         onSubmitEditing={handleSubmit(onSubmit)}
                         submitBehavior='submit'

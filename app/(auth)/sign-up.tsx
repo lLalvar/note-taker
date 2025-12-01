@@ -126,38 +126,6 @@ export default function SignUp() {
     confirmPasswordInputRef.current?.focus()
   }
 
-  function onNameFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
-  function onEmailFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
-  function onPasswordFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
-  function onConfirmPasswordFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
       <KeyboardAvoidingView
@@ -202,7 +170,6 @@ export default function SignUp() {
                         placeholder={t`Enter your full name`}
                         autoCapitalize='words'
                         autoComplete='name'
-                        onFocus={onNameFocus}
                         onSubmitEditing={onNameSubmitEditing}
                         returnKeyType='next'
                         submitBehavior='submit'
@@ -223,7 +190,6 @@ export default function SignUp() {
                         keyboardType='email-address'
                         autoComplete='email'
                         autoCapitalize='none'
-                        onFocus={onEmailFocus}
                         onSubmitEditing={onEmailSubmitEditing}
                         returnKeyType='next'
                         submitBehavior='submit'
@@ -246,7 +212,6 @@ export default function SignUp() {
                             ref={passwordInputRef}
                             placeholder={t`Create a password`}
                             secureTextEntry={!showPassword}
-                            onFocus={onPasswordFocus}
                             returnKeyType='next'
                             onSubmitEditing={onPasswordSubmitEditing}
                             className='pr-10'
@@ -295,7 +260,6 @@ export default function SignUp() {
                             ref={confirmPasswordInputRef}
                             placeholder={t`Confirm your password`}
                             secureTextEntry={!showConfirmPassword}
-                            onFocus={onConfirmPasswordFocus}
                             returnKeyType='send'
                             onSubmitEditing={handleSubmit(onSubmit)}
                             className='pr-10'
