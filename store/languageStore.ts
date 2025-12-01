@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getLocales } from 'expo-localization'
 import { create } from 'zustand'
 
-type Locale = 'en' | 'ru'
+export type Locale = 'en' | 'ru'
 
 interface LanguageState {
   locale: Locale
@@ -26,6 +27,14 @@ export const useLanguageStore = create<LanguageState>((set) => ({
       const savedLocale = await AsyncStorage.getItem(STORAGE_KEY)
       if (savedLocale && (savedLocale === 'en' || savedLocale === 'ru')) {
         set({ locale: savedLocale as Locale })
+        return
+      }
+
+      const [primary] = getLocales()
+      const deviceLanguageCode = primary?.languageCode
+
+      if (deviceLanguageCode === 'en' || deviceLanguageCode === 'ru') {
+        set({ locale: deviceLanguageCode })
       }
     } catch (error) {
       console.error('Error loading locale:', error)

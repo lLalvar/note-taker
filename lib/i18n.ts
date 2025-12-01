@@ -2,30 +2,28 @@ import { useEffect, useState } from 'react'
 
 import { i18n } from '@lingui/core'
 
-import { useLanguageStore } from '@/store/languageStore'
+import { type Locale, useLanguageStore } from '@/store/languageStore'
 
 import { messages as enMessages } from '../locales/en/messages'
 import { messages as ruMessages } from '../locales/ru/messages'
 
-const catalogs = {
+const catalogs: Record<Locale, typeof enMessages | typeof ruMessages> = {
   en: enMessages,
   ru: ruMessages,
-} as const
+}
 
 i18n.loadAndActivate({ locale: 'en', messages: catalogs.en })
 
-export async function loadCatalog(locale: string) {
+export async function loadCatalog(locale: Locale) {
   try {
-    const messages = catalogs[locale as keyof typeof catalogs]
+    const messages = catalogs[locale]
     if (!messages) {
       throw new Error(`No catalog found for locale: ${locale}`)
     }
     i18n.loadAndActivate({ locale, messages })
   } catch (error) {
     console.error(`Failed to load catalog for locale ${locale}:`, error)
-    if (locale !== 'en') {
-      i18n.loadAndActivate({ locale: 'en', messages: catalogs.en })
-    }
+    i18n.loadAndActivate({ locale: 'en', messages: catalogs.en })
   }
 }
 

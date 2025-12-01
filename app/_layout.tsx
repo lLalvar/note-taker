@@ -16,7 +16,7 @@ import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { i18n, useI18n } from '@/lib/i18n'
 import { queryClient } from '@/lib/queryClient'
-// import Sentry from '@/lib/sentry'
+import Sentry from '@/lib/sentry'
 import { NAV_THEME } from '@/lib/theme'
 import { useAuthStore } from '@/store/authStore'
 
@@ -30,8 +30,8 @@ export {
   ErrorBoundary,
 } from 'expo-router'
 
-export default function RootLayout() {
-  // export default Sentry.wrap(function RootLayout() {
+// export default function RootLayout() {
+export default Sentry.wrap(function RootLayout() {
   const { colorScheme } = useColorScheme()
   useI18n()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -78,5 +78,4 @@ export default function RootLayout() {
       </GestureHandlerRootView>
     </SafeAreaProvider>
   )
-  // })
-}
+})
