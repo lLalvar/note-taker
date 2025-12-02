@@ -7,6 +7,7 @@ import { Text } from '@/components/ui/text'
 // Apple Sign-In - Currently disabled, keeping import for future use
 // import { useAppleSignIn } from '@/hooks/use-social-auth'
 import { cn } from '@/lib/utils'
+import { signInWithGoogle } from '@/services/social-auth-service'
 
 const SOCIAL_CONNECTION_STRATEGIES = [
   // Apple Sign-In - Currently disabled, keeping code for future use
@@ -29,11 +30,8 @@ const SOCIAL_CONNECTION_STRATEGIES = [
 
 export function SocialConnections() {
   const { colorScheme } = useColorScheme()
-  // const googleSignInMutation = useGoogleSignIn()
   const googleSignInMutation = useMutation({
-    mutationFn: () => {
-      return Promise.resolve()
-    },
+    mutationFn: signInWithGoogle,
   })
   // Apple Sign-In - Currently disabled, keeping hook for future use
   // const appleSignInMutation = useAppleSignIn()
@@ -41,6 +39,7 @@ export function SocialConnections() {
   const handleSocialAuth = async (type: 'oauth_apple' | 'oauth_google') => {
     try {
       if (type === 'oauth_google') {
+        await googleSignInMutation.mutateAsync()
       }
       // Apple Sign-In - Currently disabled
       // else if (type === 'oauth_apple') {

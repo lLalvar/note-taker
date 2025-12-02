@@ -2,7 +2,8 @@ import React, { useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Link } from 'expo-router'
+import { useMutation } from '@tanstack/react-query'
+import { Link, router } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
@@ -41,6 +42,7 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
+import { signUpWithEmail } from '@/services/auth-service'
 
 // import { useGoogleAuth } from '@/services/authService'
 
@@ -94,6 +96,17 @@ export default function SignUp() {
     formState: { isSubmitting },
   } = form
 
+  const signUpMutation = useMutation({
+    mutationFn: ({ name, email, password }: SignUpFormData) =>
+      signUpWithEmail(name, email, password),
+    onSuccess: () => {
+      router.replace('/(tabs)')
+    },
+    onError: (error: unknown) => {
+      console.error('Sign Up Error:', error)
+    },
+  })
+
   // useEffect(() => {
   //   if (response?.type === 'success') {
   //     const { id_token } = response.params
@@ -105,12 +118,7 @@ export default function SignUp() {
   // }, [response])
 
   const onSubmit = (data: SignUpFormData) => {
-    // signUpMutation.mutate({
-    //   name: data.name,
-    //   email: data.email,
-    //   password: data.password,
-    // })
-    console.log('Sign Up Data:', data)
+    signUpMutation.mutate(data)
   }
 
   function onNameSubmitEditing() {

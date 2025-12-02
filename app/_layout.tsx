@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { I18nProvider, type TransRenderProps } from '@lingui/react'
 import { ThemeProvider } from '@react-navigation/native'
@@ -6,7 +8,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useColorScheme } from 'nativewind'
-import { Text as RNText, View } from 'react-native'
+import { ActivityIndicator, Text as RNText, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -14,6 +16,7 @@ import '~/global.css'
 
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { useAuth } from '@/hooks/use-auth'
 import { i18n, useI18n } from '@/lib/i18n'
 import { queryClient } from '@/lib/query-client'
 import Sentry from '@/lib/sentry'
@@ -32,10 +35,22 @@ export {
 // export default function RootLayout() {
 export default Sentry.wrap(function RootLayout() {
   const { colorScheme } = useColorScheme()
-  const isAuthenticated = false
+  const { initializing, isAuthenticated } = useAuth()
+
   useI18n()
 
-  // Show load
+  if (initializing) {
+    return (
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <View className='flex-1 items-center justify-center bg-background'>
+            <ActivityIndicator />
+          </View>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    )
+  }
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>

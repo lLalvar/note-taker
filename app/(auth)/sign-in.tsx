@@ -39,6 +39,7 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
+import { signInWithEmail } from '@/services/auth-service'
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -71,14 +72,17 @@ export default function SignIn() {
   } = form
 
   const signInMutation = useMutation({
-    mutationFn: () => {
-      return Promise.resolve()
-    },
+    mutationFn: ({ email, password }: SignInFormData) =>
+      signInWithEmail(email, password),
     onSuccess: () => {
       router.replace('/(tabs)')
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error('Sign In Error:', error)
+      Alert.alert(
+        t`Sign in failed`,
+        t`Please check your credentials and try again.`
+      )
     },
   })
 
