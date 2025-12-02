@@ -1,9 +1,9 @@
+import { useMutation } from '@tanstack/react-query'
 import { useColorScheme } from 'nativewind'
 import { Image, Platform, View } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
-import { useGoogleSignIn } from '@/hooks/use-social-auth'
 // Apple Sign-In - Currently disabled, keeping import for future use
 // import { useAppleSignIn } from '@/hooks/use-social-auth'
 import { cn } from '@/lib/utils'
@@ -29,14 +29,18 @@ const SOCIAL_CONNECTION_STRATEGIES = [
 
 export function SocialConnections() {
   const { colorScheme } = useColorScheme()
-  const googleSignInMutation = useGoogleSignIn()
+  // const googleSignInMutation = useGoogleSignIn()
+  const googleSignInMutation = useMutation({
+    mutationFn: () => {
+      return Promise.resolve()
+    },
+  })
   // Apple Sign-In - Currently disabled, keeping hook for future use
   // const appleSignInMutation = useAppleSignIn()
 
   const handleSocialAuth = async (type: 'oauth_apple' | 'oauth_google') => {
     try {
       if (type === 'oauth_google') {
-        await googleSignInMutation.mutateAsync()
       }
       // Apple Sign-In - Currently disabled
       // else if (type === 'oauth_apple') {

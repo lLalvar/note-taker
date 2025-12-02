@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { i18n } from '@lingui/core'
 
-import { type Locale, useLanguageStore } from '@/store/languageStore'
+import { type Locale, useLanguageStore } from '@/store/language-store'
 
 import { messages as enMessages } from '../locales/en/messages'
 import { messages as ruMessages } from '../locales/ru/messages'

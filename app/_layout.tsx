@@ -15,10 +15,9 @@ import '~/global.css'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { i18n, useI18n } from '@/lib/i18n'
-import { queryClient } from '@/lib/queryClient'
+import { queryClient } from '@/lib/query-client'
 import Sentry from '@/lib/sentry'
 import { NAV_THEME } from '@/lib/theme'
-import { useAuthStore } from '@/store/authStore'
 
 // Wrapper component for Trans defaultComponent
 const TransText = ({ translation }: TransRenderProps) => {
@@ -33,15 +32,10 @@ export {
 // export default function RootLayout() {
 export default Sentry.wrap(function RootLayout() {
   const { colorScheme } = useColorScheme()
+  const isAuthenticated = false
   useI18n()
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const isLoading = useAuthStore((state) => state.isLoading)
 
-  // Show loading state while checking auth
-  if (isLoading) {
-    return null
-  }
-
+  // Show load
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>

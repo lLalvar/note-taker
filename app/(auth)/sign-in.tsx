@@ -39,7 +39,6 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
-import { AuthCredentials, AuthService } from '@/services/auth-service'
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -72,36 +71,14 @@ export default function SignIn() {
   } = form
 
   const signInMutation = useMutation({
-    mutationFn: (credentials: AuthCredentials) =>
-      AuthService.signIn(credentials),
+    mutationFn: () => {
+      return Promise.resolve()
+    },
     onSuccess: () => {
-      // Firebase auth state listener will handle the state update
       router.replace('/(tabs)')
     },
-    onError: (error: any) => {
-      let message = 'An error occurred during sign in'
-
-      switch (error.code) {
-        case 'auth/user-not-found':
-          message = 'No account found with this email address'
-          break
-        case 'auth/wrong-password':
-          message = 'Incorrect password'
-          break
-        case 'auth/invalid-email':
-          message = 'Invalid email address'
-          break
-        case 'auth/too-many-requests':
-          message = 'Too many failed attempts. Please try again later'
-          break
-        case 'auth/invalid-credential':
-          message = 'Invalid email or password'
-          break
-        default:
-          message = error.message || message
-      }
-
-      Alert.alert('Sign In Failed', message)
+    onError: (error) => {
+      console.error('Sign In Error:', error)
     },
   })
 

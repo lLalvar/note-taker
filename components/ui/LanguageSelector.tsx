@@ -15,7 +15,7 @@ import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { THEME } from '@/lib/theme'
 import { cn } from '@/lib/utils'
-import { useLanguageStore } from '@/store/languageStore'
+import { useLanguageStore } from '@/store/language-store'
 
 const LOCALES = [
   { code: 'en', label: 'EN' },
