@@ -231,7 +231,7 @@ export default function SignIn() {
                   <Button
                     className='w-full bg-primary'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting || signInMutation.isPending}
+                    loading={isSubmitting || signInMutation.isPending}
                   >
                     <Text>
                       {signInMutation.isPending ? (

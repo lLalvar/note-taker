@@ -1,9 +1,10 @@
 import * as React from 'react'
 
 import { type VariantProps, cva } from 'class-variance-authority'
-import { Pressable } from 'react-native'
+import { ActivityIndicator, Pressable } from 'react-native'
 
 import { TextClassContext } from '@/components/ui/text'
+import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
@@ -62,9 +63,34 @@ const buttonTextVariants = cva(
 )
 
 type ButtonProps = React.ComponentProps<typeof Pressable> &
-  VariantProps<typeof buttonVariants>
+  VariantProps<typeof buttonVariants> & {
+    loading?: boolean
+  }
 
-function Button({ ref, className, variant, size, ...props }: ButtonProps) {
+function Button({
+  ref,
+  className,
+  variant,
+  size,
+  loading = false,
+  ...props
+}: ButtonProps) {
+  const { disabled, children, ...restProps } = props
+  const isDisabled = disabled || loading
+
+  const { colors } = useTheme()
+
+  const spinnerColor =
+    variant === 'destructive'
+      ? colors.destructiveForeground
+      : variant === 'secondary'
+        ? colors.secondaryForeground
+        : variant === 'outline' || variant === 'ghost'
+          ? colors.accentForeground
+          : variant === 'link'
+            ? colors.primary
+            : colors.primaryForeground
+
   return (
     <TextClassContext.Provider
       value={buttonTextVariants({
@@ -75,13 +101,16 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
     >
       <Pressable
         className={cn(
-          props.disabled && 'opacity-50 web:pointer-events-none',
+          isDisabled && 'opacity-50 web:pointer-events-none',
           buttonVariants({ variant, size, className })
         )}
         ref={ref}
         role='button'
-        {...props}
-      />
+        disabled={isDisabled}
+        {...restProps}
+      >
+        {loading ? <ActivityIndicator color={spinnerColor} /> : children}
+      </Pressable>
     </TextClassContext.Provider>
   )
 }

@@ -1,11 +1,10 @@
 import { Image } from 'expo-image'
-import { Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 
 import { HelloWave } from '@/components/HelloWave'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
-import { ThemedView } from '@/components/ThemedView'
-import { Text } from '@/components/ui/text'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { Text } from '@/components/ui/text'
 
 export default function HomeScreen() {
   return (
@@ -18,18 +17,20 @@ export default function HomeScreen() {
         />
       }
     >
-      <ThemedView style={styles.titleContainer}>
+      <View style={styles.titleContainer}>
         <Text variant='h1' className='bg-red-300 dark:bg-blue-800'>
           Welcome!
         </Text>
         <ThemeToggle />
         <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
+      </View>
+      <View style={styles.stepContainer}>
         <Text variant='h3'>Step 1: Try it</Text>
         <Text variant='p'>
           Edit{' '}
-          <Text variant='p' className='font-medium'>app/(tabs)/index.tsx</Text>{' '}
+          <Text variant='p' className='font-medium'>
+            app/(tabs)/index.tsx
+          </Text>{' '}
           to see changes. Press{' '}
           <Text variant='p' className='font-medium'>
             {Platform.select({
@@ -40,21 +41,24 @@ export default function HomeScreen() {
           </Text>{' '}
           to open developer tools.
         </Text>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
+      </View>
+      <View style={styles.stepContainer}>
         <Text variant='h3'>Step 2: Explore</Text>
         <Text variant='p'>
           {`Tap the Explore tab to learn more about what's included in this starter app.`}
         </Text>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
+      </View>
+      <View style={styles.stepContainer}>
         <Text variant='h3'>Step 3: Get a fresh start</Text>
         <Text variant='p'>
           {`When you're ready, run `}
           <Text variant='p' className='font-medium'>
             npm run reset-project
           </Text>{' '}
-          to get a fresh <Text variant='p' className='font-medium'>app</Text>{' '}
+          to get a fresh{' '}
+          <Text variant='p' className='font-medium'>
+            app
+          </Text>{' '}
           directory. This will move the current Lorem ipsum dolor, sit amet
           consectetur adipisicing elit. Obcaecati, perspiciatis? Vero commodi at
           eaque quos labore saepe eos facilis eum amet aspernatur est,
@@ -67,10 +71,16 @@ export default function HomeScreen() {
           consectetur ratione explicabo quae eius voluptatibus quibusdam fuga?
           Amet, perspiciatis libero adipisci sint, at quod debitis iure iste
           repellendus in tenetur vel neque mollitia aspernatur.
-          <Text variant='p' className='font-medium'>app</Text> to{' '}
-          <Text variant='p' className='font-medium'>app-example</Text>.
+          <Text variant='p' className='font-medium'>
+            app
+          </Text>{' '}
+          to{' '}
+          <Text variant='p' className='font-medium'>
+            app-example
+          </Text>
+          .
         </Text>
-      </ThemedView>
+      </View>
     </ParallaxScrollView>
   )
 }

@@ -2,24 +2,23 @@ import React from 'react'
 
 import { Tabs } from 'expo-router'
 import { Home, Send } from 'lucide-react-native'
-import { useColorScheme } from 'nativewind'
 
 // import { Platform } from 'react-native'
 
 import { HapticTab } from '@/components/HapticTab'
 import { Icon } from '@/components/ui/icon'
 // import TabBarBackground from '@/components/ui/TabBarBackground'
-import { THEME } from '@/lib/theme'
+import { useTheme } from '@/hooks/use-theme'
 
 export default function TabLayout() {
-  const { colorScheme } = useColorScheme()
+  const { colors } = useTheme()
 
   return (
     <Tabs
       screenOptions={{
         // tabBarActiveTintColor: '#ef4444',
         // tabBarActiveTintColor: 'hsl(0, 84.2%, 60.2%)',
-        tabBarActiveTintColor: THEME[colorScheme ?? 'light'].destructive,
+        tabBarActiveTintColor: colors.destructive,
         headerShown: false,
         tabBarButton: HapticTab,
         // tabBarBackground: TabBarBackground,

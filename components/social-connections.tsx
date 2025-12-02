@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
-import { useColorScheme } from 'nativewind'
 import { Image, Platform, View } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 // Apple Sign-In - Currently disabled, keeping import for future use
 // import { useAppleSignIn } from '@/hooks/use-social-auth'
+import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 import { signInWithGoogle } from '@/services/social-auth-service'
 
@@ -29,7 +29,7 @@ const SOCIAL_CONNECTION_STRATEGIES = [
 ]
 
 export function SocialConnections() {
-  const { colorScheme } = useColorScheme()
+  const { isDark } = useTheme()
   const googleSignInMutation = useMutation({
     mutationFn: signInWithGoogle,
   })
@@ -73,7 +73,7 @@ export function SocialConnections() {
             variant='outline'
             size='sm'
             className='sm:flex-1'
-            disabled={isLoading}
+            loading={isLoading}
             onPress={() => handleSocialAuth(strategy.type)}
           >
             {isLoading ? (
@@ -86,7 +86,7 @@ export function SocialConnections() {
                 )}
                 tintColor={Platform.select({
                   native: strategy.useTint
-                    ? colorScheme === 'dark'
+                    ? isDark
                       ? 'white'
                       : 'black'
                     : undefined,

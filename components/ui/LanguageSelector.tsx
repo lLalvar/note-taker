@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 
 import {
   BottomSheetBackdrop,
@@ -7,13 +7,12 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
 import { Languages } from 'lucide-react-native'
-import { useColorScheme } from 'nativewind'
 import { Pressable } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
-import { THEME } from '@/lib/theme'
+import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 import { useLanguageStore } from '@/store/language-store'
 
@@ -24,7 +23,7 @@ const LOCALES = [
 
 export function LanguageSelector() {
   const { locale, setLocale } = useLanguageStore()
-  const { colorScheme } = useColorScheme()
+  const { colors } = useTheme()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   const handleOpenSheet = () => {
@@ -36,10 +35,7 @@ export function LanguageSelector() {
     bottomSheetModalRef.current?.dismiss()
   }
 
-  const theme = colorScheme ?? 'light'
-  const handleColor = THEME[theme].mutedForeground
-
-  const renderBackdrop = React.useCallback(
+  const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
@@ -65,8 +61,8 @@ export function LanguageSelector() {
         ref={bottomSheetModalRef}
         // snapPoints={['25%']}
         enablePanDownToClose
-        backgroundStyle={{ backgroundColor: THEME[theme].background }}
-        handleIndicatorStyle={{ backgroundColor: handleColor }}
+        backgroundStyle={{ backgroundColor: colors.background }}
+        handleIndicatorStyle={{ backgroundColor: colors.mutedForeground }}
         backdropComponent={renderBackdrop}
       >
         <BottomSheetView
