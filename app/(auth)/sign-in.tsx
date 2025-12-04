@@ -10,7 +10,6 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   TextInput,
   View,
@@ -27,16 +26,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Form,
-  FormField,
-  FormInput,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormField, FormInput } from '@/components/ui/form'
 import { Icon } from '@/components/ui/icon'
-import { Input } from '@/components/ui/input'
+// import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
 import { signInWithEmail } from '@/services/auth-service'
@@ -63,7 +55,6 @@ export default function SignIn() {
       email: '',
       password: '',
     },
-    mode: 'onChange',
   })
 
   const {
@@ -171,41 +162,20 @@ export default function SignIn() {
                     control={form.control}
                     name='password'
                     render={({ field }) => (
-                      <FormItem>
-                        <View className='flex-row items-center justify-between'>
-                          <FormLabel>
-                            <Trans>Password</Trans>
-                          </FormLabel>
-                          <Link href='/(auth)/forgot-password' asChild>
-                            <Button variant='link' size='sm'>
-                              <Text className='native:text-sm pb-2'>
-                                <Trans>Forgot your password?</Trans>
-                              </Text>
-                            </Button>
-                          </Link>
-                        </View>
-                        <View className='relative'>
-                          <Input
-                            {...field}
-                            ref={passwordInputRef}
-                            placeholder={t`Enter your password`}
-                            secureTextEntry={!showPassword}
-                            // value={field.value}
-                            // onChangeText={field.onChange}
-                            // onBlur={field.onBlur}
-                            // onFocus={onPasswordFocus}
-                            returnKeyType='send'
-                            onSubmitEditing={handleSubmit(onSubmit)}
-                            className='pr-10'
-                          />
-                          <Pressable
+                      <FormInput
+                        {...field}
+                        name='password'
+                        label={t`Password`}
+                        ref={passwordInputRef}
+                        placeholder={t`Enter your password`}
+                        secureTextEntry={!showPassword}
+                        returnKeyType='send'
+                        onSubmitEditing={handleSubmit(onSubmit)}
+                        rightIcon={
+                          <Button
+                            variant='ghost'
+                            size='icon'
                             onPress={() => setShowPassword(!showPassword)}
-                            style={{
-                              position: 'absolute',
-                              right: 12,
-                              top: '50%',
-                              transform: [{ translateY: -10 }],
-                            }}
                           >
                             {showPassword ? (
                               <Icon
@@ -220,10 +190,9 @@ export default function SignIn() {
                                 className='text-muted-foreground'
                               />
                             )}
-                          </Pressable>
-                        </View>
-                        <FormMessage />
-                      </FormItem>
+                          </Button>
+                        }
+                      />
                     )}
                   />
 

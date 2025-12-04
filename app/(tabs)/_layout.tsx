@@ -1,12 +1,12 @@
 import React from 'react'
 
 import { Tabs } from 'expo-router'
-import { Home, Send } from 'lucide-react-native'
+import { FilePlus2, Home, Send } from 'lucide-react-native'
 
 // import { Platform } from 'react-native'
 
 import { HapticTab } from '@/components/HapticTab'
-import { Icon } from '@/components/ui/icon'
+import { TabBarIcon } from '@/components/ui/TabBarIcon'
 // import TabBarBackground from '@/components/ui/TabBarBackground'
 import { useTheme } from '@/hooks/use-theme'
 
@@ -16,11 +16,16 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // tabBarActiveTintColor: '#ef4444',
-        // tabBarActiveTintColor: 'hsl(0, 84.2%, 60.2%)',
-        tabBarActiveTintColor: colors.destructive,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.mutedForeground,
         headerShown: false,
         tabBarButton: HapticTab,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 10,
+        },
         // tabBarBackground: TabBarBackground,
         // tabBarStyle: Platform.select({
         //   ios: {
@@ -35,14 +40,27 @@ export default function TabLayout() {
         name='index'
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Icon as={Home} size={28} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon icon={Home} focused={focused} />
+          ),
         }}
       />
       <Tabs.Screen
         name='explore'
         options={{
           title: 'Explore',
-          tabBarIcon: ({ color }) => <Icon as={Send} size={28} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon icon={Send} focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name='create-note'
+        options={{
+          title: 'New Note',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon icon={FilePlus2} focused={focused} />
+          ),
         }}
       />
     </Tabs>

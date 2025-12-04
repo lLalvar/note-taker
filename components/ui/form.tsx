@@ -196,13 +196,15 @@ type FormItemProps<T extends React.ComponentType<any>, U> = Override<
 > & {
   label?: string
   description?: string
+  rightIcon?: React.ReactNode
 }
 
 function FormInput({
   ref,
   label,
   description,
-  onChange,
+  rightIcon,
+  className,
   ...props
 }: FormItemProps<typeof Input, string>) {
   const inputRef = React.useRef<TextInput>(null)
@@ -239,18 +241,25 @@ function FormInput({
         </FormLabel>
       )}
 
-      <Input
-        ref={inputRef}
-        aria-labelledby={formItemNativeID}
-        aria-describedby={
-          !error
-            ? `${formDescriptionNativeID}`
-            : `${formDescriptionNativeID} ${formMessageNativeID}`
-        }
-        aria-invalid={!!error}
-        onChangeText={onChange}
-        {...props}
-      />
+      <View className={rightIcon ? 'relative' : undefined}>
+        <Input
+          ref={inputRef}
+          aria-labelledby={formItemNativeID}
+          aria-describedby={
+            !error
+              ? `${formDescriptionNativeID}`
+              : `${formDescriptionNativeID} ${formMessageNativeID}`
+          }
+          aria-invalid={!!error}
+          className={cn(rightIcon && 'pr-10', className)}
+          {...props}
+        />
+        {rightIcon && (
+          <View className='absolute right-3 top-1/2 -translate-y-1/2'>
+            {rightIcon}
+          </View>
+        )}
+      </View>
       {!!description && <FormDescription>{description}</FormDescription>}
       <FormMessage />
     </FormItem>
