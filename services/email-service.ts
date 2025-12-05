@@ -1,79 +1,57 @@
-import { getFunctions, httpsCallable } from '@react-native-firebase/functions'
+import axios from 'axios'
 
-/**
- * Email service for sending emails via Firebase Cloud Functions
- * This service calls Cloud Functions which use Resend to send emails
- */
+const CLOUDFLARE_WORKER_URL = `${process.env.EXPO_PUBLIC_CLOUDFLARE_WORKER_URL}/api/email`
 
-const functions = getFunctions()
-
-/**
- * Send password recovery email
- * @param email - User's email address
- * @param resetToken - Token/code for password reset
- * @param userName - Optional user name for personalization
- */
 export async function sendPasswordRecoveryEmail(
   email: string,
   resetToken: string,
   userName?: string
 ) {
   try {
-    const sendEmail = httpsCallable(
-      functions,
-      'sendPasswordRecoveryEmail'
-    )
-
-    const result = await sendEmail({
+    const response = await axios.post(CLOUDFLARE_WORKER_URL, {
       email,
       resetToken,
       userName,
+      type: 'password-recovery',
     })
 
     return {
       success: true,
-      data: result.data,
+      data: response.data,
     }
   } catch (error: any) {
     console.error('Error sending password recovery email:', error)
-    throw new Error(
-      error.message || 'Failed to send password recovery email'
-    )
+    const errorMessage =
+      error.response?.data?.error ||
+      error.message ||
+      'Failed to send password recovery email'
+    throw new Error(errorMessage)
   }
 }
 
-/**
- * Send security question reset email
- * @param email - User's email address
- * @param resetToken - Token/code for security question reset
- * @param userName - Optional user name for personalization
- */
 export async function sendSecurityQuestionResetEmail(
   email: string,
   resetToken: string,
   userName?: string
 ) {
   try {
-    const sendEmail = httpsCallable(
-      functions,
-      'sendSecurityQuestionResetEmail'
-    )
-
-    const result = await sendEmail({
+    const response = await axios.post(CLOUDFLARE_WORKER_URL, {
       email,
       resetToken,
       userName,
+      type: 'security-question-reset',
     })
 
     return {
       success: true,
-      data: result.data,
+      data: response.data,
     }
   } catch (error: any) {
     console.error('Error sending security question reset email:', error)
-    throw new Error(
-      error.message || 'Failed to send security question reset email'
-    )
+    const errorMessage =
+      error.response?.data?.error ||
+      error.message ||
+      'Failed to send security question reset email'
+    throw new Error(errorMessage)
   }
 }
-
