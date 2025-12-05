@@ -13,6 +13,7 @@ import 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import '~/global.css'
 
+import { DiaryLockGuard } from '@/components/diary-lock-guard'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { SignOutButton } from '@/components/ui/SignOutButton'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
@@ -42,9 +43,13 @@ export default Sentry.wrap(function RootLayout() {
     return (
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <View className='flex-1 items-center justify-center bg-background'>
-            <ActivityIndicator />
-          </View>
+          <QueryClientProvider client={queryClient}>
+            <I18nProvider i18n={i18n} defaultComponent={TransText}>
+              <View className='flex-1 items-center justify-center bg-background'>
+                <ActivityIndicator />
+              </View>
+            </I18nProvider>
+          </QueryClientProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     )
@@ -57,22 +62,24 @@ export default Sentry.wrap(function RootLayout() {
           <QueryClientProvider client={queryClient}>
             <I18nProvider i18n={i18n} defaultComponent={TransText}>
               <ThemeProvider value={navTheme}>
-                <Stack>
-                  <Stack.Protected guard={isAuthenticated}>
-                    <Stack.Screen
-                      name='(tabs)'
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name='+not-found' />
-                  </Stack.Protected>
+                <DiaryLockGuard>
+                  <Stack>
+                    <Stack.Protected guard={isAuthenticated}>
+                      <Stack.Screen
+                        name='(tabs)'
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen name='+not-found' />
+                    </Stack.Protected>
 
-                  <Stack.Protected guard={!isAuthenticated}>
-                    <Stack.Screen
-                      name='(auth)'
-                      options={{ headerShown: false }}
-                    />
-                  </Stack.Protected>
-                </Stack>
+                    <Stack.Protected guard={!isAuthenticated}>
+                      <Stack.Screen
+                        name='(auth)'
+                        options={{ headerShown: false }}
+                      />
+                    </Stack.Protected>
+                  </Stack>
+                </DiaryLockGuard>
                 <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
                   {isAuthenticated && <SignOutButton />}
                   <ThemeToggle />
