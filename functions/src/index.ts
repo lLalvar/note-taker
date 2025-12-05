@@ -1,4 +1,4 @@
-import { onCall, HttpsError } from 'firebase-functions/v2/https'
+import { HttpsError, onCall } from 'firebase-functions/v2/https'
 import { Resend } from 'resend'
 
 // Initialize Resend with API key from environment
@@ -76,7 +76,7 @@ export const sendPasswordRecoveryEmail = onCall(
 
       return {
         success: true,
-        messageId: result.id,
+        messageId: result.data?.id,
         message: 'Password recovery email sent successfully',
       }
     } catch (error) {
@@ -140,7 +140,7 @@ export const sendSecurityQuestionResetEmail = onCall(
 
       return {
         success: true,
-        messageId: result.id,
+        messageId: result.data?.id,
       }
     } catch (error) {
       console.error('Error sending email:', error)
@@ -148,4 +148,3 @@ export const sendSecurityQuestionResetEmail = onCall(
     }
   }
 )
-
