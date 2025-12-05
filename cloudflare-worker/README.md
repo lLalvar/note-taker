@@ -1,6 +1,6 @@
-# Note Taker API - Cloudflare Worker
+# DailyMood Journal API - Cloudflare Worker
 
-Backend API for the Note Taker app, built with Cloudflare Workers.
+Backend API for the DailyMood Journal app, built with Cloudflare Workers.
 
 ## 📁 Project Structure
 
