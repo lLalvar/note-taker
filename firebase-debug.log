@@ -1,0 +1,71 @@
+[debug] [2025-12-05T08:16:00.486Z] ----------------------------------------------------------------------
+[debug] [2025-12-05T08:16:00.487Z] Command:       /home/lalvar/.nvm/versions/node/v24.11.0/bin/node /home/lalvar/.nvm/versions/node/v24.11.0/bin/firebase init functions
+[debug] [2025-12-05T08:16:00.487Z] CLI Version:   14.27.0
+[debug] [2025-12-05T08:16:00.488Z] Platform:      linux
+[debug] [2025-12-05T08:16:00.488Z] Node Version:  v24.11.0
+[debug] [2025-12-05T08:16:00.488Z] Time:          Fri Dec 05 2025 12:16:00 GMT+0400 (Armenia Standard Time)
+[debug] [2025-12-05T08:16:00.488Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /var/www/note-taker
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2025-12-05T08:16:00.615Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-05T08:16:00.615Z] > authorizing via signed-in user (mnacakanyanlalvar@gmail.com)
+[debug] [2025-12-05T08:16:00.615Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:00.615Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:00.616Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/note-taker-d9c88 [none]
+[debug] [2025-12-05T08:16:01.044Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/note-taker-d9c88 200
+[debug] [2025-12-05T08:16:01.044Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/note-taker-d9c88 {"projectId":"note-taker-d9c88","projectNumber":"611802169319","displayName":"note-taker","name":"projects/note-taker-d9c88","resources":{"hostingSite":"note-taker-d9c88"},"state":"ACTIVE","etag":"1_edd9a9c5-505a-466b-9b20-8fbea15dce2a"}
+[info] i  Using project note-taker-d9c88 (note-taker) . 
+[info] 
+=== Functions Setup
+[debug] [2025-12-05T08:16:01.047Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-05T08:16:01.047Z] > authorizing via signed-in user (mnacakanyanlalvar@gmail.com)
+[debug] [2025-12-05T08:16:01.047Z] [iam] checking project note-taker-d9c88 for permissions ["firebase.projects.get"]
+[debug] [2025-12-05T08:16:01.047Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:01.047Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:01.047Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/note-taker-d9c88:testIamPermissions [none]
+[debug] [2025-12-05T08:16:01.047Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/note-taker-d9c88:testIamPermissions x-goog-quota-user=projects/note-taker-d9c88
+[debug] [2025-12-05T08:16:01.047Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/note-taker-d9c88:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-12-05T08:16:02.013Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/note-taker-d9c88:testIamPermissions 200
+[debug] [2025-12-05T08:16:02.013Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/note-taker-d9c88:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-12-05T08:16:02.013Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:02.013Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:02.013Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:02.014Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:02.014Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-12-05T08:16:02.014Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/note-taker-d9c88
+[debug] [2025-12-05T08:16:02.015Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-12-05T08:16:02.015Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/note-taker-d9c88
+[debug] [2025-12-05T08:16:03.170Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com 200
+[debug] [2025-12-05T08:16:03.170Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-12-05T08:16:03.170Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:03.170Z] Checked if tokens are valid: true, expires at: 1764925952266
+[debug] [2025-12-05T08:16:03.170Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com:enable [none]
+[debug] [2025-12-05T08:16:03.170Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com:enable x-goog-quota-user=projects/note-taker-d9c88
+[debug] [2025-12-05T08:16:03.175Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/runtimeconfig.googleapis.com 200
+[debug] [2025-12-05T08:16:03.176Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-12-05T08:16:03.778Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com:enable 200
+[debug] [2025-12-05T08:16:03.778Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/note-taker-d9c88/services/cloudfunctions.googleapis.com:enable [omitted]
+[info] 
+Detected existing codebase(s): default
+
