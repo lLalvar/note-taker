@@ -13,46 +13,259 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: app/(auth)/sign-in.tsx:292
+#: app/(auth)/sign-up.tsx:322
+msgid "Already have an account?"
+msgstr "Already have an account?"
+
+#: app/(auth)/diary-lock.tsx:430
+msgid "Back to {lockTypeLabel}"
+msgstr "Back to {lockTypeLabel}"
+
+#: app/(auth)/reset-password.tsx:270
+msgid "Confirm New Password"
+msgstr "Confirm New Password"
+
+#: app/(auth)/sign-up.tsx:263
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: app/(auth)/reset-password.tsx:276
+msgid "Confirm your new password"
+msgstr "Confirm your new password"
+
+#: app/(auth)/sign-up.tsx:269
+msgid "Confirm your password"
+msgstr "Confirm your password"
+
+#: app/(auth)/sign-in.tsx:209
 msgid "Continue"
 msgstr "Continue"
 
-#: app/(auth)/sign-in.tsx:301
+#: app/(auth)/sign-up.tsx:221
+msgid "Create a password"
+msgstr "Create a password"
+
+#: app/(auth)/sign-up.tsx:313
+msgid "Create Account"
+msgstr "Create Account"
+
+#: app/(tabs)/create-note.tsx:92
+#: app/(tabs)/create-note.tsx:129
+msgid "Create Note"
+msgstr "Create Note"
+
+#: app/(auth)/sign-up.tsx:160
+msgid "Create your account"
+msgstr "Create your account"
+
+#: app/(tabs)/create-note.tsx:127
+msgid "Creating..."
+msgstr "Creating..."
+
+#: app/(auth)/sign-in.tsx:219
 msgid "Don't have an account?"
 msgstr "Don't have an account?"
 
-#: app/(auth)/sign-in.tsx:208
+#: app/(auth)/forgot-password.tsx:115
+#: app/(auth)/sign-in.tsx:144
+#: app/(auth)/sign-up.tsx:196
 msgid "Email"
 msgstr "Email"
 
-#: app/(auth)/sign-in.tsx:246
+#: app/(auth)/diary-lock.tsx:224
+msgid "Enter your {lockTypeLabel} to access your diary"
+msgstr "Enter your {lockTypeLabel} to access your diary"
+
+#: app/(auth)/diary-lock.tsx:397
+msgid "Enter your answer"
+msgstr "Enter your answer"
+
+#: app/(auth)/forgot-password.tsx:98
+msgid "Enter your email address and we'll send you a link to reset your password."
+msgstr "Enter your email address and we'll send you a link to reset your password."
+
+#: app/(auth)/sign-up.tsx:178
+msgid "Enter your full name"
+msgstr "Enter your full name"
+
+#: app/(auth)/reset-password.tsx:227
+msgid "Enter your new password"
+msgstr "Enter your new password"
+
+#: app/(auth)/diary-lock.tsx:243
+#: app/(auth)/sign-in.tsx:170
 msgid "Enter your password"
 msgstr "Enter your password"
 
-#: app/(auth)/sign-in.tsx:237
-msgid "Forgot your password?"
-msgstr "Forgot your password?"
+#: app/(auth)/diary-lock.tsx:307
+msgid "Enter your PIN"
+msgstr "Enter your PIN"
 
-#: app/(auth)/sign-in.tsx:209
+#: app/(auth)/diary-lock.tsx:186
+msgid "Error"
+msgstr "Error"
+
+#: app/(auth)/diary-lock.tsx:373
+msgid "Forgot {lockTypeLabel}?"
+msgstr "Forgot {lockTypeLabel}?"
+
+#: app/(auth)/sign-up.tsx:177
+msgid "Full Name"
+msgstr "Full Name"
+
+#: app/(auth)/diary-lock.tsx:147
+msgid "Invalid {lockTypeLabel}. Please try again."
+msgstr "Invalid {lockTypeLabel}. Please try again."
+
+#: app/(auth)/diary-lock.tsx:174
+msgid "Invalid security answer. Please try again."
+msgstr "Invalid security answer. Please try again."
+
+#: app/(auth)/forgot-password.tsx:116
+#: app/(auth)/sign-in.tsx:145
+#: app/(auth)/sign-up.tsx:197
 msgid "m@example.com"
 msgstr "m@example.com"
 
-#: app/(auth)/sign-in.tsx:316
+#: app/(auth)/reset-password.tsx:330
+msgid "Make sure your new password is secure and different from your previous one."
+msgstr "Make sure your new password is secure and different from your previous one."
+
+#: app/(auth)/reset-password.tsx:221
+msgid "New Password"
+msgstr "New Password"
+
+#: app/(tabs)/create-note.tsx:107
+msgid "Note"
+msgstr "Note"
+
+#: app/(auth)/diary-lock.tsx:344
+#: app/(auth)/sign-in.tsx:234
+#: app/(auth)/sign-up.tsx:337
 msgid "or"
 msgstr "or"
 
-#: app/(auth)/sign-in.tsx:232
+#: app/(auth)/diary-lock.tsx:241
+#: app/(auth)/sign-in.tsx:168
+#: app/(auth)/sign-up.tsx:215
 msgid "Password"
 msgstr "Password"
 
-#: app/(auth)/sign-in.tsx:137
+#: app/(auth)/diary-lock.tsx:305
+msgid "PIN"
+msgstr "PIN"
+
+#: app/(auth)/sign-in.tsx:75
+msgid "Please check your credentials and try again."
+msgstr "Please check your credentials and try again."
+
+#: app/(auth)/reset-password.tsx:208
+msgid "Please enter your new password below."
+msgstr "Please enter your new password below."
+
+#: app/(auth)/diary-lock.tsx:186
+msgid "Please enter your security answer"
+msgstr "Please enter your security answer"
+
+#: app/(auth)/forgot-password.tsx:143
+msgid "Remember your password?"
+msgstr "Remember your password?"
+
+#: app/(auth)/forgot-password.tsx:94
+msgid "Reset Password"
+msgstr "Reset Password"
+
+#: app/(auth)/diary-lock.tsx:382
+msgid "Security Question"
+msgstr "Security Question"
+
+#: app/(auth)/forgot-password.tsx:134
+msgid "Send Reset Email"
+msgstr "Send Reset Email"
+
+#: app/(auth)/reset-password.tsx:205
+msgid "Set New Password"
+msgstr "Set New Password"
+
+#: app/(auth)/forgot-password.tsx:148
+#: app/(auth)/sign-up.tsx:327
+msgid "Sign in"
+msgstr "Sign in"
+
+#: app/(auth)/sign-in.tsx:74
+msgid "Sign in failed"
+msgstr "Sign in failed"
+
+#: app/(auth)/sign-in.tsx:127
 msgid "Sign in to your app"
 msgstr "Sign in to your app"
 
-#: app/(auth)/sign-in.tsx:306
+#: app/(auth)/sign-in.tsx:224
 msgid "Sign up"
 msgstr "Sign up"
 
-#: app/(auth)/sign-in.tsx:140
+#: app/(auth)/sign-up.tsx:163
+msgid "Sign up to get started"
+msgstr "Sign up to get started"
+
+#: app/(auth)/sign-in.tsx:207
+msgid "Signing in..."
+msgstr "Signing in..."
+
+#: app/(tabs)/create-note.tsx:95
+msgid "Start by typing your note below."
+msgstr "Start by typing your note below."
+
+#: app/(auth)/diary-lock.tsx:288
+#: app/(auth)/diary-lock.tsx:330
+msgid "Unlock"
+msgstr "Unlock"
+
+#: app/(auth)/diary-lock.tsx:146
+msgid "Unlock failed"
+msgstr "Unlock failed"
+
+#: app/(auth)/diary-lock.tsx:221
+msgid "Unlock Your Diary"
+msgstr "Unlock Your Diary"
+
+#: app/(auth)/diary-lock.tsx:286
+#: app/(auth)/diary-lock.tsx:328
+msgid "Unlocking..."
+msgstr "Unlocking..."
+
+#: app/(auth)/reset-password.tsx:321
+msgid "Update Password"
+msgstr "Update Password"
+
+#: app/(auth)/diary-lock.tsx:359
+msgid "Use Biometric"
+msgstr "Use Biometric"
+
+#: app/(auth)/diary-lock.tsx:173
+msgid "Verification failed"
+msgstr "Verification failed"
+
+#: app/(auth)/diary-lock.tsx:416
+msgid "Verify Answer"
+msgstr "Verify Answer"
+
+#: app/(auth)/reset-password.tsx:171
+msgid "Verifying reset link..."
+msgstr "Verifying reset link..."
+
+#: app/(auth)/diary-lock.tsx:414
+msgid "Verifying..."
+msgstr "Verifying..."
+
+#: app/(auth)/sign-in.tsx:130
 msgid "Welcome back! Please sign in to continue"
 msgstr "Welcome back! Please sign in to continue"
+
+#: app/(tabs)/create-note.tsx:111
+msgid "Write your note here..."
+msgstr "Write your note here..."
+
+#: app/(auth)/diary-lock.tsx:391
+msgid "Your Answer"
+msgstr "Your Answer"
