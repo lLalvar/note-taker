@@ -66,6 +66,12 @@ export default function TabsLayout() {
               </View>
             )
           },
+          tabBarStyle: {
+            height: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            borderTopWidth: 0,
+          }, // Hide tab bar on create screen
         }}
       />
       <Tabs.Screen
@@ -75,6 +81,18 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon icon={User} focused={focused} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name='[id]/edit'
+        options={{
+          href: null, // Hide from tab bar
+          tabBarStyle: {
+            height: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            borderTopWidth: 0,
+          }, // Hide tab bar on edit screen
         }}
       />
     </Tabs>

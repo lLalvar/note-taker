@@ -67,7 +67,7 @@ export function Notes({ entries }: NotesProps) {
               key={entry.id}
               onPress={() => {
                 router.push({
-                  pathname: '/(app)/[id]/edit',
+                  pathname: '/(app)/(tabs)/[id]/edit',
                   params: { id: entry.id },
                 })
               }}

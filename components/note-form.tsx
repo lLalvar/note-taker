@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
   Alert,
@@ -33,6 +34,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { Textarea } from '@/components/ui/textarea'
+import { useTheme } from '@/hooks/use-theme'
 import { createNote, getNote, updateNote } from '@/services/notes'
 
 const noteSchema = z.object({
@@ -48,6 +50,7 @@ interface NoteFormProps {
 
 export function NoteForm({ noteId }: NoteFormProps) {
   const { t } = useLingui()
+  const { colors } = useTheme()
   const queryClient = useQueryClient()
   const isEditMode = !!noteId
 
@@ -126,6 +129,41 @@ export function NoteForm({ noteId }: NoteFormProps) {
 
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
+      {/* Header with Back and Save buttons */}
+      <View className='flex-row items-center justify-between border-b border-border bg-background px-4 py-3'>
+        <Button
+          variant='ghost'
+          size='icon'
+          onPress={() => router.back()}
+          disabled={isLoading}
+        >
+          <ArrowLeft
+            size={24}
+            color={isLoading ? colors.mutedForeground : colors.foreground}
+          />
+        </Button>
+        <Button
+          variant='ghost'
+          onPress={handleSubmit(onSubmit)}
+          disabled={isLoading || isLoadingNote}
+          loading={isSubmitting || noteMutation.isPending}
+        >
+          <Text className='text-base font-medium'>
+            {isLoading ? (
+              isEditMode ? (
+                <Trans>Saving...</Trans>
+              ) : (
+                <Trans>Creating...</Trans>
+              )
+            ) : isEditMode ? (
+              <Trans>Save</Trans>
+            ) : (
+              <Trans>Create</Trans>
+            )}
+          </Text>
+        </Button>
+      </View>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className='flex-1'
@@ -135,8 +173,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
           className='flex-1 gap-8 px-4'
           contentContainerStyle={{
             flexGrow: 1,
-            paddingVertical: 32,
-            justifyContent: 'center',
+            paddingVertical: 24,
           }}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
@@ -211,27 +248,6 @@ export function NoteForm({ noteId }: NoteFormProps) {
                       </FormItem>
                     )}
                   />
-
-                  <Button
-                    className='w-full'
-                    onPress={handleSubmit(onSubmit)}
-                    loading={isSubmitting || isLoading}
-                    disabled={isLoadingNote}
-                  >
-                    <Text>
-                      {isLoading ? (
-                        isEditMode ? (
-                          <Trans>Saving...</Trans>
-                        ) : (
-                          <Trans>Creating...</Trans>
-                        )
-                      ) : isEditMode ? (
-                        <Trans>Save Note</Trans>
-                      ) : (
-                        <Trans>Create Note</Trans>
-                      )}
-                    </Text>
-                  </Button>
                 </View>
               </Form>
             </CardContent>

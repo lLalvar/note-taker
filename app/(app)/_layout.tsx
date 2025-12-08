@@ -10,12 +10,6 @@ export default function AppLayout() {
       }}
     >
       <Stack.Screen name='(tabs)' />
-      <Stack.Screen
-        name='[id]/edit'
-        options={{
-          presentation: 'modal',
-        }}
-      />
     </Stack>
   )
 }
