@@ -38,7 +38,7 @@ export function DiaryLockGuard({ children }: { children: React.ReactNode }) {
     }
     // If not locked and on lock screen, navigate to tabs
     else if (!isLocked && isOnLockScreen) {
-      router.replace('/(tabs)')
+      router.replace('/(app)')
     }
   }, [isLocked, hasLock, segments, router, isAuthenticated])
 

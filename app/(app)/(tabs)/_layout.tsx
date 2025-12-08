@@ -8,7 +8,7 @@ import { HapticTab } from '@/components/HapticTab'
 import { TabBarIcon } from '@/components/ui/TabBarIcon'
 import { useTheme } from '@/hooks/use-theme'
 
-export default function TabLayout() {
+export default function TabsLayout() {
   const { colors } = useTheme()
 
   return (
@@ -68,12 +68,6 @@ export default function TabLayout() {
           },
         }}
       />
-      {/* <Tabs.Screen
-        name='[id]'
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      /> */}
       <Tabs.Screen
         name='explore'
         options={{

@@ -66,7 +66,7 @@ export default Sentry.wrap(function RootLayout() {
                   <Stack>
                     <Stack.Protected guard={isAuthenticated}>
                       <Stack.Screen
-                        name='(tabs)'
+                        name='(app)'
                         options={{ headerShown: false }}
                       />
                       <Stack.Screen name='+not-found' />

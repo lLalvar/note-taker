@@ -66,7 +66,10 @@ export function Notes({ entries }: NotesProps) {
             <Pressable
               key={entry.id}
               onPress={() => {
-                router.push(`/(tabs)/${entry.id}/edit`)
+                router.push({
+                  pathname: '/(app)/[id]/edit',
+                  params: { id: entry.id },
+                })
               }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.7 : 1,

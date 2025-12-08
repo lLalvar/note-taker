@@ -100,7 +100,7 @@ export default function SignUp() {
     mutationFn: ({ name, email, password }: SignUpFormData) =>
       signUpWithEmail(name, email, password),
     onSuccess: () => {
-      router.replace('/(tabs)')
+      router.replace('/(app)')
     },
     onError: (error: unknown) => {
       console.error('Sign Up Error:', error)
