@@ -21,6 +21,30 @@ msgstr "Already have an account?"
 msgid "Back to {lockTypeLabel}"
 msgstr "Back to {lockTypeLabel}"
 
+#: components/side-drawer.tsx:254
+msgid "Backup & Restore"
+msgstr "Backup & Restore"
+
+#: components/side-drawer.tsx:322
+msgid "CheckIt Task 1"
+msgstr "CheckIt Task 1"
+
+#: components/side-drawer.tsx:330
+msgid "CheckIt Task 2"
+msgstr "CheckIt Task 2"
+
+#: components/side-drawer.tsx:338
+msgid "CheckIt Task 3"
+msgstr "CheckIt Task 3"
+
+#: components/side-drawer.tsx:346
+msgid "CheckIt Task 4"
+msgstr "CheckIt Task 4"
+
+#: components/side-drawer.tsx:354
+msgid "CheckIt Task 5"
+msgstr "CheckIt Task 5"
+
 #: app/(auth)/reset-password.tsx:270
 msgid "Confirm New Password"
 msgstr "Confirm New Password"
@@ -62,9 +86,17 @@ msgstr "Create your account"
 msgid "Creating..."
 msgstr "Creating..."
 
+#: components/side-drawer.tsx:245
+msgid "Diary Lock"
+msgstr "Diary Lock"
+
 #: app/(auth)/sign-in.tsx:219
 msgid "Don't have an account?"
 msgstr "Don't have an account?"
+
+#: components/side-drawer.tsx:272
+msgid "Donate"
+msgstr "Donate"
 
 #: app/(auth)/forgot-password.tsx:115
 #: app/(auth)/sign-in.tsx:144
@@ -105,6 +137,14 @@ msgstr "Enter your PIN"
 msgid "Error"
 msgstr "Error"
 
+#: components/side-drawer.tsx:263
+msgid "Export & Import"
+msgstr "Export & Import"
+
+#: components/side-drawer.tsx:288
+msgid "Follow Us"
+msgstr "Follow Us"
+
 #: app/(auth)/diary-lock.tsx:373
 msgid "Forgot {lockTypeLabel}?"
 msgstr "Forgot {lockTypeLabel}?"
@@ -112,6 +152,10 @@ msgstr "Forgot {lockTypeLabel}?"
 #: app/(auth)/sign-up.tsx:177
 msgid "Full Name"
 msgstr "Full Name"
+
+#: components/side-drawer.tsx:304
+msgid "Help Center"
+msgstr "Help Center"
 
 #: app/(auth)/diary-lock.tsx:147
 msgid "Invalid {lockTypeLabel}. Please try again."
@@ -130,6 +174,14 @@ msgstr "m@example.com"
 #: app/(auth)/reset-password.tsx:330
 msgid "Make sure your new password is secure and different from your previous one."
 msgstr "Make sure your new password is secure and different from your previous one."
+
+#: components/side-drawer.tsx:296
+msgid "More Apps (AD)"
+msgstr "More Apps (AD)"
+
+#: components/side-drawer.tsx:446
+msgid "MyDiary"
+msgstr "MyDiary"
 
 #: app/(auth)/reset-password.tsx:221
 msgid "New Password"
@@ -187,6 +239,14 @@ msgstr "Send Reset Email"
 msgid "Set New Password"
 msgstr "Set New Password"
 
+#: components/side-drawer.tsx:313
+msgid "Settings"
+msgstr "Settings"
+
+#: components/side-drawer.tsx:280
+msgid "Share App"
+msgstr "Share App"
+
 #: app/(auth)/forgot-password.tsx:148
 #: app/(auth)/sign-up.tsx:327
 msgid "Sign in"
@@ -216,6 +276,14 @@ msgstr "Signing in..."
 msgid "Start by typing your note below."
 msgstr "Start by typing your note below."
 
+#: components/side-drawer.tsx:236
+msgid "Tags"
+msgstr "Tags"
+
+#: components/side-drawer.tsx:228
+msgid "Theme"
+msgstr "Theme"
+
 #: app/(auth)/diary-lock.tsx:288
 #: app/(auth)/diary-lock.tsx:330
 msgid "Unlock"
@@ -237,6 +305,10 @@ msgstr "Unlocking..."
 #: app/(auth)/reset-password.tsx:321
 msgid "Update Password"
 msgstr "Update Password"
+
+#: components/side-drawer.tsx:218
+msgid "Upgrade to PRO"
+msgstr "Upgrade to PRO"
 
 #: app/(auth)/diary-lock.tsx:359
 msgid "Use Biometric"

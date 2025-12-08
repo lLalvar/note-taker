@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 
+import { Trans, useLingui } from '@lingui/react/macro'
 import { useRouter } from 'expo-router'
 import {
   BookOpen,
@@ -54,6 +55,7 @@ interface SideDrawerProps {
 }
 
 export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
+  const { t } = useLingui()
   const { colors } = useTheme()
   const insets = useSafeAreaInsets()
   const router = useRouter()
@@ -213,7 +215,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
   const menuItems: MenuItem[] = [
     {
       id: 'upgrade',
-      label: 'Upgrade to PRO',
+      label: t`Upgrade to PRO`,
       icon: Crown,
       isPro: true,
       onPress: () => {
@@ -223,7 +225,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'theme',
-      label: 'Theme',
+      label: t`Theme`,
       icon: Palette,
       onPress: () => {
         // Theme toggle is handled globally, just close drawer
@@ -231,7 +233,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'tags',
-      label: 'Tags',
+      label: t`Tags`,
       icon: Tag,
       onPress: () => {
         // TODO: Navigate to tags screen
@@ -240,7 +242,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'diary-lock',
-      label: 'Diary Lock',
+      label: t`Diary Lock`,
       icon: Lock,
       onPress: () => {
         // Navigate to diary lock settings
@@ -248,26 +250,8 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       },
     },
     {
-      id: 'backup',
-      label: 'Backup & Restore',
-      icon: RefreshCw,
-      onPress: () => {
-        // TODO: Navigate to backup screen
-        // router.push('/(tabs)/backup')
-      },
-    },
-    {
-      id: 'export',
-      label: 'Export & Import',
-      icon: Upload,
-      onPress: () => {
-        // TODO: Navigate to export screen
-        // router.push('/(tabs)/export')
-      },
-    },
-    {
       id: 'donate',
-      label: 'Donate',
+      label: t`Donate`,
       icon: Heart,
       onPress: () => {
         // TODO: Open donate modal or link
@@ -275,31 +259,15 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'share',
-      label: 'Share App',
+      label: t`Share App`,
       icon: Share2,
       onPress: () => {
         // TODO: Implement share functionality
       },
     },
     {
-      id: 'follow',
-      label: 'Follow Us',
-      icon: Facebook,
-      onPress: () => {
-        // TODO: Open social media link
-      },
-    },
-    {
-      id: 'more-apps',
-      label: 'More Apps (AD)',
-      icon: Grid3x3,
-      onPress: () => {
-        // TODO: Open app store or more apps screen
-      },
-    },
-    {
       id: 'help',
-      label: 'Help Center',
+      label: t`Help Center`,
       icon: HelpCircle,
       onPress: () => {
         // TODO: Navigate to help screen
@@ -308,7 +276,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: t`Settings`,
       icon: Settings,
       onPress: () => {
         // TODO: Navigate to settings screen
@@ -317,7 +285,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'checkit-task-1',
-      label: 'CheckIt Task 1',
+      label: t`CheckIt Task 1`,
       icon: Tag,
       onPress: () => {
         // TODO: Handle CheckIt Task 1
@@ -325,7 +293,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'checkit-task-2',
-      label: 'CheckIt Task 2',
+      label: t`CheckIt Task 2`,
       icon: Tag,
       onPress: () => {
         // TODO: Handle CheckIt Task 2
@@ -333,7 +301,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'checkit-task-3',
-      label: 'CheckIt Task 3',
+      label: t`CheckIt Task 3`,
       icon: Tag,
       onPress: () => {
         // TODO: Handle CheckIt Task 3
@@ -341,7 +309,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'checkit-task-4',
-      label: 'CheckIt Task 4',
+      label: t`CheckIt Task 4`,
       icon: Tag,
       onPress: () => {
         // TODO: Handle CheckIt Task 4
@@ -349,7 +317,31 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     },
     {
       id: 'checkit-task-5',
-      label: 'CheckIt Task 5',
+      label: t`CheckIt Task 5`,
+      icon: Tag,
+      onPress: () => {
+        // TODO: Handle CheckIt Task 5
+      },
+    },
+    {
+      id: 'checkit-task-6',
+      label: t`CheckIt Task 6`,
+      icon: Tag,
+      onPress: () => {
+        // TODO: Handle CheckIt Task 5
+      },
+    },
+    {
+      id: 'checkit-task-7',
+      label: t`CheckIt Task 7`,
+      icon: Tag,
+      onPress: () => {
+        // TODO: Handle CheckIt Task 5
+      },
+    },
+    {
+      id: 'checkit-task-8',
+      label: t`CheckIt Task 8`,
       icon: Tag,
       onPress: () => {
         // TODO: Handle CheckIt Task 5
@@ -441,7 +433,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         color: colors.foreground,
                       }}
                     >
-                      MyDiary
+                      <Trans>MyDiary</Trans>
                     </Text>
                   </View>
                 </View>
