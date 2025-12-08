@@ -5,23 +5,18 @@ import { useRouter } from 'expo-router'
 import {
   BookOpen,
   Crown,
-  Facebook,
-  Grid3x3,
   Heart,
   HelpCircle,
   Lock,
   Palette,
-  RefreshCw,
   Settings,
   Share2,
   Tag,
-  Upload,
 } from 'lucide-react-native'
 import {
   Modal,
   Pressable,
   ScrollView,
-  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native'
@@ -35,8 +30,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
+import { cn } from '@/lib/utils'
 
 const DRAWER_WIDTH = 280
 const BACKDROP_OPACITY = 0.5
@@ -451,19 +448,15 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                 {menuItems.map((item) => {
                   const Icon = item.icon
                   return (
-                    <TouchableOpacity
+                    <Button
                       key={item.id}
+                      variant='ghost'
                       onPress={() => {
                         item.onPress?.()
                         // Close drawer after action (navigation will happen via router)
                         onClose()
                       }}
-                      className='flex-row items-center gap-4 rounded-lg px-3 py-3.5 active:opacity-70'
-                      style={{
-                        backgroundColor: item.isPro
-                          ? colors.accent
-                          : 'transparent',
-                      }}
+                      className={cn(item.isPro ? 'bg-accent' : undefined)}
                     >
                       <Icon
                         size={22}
@@ -480,7 +473,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                       >
                         {item.label}
                       </Text>
-                    </TouchableOpacity>
+                    </Button>
                   )
                 })}
               </ScrollView>

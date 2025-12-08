@@ -3,7 +3,7 @@ import { Alert } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
-import { signOutUser } from '@/services/auth-service'
+import { signOutUser } from '@/services/auth'
 
 export function SignOutButton() {
   const handleSignOut = async () => {

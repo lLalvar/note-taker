@@ -42,7 +42,7 @@ import {
   verifyPassword,
   verifyPin,
   verifySecurityAnswer,
-} from '@/services/diary-lock-service'
+} from '@/services/diary-lock'
 import { useDiaryLockStore } from '@/store/diary-lock-store'
 
 export default function DiaryLock() {

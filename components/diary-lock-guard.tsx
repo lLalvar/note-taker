@@ -4,7 +4,7 @@ import { useRouter, useSegments } from 'expo-router'
 import { AppState, type AppStateStatus } from 'react-native'
 
 import { useAuth } from '@/hooks/use-auth'
-import { hasLockEnabled } from '@/services/diary-lock-service'
+import { hasLockEnabled } from '@/services/diary-lock'
 import { useDiaryLockStore } from '@/store/diary-lock-store'
 
 export function DiaryLockGuard({ children }: { children: React.ReactNode }) {

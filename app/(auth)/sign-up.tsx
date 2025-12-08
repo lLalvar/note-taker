@@ -42,7 +42,7 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
-import { signUpWithEmail } from '@/services/auth-service'
+import { signUpWithEmail } from '@/services/auth'
 
 // import { useGoogleAuth } from '@/services/authService'
 

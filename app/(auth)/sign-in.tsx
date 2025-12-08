@@ -31,7 +31,7 @@ import { Icon } from '@/components/ui/icon'
 // import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
-import { signInWithEmail } from '@/services/auth-service'
+import { signInWithEmail } from '@/services/auth'
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),

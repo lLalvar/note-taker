@@ -7,7 +7,7 @@ import { Text } from '@/components/ui/text'
 // import { useAppleSignIn } from '@/hooks/use-social-auth'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
-import { signInWithGoogle } from '@/services/social-auth-service'
+import { signInWithGoogle } from '@/services/social-auth'
 
 const SOCIAL_CONNECTION_STRATEGIES = [
   // Apple Sign-In - Currently disabled, keeping code for future use

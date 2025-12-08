@@ -39,7 +39,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name='create-note'
+        name='create'
         options={{
           title: 'New Note',
           tabBarIcon: ({ color, focused }) => {
@@ -68,6 +68,12 @@ export default function TabLayout() {
           },
         }}
       />
+      {/* <Tabs.Screen
+        name='[id]'
+        options={{
+          href: null, // Hide from tab bar
+        }}
+      /> */}
       <Tabs.Screen
         name='explore'
         options={{
