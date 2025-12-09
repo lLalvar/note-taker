@@ -12,7 +12,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.lalvar.notetaker",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "10100"
+      "buildNumber": "10100",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +33,11 @@
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
-      "googleClientIdWeb": "611802169319-3reqf7lhaaep2fcc35olk7c37imah0sp.apps.googleusercontent.com"
+      "googleClientIdWeb": "611802169319-3reqf7lhaaep2fcc35olk7c37imah0sp.apps.googleusercontent.com",
+      "router": {},
+      "eas": {
+        "projectId": "c1c758cf-c13c-4d77-883f-1d56c606f935"
+      }
     },
     "plugins": [
       "expo-router",
