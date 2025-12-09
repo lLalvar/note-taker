@@ -8,6 +8,7 @@ import {
   Heart,
   HelpCircle,
   Lock,
+  type LucideIcon,
   Palette,
   Settings,
   Share2,
@@ -31,6 +32,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
@@ -41,7 +43,7 @@ const BACKDROP_OPACITY = 0.5
 interface MenuItem {
   id: string
   label: string
-  icon: React.ComponentType<{ size?: number; color?: string }>
+  icon: LucideIcon
   onPress?: () => void
   isPro?: boolean
 }
@@ -420,7 +422,11 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                       backgroundColor: colors.muted,
                     }}
                   >
-                    <BookOpen size={28} color={colors.foreground} />
+                    <Icon
+                      as={BookOpen}
+                      size={28}
+                      className={cn('text-foreground')}
+                    />
                   </View>
                   {/* App Name */}
                   <View>
@@ -446,7 +452,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                 showsVerticalScrollIndicator={false}
               >
                 {menuItems.map((item) => {
-                  const Icon = item.icon
+                  const IconComponent = item.icon
                   return (
                     <Button
                       key={item.id}
@@ -459,8 +465,11 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                       className={cn(item.isPro ? 'bg-accent' : undefined)}
                     >
                       <Icon
+                        as={IconComponent}
                         size={22}
-                        color={item.isPro ? colors.primary : colors.foreground}
+                        className={cn(
+                          item.isPro ? 'text-primary' : 'text-foreground'
+                        )}
                       />
                       <Text
                         className='flex-1 text-base'

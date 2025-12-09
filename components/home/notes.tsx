@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { router } from 'expo-router'
-import { Calendar } from 'lucide-react-native'
+import { Calendar, NotebookPen } from 'lucide-react-native'
 import { Pressable, View } from 'react-native'
 
 import { Card, CardContent } from '@/components/ui/card'
@@ -10,6 +10,7 @@ import { useTheme } from '@/hooks/use-theme'
 import dayjs from '@/lib/dayjs'
 import type { Note } from '@/types'
 
+import { Icon } from '../ui/icon'
 import { EmptyNotesState } from './empty-notes-state'
 
 interface NotesProps {
@@ -127,7 +128,11 @@ export function Notes({ entries }: NotesProps) {
 
                     {/* Emoji */}
                     <View className='items-center justify-center'>
-                      <Text className='text-2xl'>📝</Text>
+                      <Icon
+                        as={NotebookPen}
+                        size={28}
+                        className='text-primary'
+                      />
                     </View>
                   </View>
                 </CardContent>

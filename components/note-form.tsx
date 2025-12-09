@@ -7,6 +7,7 @@ import { router } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -54,8 +55,12 @@ export function NoteForm({ noteId }: NoteFormProps) {
   const queryClient = useQueryClient()
   const isEditMode = !!noteId
 
-  // Fetch note data if editing
-  const { data: noteData, isLoading: isLoadingNote } = useQuery({
+  const {
+    data: noteData,
+    isLoading: isLoadingNote,
+    isFetching: isFetchingNote,
+    isError: isNoteError,
+  } = useQuery({
     queryKey: ['note', noteId],
     queryFn: () => getNote(noteId!),
     enabled: isEditMode,
@@ -69,31 +74,27 @@ export function NoteForm({ noteId }: NoteFormProps) {
     },
   })
 
-  // Reset form when screen comes into focus in create mode
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (!isEditMode) {
-  //       form.reset({ title: '', description: '' })
-  //     }
-  //   }, [isEditMode, form])
-  // )
-
-  // Populate form when note data loads (edit mode)
   useEffect(() => {
-    if (noteData && isEditMode) {
+    if (isNoteError && isEditMode) {
+      Alert.alert('Error', 'Failed to load note', [
+        {
+          text: 'OK',
+          onPress: () => router.back(),
+        },
+      ])
+    }
+  }, [isNoteError, isEditMode])
+
+  useEffect(() => {
+    if (isEditMode && noteData && !isFetchingNote) {
       form.reset({
         title: noteData.title || '',
         description: noteData.description || '',
       })
     }
-  }, [noteData, isEditMode, form])
+  }, [isEditMode, noteData, isFetchingNote, form])
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form
-
-  const noteMutation = useMutation({
+  const mutation = useMutation({
     mutationFn: async (data: NoteFormData) => {
       if (isEditMode) {
         if (!noteId) throw new Error('Note ID is required for update')
@@ -106,7 +107,9 @@ export function NoteForm({ noteId }: NoteFormProps) {
       if (isEditMode && noteId) {
         queryClient.invalidateQueries({ queryKey: ['note', noteId] })
       }
-      // form.reset({ title: '', description: '' })
+      if (!isEditMode) {
+        form.reset({ title: '', description: '' })
+      }
       router.back()
     },
     onError: (error: unknown) => {
@@ -121,11 +124,11 @@ export function NoteForm({ noteId }: NoteFormProps) {
     },
   })
 
-  const onSubmit = (data: NoteFormData) => {
-    noteMutation.mutate(data)
+  const handleSubmit = (values: NoteFormData) => {
+    mutation.mutate(values)
   }
 
-  const isLoading = isLoadingNote || noteMutation.isPending
+  const isLoading = isLoadingNote || mutation.isPending
 
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
@@ -144,9 +147,9 @@ export function NoteForm({ noteId }: NoteFormProps) {
         </Button>
         <Button
           variant='ghost'
-          onPress={handleSubmit(onSubmit)}
+          onPress={form.handleSubmit(handleSubmit)}
           disabled={isLoading || isLoadingNote}
-          loading={isSubmitting || noteMutation.isPending}
+          loading={mutation.isPending}
         >
           <Text className='text-base font-medium'>
             {isLoading ? (
@@ -203,53 +206,64 @@ export function NoteForm({ noteId }: NoteFormProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className='gap-6'>
-              <Form {...form}>
-                <View className='gap-6'>
-                  <FormField
-                    control={form.control}
-                    name='title'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          <Trans>Title</Trans>
-                          <Text className='text-muted-foreground'>
-                            {' '}
-                            (Optional)
-                          </Text>
-                        </FormLabel>
-                        <Input
-                          {...field}
-                          placeholder={t`Enter note title...`}
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name='description'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          <Trans>Description</Trans>
-                          <Text className='text-muted-foreground'>
-                            {' '}
-                            (Optional)
-                          </Text>
-                        </FormLabel>
-                        <Textarea
-                          {...field}
-                          placeholder={t`Write your note description here...`}
-                          numberOfLines={8}
-                          textAlignVertical='top'
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              {isLoadingNote && isEditMode ? (
+                <View className='items-center justify-center py-12'>
+                  <ActivityIndicator size='large' color={colors.primary} />
+                  <Text className='mt-4 text-muted-foreground'>
+                    <Trans>Loading note...</Trans>
+                  </Text>
                 </View>
-              </Form>
+              ) : (
+                <Form {...form}>
+                  <View className='gap-6'>
+                    <FormField
+                      control={form.control}
+                      name='title'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            <Trans>Title</Trans>
+                            <Text className='text-muted-foreground'>
+                              {' '}
+                              (Optional)
+                            </Text>
+                          </FormLabel>
+                          <Input
+                            {...field}
+                            placeholder={t`Enter note title...`}
+                            editable={!isLoadingNote}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name='description'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            <Trans>Description</Trans>
+                            <Text className='text-muted-foreground'>
+                              {' '}
+                              (Optional)
+                            </Text>
+                          </FormLabel>
+                          <Textarea
+                            {...field}
+                            placeholder={t`Write your note description here...`}
+                            numberOfLines={8}
+                            textAlignVertical='top'
+                            editable={!isLoadingNote}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </View>
+                </Form>
+              )}
             </CardContent>
           </Card>
         </ScrollView>
