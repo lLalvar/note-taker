@@ -1,25 +1,37 @@
 import { MoonStar, Sun } from 'lucide-react-native'
-import { useColorScheme } from 'nativewind'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
-
-const THEME_ICONS = {
-  light: Sun,
-  dark: MoonStar,
-}
+import { getDefaultThemeId } from '@/lib/theme-registry'
+import { useThemeStore } from '@/store/theme-store'
 
 export function ThemeToggle() {
-  const { colorScheme, toggleColorScheme } = useColorScheme()
+  const { setTheme, getCategory } = useThemeStore()
+
+  const handleToggle = () => {
+    // Get current category
+    const currentCategory = getCategory()
+
+    // Toggle between light and dark categories
+    if (currentCategory === 'light') {
+      setTheme(getDefaultThemeId('dark'))
+    } else if (currentCategory === 'dark') {
+      setTheme(getDefaultThemeId('light'))
+    }
+  }
+
+  // Determine icon based on effective theme category
+  const effectiveCategory = getCategory()
+  const isDark = effectiveCategory === 'dark'
 
   return (
     <Button
-      onPressIn={toggleColorScheme}
+      onPressIn={handleToggle}
       size='icon'
       variant='ghost'
       className='ios:size-9 rounded-full web:mx-4'
     >
-      <Icon as={THEME_ICONS[colorScheme ?? 'light']} className='size-5' />
+      <Icon as={isDark ? MoonStar : Sun} className='size-5' />
     </Button>
   )
 }

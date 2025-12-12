@@ -23,7 +23,7 @@ export default function ParallaxScrollView({
   headerImage,
   headerBackgroundColor,
 }: Props) {
-  const { theme } = useTheme()
+  const { colorScheme } = useTheme()
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
   const scrollOffset = useScrollViewOffset(scrollRef)
   const bottom = useBottomTabOverflow()
@@ -59,7 +59,10 @@ export default function ParallaxScrollView({
         <Animated.View
           style={[
             styles.header,
-            { backgroundColor: headerBackgroundColor[theme] },
+            {
+              backgroundColor:
+                headerBackgroundColor[colorScheme as 'dark' | 'light'],
+            },
             headerAnimatedStyle,
           ]}
         >

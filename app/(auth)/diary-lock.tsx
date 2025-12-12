@@ -83,7 +83,7 @@ export default function DiaryLock() {
       const success = await authenticateWithBiometric()
       if (success) {
         setLocked(false)
-        router.replace('/(app)')
+        router.replace('/(app)/(tabs)')
       }
     } catch (error) {
       console.error('Biometric authentication error:', error)
@@ -97,7 +97,7 @@ export default function DiaryLock() {
 
       // Check if lock is enabled
       if (!hasLockEnabled() || !hasLock) {
-        router.replace('/(app)')
+        router.replace('/(app)/(tabs)')
         return
       }
 
@@ -137,7 +137,7 @@ export default function DiaryLock() {
     },
     onSuccess: () => {
       setLocked(false)
-      router.replace('/(tabs)')
+      router.replace('/(app)/(tabs)')
     },
     onError: (error: unknown) => {
       console.error('Unlock Error:', error)
@@ -166,7 +166,7 @@ export default function DiaryLock() {
     onSuccess: () => {
       // Security answer verified, unlock
       setLocked(false)
-      router.replace('/(tabs)')
+      router.replace('/(app)/(tabs)')
     },
     onError: () => {
       Alert.alert(

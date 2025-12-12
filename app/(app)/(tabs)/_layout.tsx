@@ -4,7 +4,7 @@ import { Tabs } from 'expo-router'
 import { Home, Plus, User } from 'lucide-react-native'
 import { Platform, View } from 'react-native'
 
-import { HapticTab } from '@/components/HapticTab'
+import { HapticTab } from '@/components/haptic-tab'
 import { TabBarIcon } from '@/components/ui/TabBarIcon'
 import { useTheme } from '@/hooks/use-theme'
 

@@ -66,7 +66,7 @@ export default function SignIn() {
     mutationFn: ({ email, password }: SignInFormData) =>
       signInWithEmail(email, password),
     onSuccess: () => {
-      router.replace('/(app)')
+      router.replace('/(app)/(tabs)')
     },
     onError: (error: unknown) => {
       console.error('Sign In Error:', error)

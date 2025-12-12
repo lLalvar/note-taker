@@ -10,6 +10,13 @@ export default function AppLayout() {
       }}
     >
       <Stack.Screen name='(tabs)' />
+      <Stack.Screen
+        name='theme'
+        options={{
+          presentation: 'card',
+          animation: 'slide_from_right',
+        }}
+      />
     </Stack>
   )
 }

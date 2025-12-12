@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 
-import ParallaxScrollView from '@/components/ParallaxScrollView'
+import ParallaxScrollView from '@/components/parallax-scroll-view'
 import { IconSymbol } from '@/components/ui/IconSymbol'
 import { Text } from '@/components/ui/text'
 

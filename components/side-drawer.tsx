@@ -5,14 +5,14 @@ import { useRouter } from 'expo-router'
 import {
   BookOpen,
   Crown,
-  Heart,
+  // Heart,
   HelpCircle,
-  Lock,
+  // Lock,
   type LucideIcon,
   Palette,
   Settings,
   Share2,
-  Tag,
+  // Tag,
 } from 'lucide-react-native'
 import {
   Modal,
@@ -227,7 +227,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       label: t`Theme`,
       icon: Palette,
       onPress: () => {
-        // Theme toggle is handled globally, just close drawer
+        router.push('/(app)/theme')
       },
     },
     // {
