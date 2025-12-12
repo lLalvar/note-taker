@@ -13,7 +13,7 @@ import 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import '~/global.css'
 
-import { DiaryLockGuard } from '@/components/diary-lock-guard'
+// import { DiaryLockGuard } from '@/components/diary-lock-guard'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { SignOutButton } from '@/components/ui/SignOutButton'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
@@ -62,24 +62,24 @@ export default Sentry.wrap(function RootLayout() {
           <QueryClientProvider client={queryClient}>
             <I18nProvider i18n={i18n} defaultComponent={TransText}>
               <ThemeProvider value={navTheme}>
-                <DiaryLockGuard>
-                  <Stack>
-                    <Stack.Protected guard={isAuthenticated}>
-                      <Stack.Screen
-                        name='(app)'
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen name='+not-found' />
-                    </Stack.Protected>
+                {/* <DiaryLockGuard> */}
+                <Stack>
+                  <Stack.Protected guard={isAuthenticated}>
+                    <Stack.Screen
+                      name='(app)'
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name='+not-found' />
+                  </Stack.Protected>
 
-                    <Stack.Protected guard={!isAuthenticated}>
-                      <Stack.Screen
-                        name='(auth)'
-                        options={{ headerShown: false }}
-                      />
-                    </Stack.Protected>
-                  </Stack>
-                </DiaryLockGuard>
+                  <Stack.Protected guard={!isAuthenticated}>
+                    <Stack.Screen
+                      name='(auth)'
+                      options={{ headerShown: false }}
+                    />
+                  </Stack.Protected>
+                </Stack>
+                {/* </DiaryLockGuard> */}
                 <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
                   {isAuthenticated && <SignOutButton />}
                   <ThemeToggle />

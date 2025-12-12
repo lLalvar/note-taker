@@ -230,32 +230,32 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
         // Theme toggle is handled globally, just close drawer
       },
     },
-    {
-      id: 'tags',
-      label: t`Tags`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Navigate to tags screen
-        // router.push('/(tabs)/tags')
-      },
-    },
-    {
-      id: 'diary-lock',
-      label: t`Diary Lock`,
-      icon: Lock,
-      onPress: () => {
-        // Navigate to diary lock settings
-        router.push('/(auth)/diary-lock')
-      },
-    },
-    {
-      id: 'donate',
-      label: t`Donate`,
-      icon: Heart,
-      onPress: () => {
-        // TODO: Open donate modal or link
-      },
-    },
+    // {
+    //   id: 'tags',
+    //   label: t`Tags`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Navigate to tags screen
+    //     // router.push('/(tabs)/tags')
+    //   },
+    // },
+    // {
+    //   id: 'diary-lock',
+    //   label: t`Diary Lock`,
+    //   icon: Lock,
+    //   onPress: () => {
+    //     // Navigate to diary lock settings
+    //     router.push('/(auth)/diary-lock')
+    //   },
+    // },
+    // {
+    //   id: 'donate',
+    //   label: t`Donate`,
+    //   icon: Heart,
+    //   onPress: () => {
+    //     // TODO: Open donate modal or link
+    //   },
+    // },
     {
       id: 'share',
       label: t`Share App`,
@@ -282,70 +282,70 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
         // router.push('/(tabs)/settings')
       },
     },
-    {
-      id: 'checkit-task-1',
-      label: t`CheckIt Task 1`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 1
-      },
-    },
-    {
-      id: 'checkit-task-2',
-      label: t`CheckIt Task 2`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 2
-      },
-    },
-    {
-      id: 'checkit-task-3',
-      label: t`CheckIt Task 3`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 3
-      },
-    },
-    {
-      id: 'checkit-task-4',
-      label: t`CheckIt Task 4`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 4
-      },
-    },
-    {
-      id: 'checkit-task-5',
-      label: t`CheckIt Task 5`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 5
-      },
-    },
-    {
-      id: 'checkit-task-6',
-      label: t`CheckIt Task 6`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 5
-      },
-    },
-    {
-      id: 'checkit-task-7',
-      label: t`CheckIt Task 7`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 5
-      },
-    },
-    {
-      id: 'checkit-task-8',
-      label: t`CheckIt Task 8`,
-      icon: Tag,
-      onPress: () => {
-        // TODO: Handle CheckIt Task 5
-      },
-    },
+    // {
+    //   id: 'checkit-task-1',
+    //   label: t`CheckIt Task 1`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 1
+    //   },
+    // },
+    // {
+    //   id: 'checkit-task-2',
+    //   label: t`CheckIt Task 2`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 2
+    //   },
+    // },
+    // {
+    //   id: 'checkit-task-3',
+    //   label: t`CheckIt Task 3`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 3
+    //   },
+    // },
+    // {
+    //   id: 'checkit-task-4',
+    //   label: t`CheckIt Task 4`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 4
+    //   },
+    // },
+    // {
+    //   id: 'checkit-task-5',
+    //   label: t`CheckIt Task 5`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 5
+    //   },
+    // },
+    // {
+    //   id: 'checkit-task-6',
+    //   label: t`CheckIt Task 6`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 5
+    //   },
+    // },
+    // {
+    //   id: 'checkit-task-7',
+    //   label: t`CheckIt Task 7`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 5
+    //   },
+    // },
+    // {
+    //   id: 'checkit-task-8',
+    //   label: t`CheckIt Task 8`,
+    //   icon: Tag,
+    //   onPress: () => {
+    //     // TODO: Handle CheckIt Task 5
+    //   },
+    // },
   ]
 
   return (
