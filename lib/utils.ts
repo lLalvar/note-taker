@@ -21,3 +21,7 @@ export const formatTime = (date: string | Date): string => {
   const dateObj = dayjs(date)
   return dateObj.locale(getUserLocale()).format('LT')
 }
+
+export function toHsla(hsl: string, alpha: number = 1): string {
+  return hsl.replace(/hsl\(/, `hsla(`).replace(/\)$/, ` / ${alpha})`)
+}

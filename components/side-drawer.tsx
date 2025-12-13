@@ -472,7 +472,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         )}
                       />
                       <Text
-                        className='flex-1 text-base'
+                        className='flex-1'
                         style={{
                           color: item.isPro
                             ? colors.primary

@@ -74,12 +74,7 @@ export function LanguageSelector() {
               onPress={() => handleSelectLanguage(loc.code)}
               className={cn('px-6 py-4', locale === loc.code && 'bg-muted')}
             >
-              <Text
-                className={cn(
-                  'text-base',
-                  locale === loc.code && 'font-semibold'
-                )}
-              >
+              <Text className={cn(locale === loc.code && 'font-semibold')}>
                 {loc.label}
               </Text>
             </Pressable>

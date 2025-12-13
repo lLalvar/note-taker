@@ -151,7 +151,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
           disabled={isLoading || isLoadingNote}
           loading={mutation.isPending}
         >
-          <Text className='text-base font-medium'>
+          <Text className='font-medium'>
             {isLoading ? (
               isEditMode ? (
                 <Trans>Saving...</Trans>

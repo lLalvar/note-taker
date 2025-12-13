@@ -12,7 +12,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import '~/global.css'
 
-// import  DiaryLockGuard  from '@/components/DiaryLockGuard'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { SignOutButton } from '@/components/ui/SignOutButton'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
@@ -22,18 +21,14 @@ import { i18n, useI18n } from '@/lib/i18n'
 import { queryClient } from '@/lib/query-client'
 import Sentry from '@/lib/sentry'
 
-// Wrapper component for Trans defaultComponent
 const TransText = ({ translation }: TransRenderProps) => {
   return <RNText>{translation}</RNText>
 }
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router'
+export { ErrorBoundary } from 'expo-router'
 
 export default Sentry.wrap(function RootLayout() {
-  const { navTheme, isDark } = useTheme()
+  const { navTheme, isDark, cssVariables } = useTheme()
   const { initializing, isAuthenticated } = useAuth()
 
   useI18n()
@@ -44,7 +39,10 @@ export default Sentry.wrap(function RootLayout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <QueryClientProvider client={queryClient}>
             <I18nProvider i18n={i18n} defaultComponent={TransText}>
-              <View className='flex-1 items-center justify-center bg-background'>
+              <View
+                className='flex-1 items-center justify-center bg-background'
+                style={cssVariables}
+              >
                 <ActivityIndicator />
               </View>
             </I18nProvider>
@@ -60,33 +58,35 @@ export default Sentry.wrap(function RootLayout() {
         <BottomSheetModalProvider>
           <QueryClientProvider client={queryClient}>
             <I18nProvider i18n={i18n} defaultComponent={TransText}>
-              <ThemeProvider value={navTheme}>
-                {/* <DiaryLockGuard> */}
-                <Stack>
-                  <Stack.Protected guard={isAuthenticated}>
-                    <Stack.Screen
-                      name='(app)'
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name='+not-found' />
-                  </Stack.Protected>
+              <View style={[{ flex: 1 }, cssVariables]}>
+                <ThemeProvider value={navTheme}>
+                  {/* <DiaryLockGuard> */}
+                  <Stack>
+                    <Stack.Protected guard={isAuthenticated}>
+                      <Stack.Screen
+                        name='(app)'
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen name='+not-found' />
+                    </Stack.Protected>
 
-                  <Stack.Protected guard={!isAuthenticated}>
-                    <Stack.Screen
-                      name='(auth)'
-                      options={{ headerShown: false }}
-                    />
-                  </Stack.Protected>
-                </Stack>
-                {/* </DiaryLockGuard> */}
-                <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
-                  {isAuthenticated && <SignOutButton />}
-                  <ThemeToggle />
-                  <LanguageSelector />
-                </View>
-                <StatusBar style={isDark ? 'light' : 'dark'} />
-                <PortalHost />
-              </ThemeProvider>
+                    <Stack.Protected guard={!isAuthenticated}>
+                      <Stack.Screen
+                        name='(auth)'
+                        options={{ headerShown: false }}
+                      />
+                    </Stack.Protected>
+                  </Stack>
+                  {/* </DiaryLockGuard> */}
+                  <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
+                    {isAuthenticated && <SignOutButton />}
+                    <ThemeToggle />
+                    <LanguageSelector />
+                  </View>
+                  <StatusBar style={isDark ? 'light' : 'dark'} />
+                  <PortalHost />
+                </ThemeProvider>
+              </View>
             </I18nProvider>
           </QueryClientProvider>
         </BottomSheetModalProvider>

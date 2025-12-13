@@ -4,379 +4,220 @@ import { DarkTheme, DefaultTheme, type Theme } from '@react-navigation/native'
  * Theme Color Definitions
  *
  * Each theme is identified by a unique ID (e.g., 'light-1', 'dark-1').
- * To add a new theme:
- * 1. Add a new entry with a unique ID
- * 2. Add the theme metadata to THEME_REGISTRY in theme-registry.ts
+ *
+ * HOW TO ADD A NEW THEME:
+ *
+ * 1. Add theme colors below following the pattern:
+ *    - Light themes: 'light-2', 'light-3', etc.
+ *    - Dark themes: 'dark-2', 'dark-3', etc.
+ *
+ * 2. Add theme metadata to THEME_REGISTRY in theme-registry.ts
+ *
+ * 3. CSS variables in global.css are automatically synced via theme-css-sync.ts
+ *    when the theme is selected. The default values in global.css match light-1
+ *    and dark-1, but they update dynamically.
+ *
+ * 4. To verify CSS sync, you can run: node scripts/sync-theme-css.js [theme-id]
  *
  * Theme IDs should follow the pattern: '{category}-{number}'
  * Examples: 'light-1', 'light-2', 'dark-1', 'dark-2'
+ *
+ * IMPORTANT: Keep HSL format consistent (e.g., 'hsl(280 33.3333% 96.4706%)')
+ * The CSS sync utility extracts the inner values automatically.
  */
-export const THEME: Record<
-  string,
-  {
-    background: string
-    foreground: string
-    card: string
-    cardForeground: string
-    popover: string
-    popoverForeground: string
-    primary: string
-    primaryForeground: string
-    secondary: string
-    secondaryForeground: string
-    muted: string
-    mutedForeground: string
-    accent: string
-    accentForeground: string
-    destructive: string
-    destructiveForeground: string
-    border: string
-    input: string
-    ring: string
-    radius: string
-    chart1: string
-    chart2: string
-    chart3: string
-    chart4: string
-    chart5: string
-  }
-> = {
+export const THEME = {
   // Light Theme 1 (Default Light)
   'light-1': {
-    background: 'hsl(280 33.3333% 96.4706%)',
-    foreground: 'hsl(216.9231 19.1176% 26.6667%)',
+    background: 'hsl(340.0000 33.3333% 96.4706%)',
+    foreground: 'hsl(276.9231 19.1176% 26.6667%)',
     card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(216.9231 19.1176% 26.6667%)',
+    cardForeground: 'hsl(276.9231 19.1176% 26.6667%)',
     popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    primary: 'hsl(255.1351 91.7355% 76.2745%)',
+    popoverForeground: 'hsl(276.9231 19.1176% 26.6667%)',
+    primary: 'hsl(315.1351 91.7355% 76.2745%)',
     primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(267.5676 90.2439% 91.9608%)',
-    secondaryForeground: 'hsl(215 13.7931% 34.1176%)',
-    muted: 'hsl(268.6957 100% 95.4902%)',
-    mutedForeground: 'hsl(220 8.9362% 46.0784%)',
-    accent: 'hsl(292.5 44.4444% 92.9412%)',
-    accentForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
+    secondary: 'hsl(327.5676 90.2439% 91.9608%)',
+    secondaryForeground: 'hsl(275 13.7931% 34.1176%)',
+    muted: 'hsl(328.6957 100.0000% 95.4902%)',
+    mutedForeground: 'hsl(280.0000 8.9362% 46.0784%)',
+    accent: 'hsl(352.5000 44.4444% 92.9412%)',
+    accentForeground: 'hsl(276.9231 19.1176% 26.6667%)',
+    destructive: 'hsl(60 93.5484% 81.7647%)',
     destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(267.5676 90.2439% 91.9608%)',
-    input: 'hsl(267.5676 90.2439% 91.9608%)',
-    ring: 'hsl(255.1351 91.7355% 76.2745%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart2: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart3: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart4: 'hsl(263.3898 69.9605% 50.3922%)',
-    chart5: 'hsl(263.3557 69.3023% 42.1569%)',
+    border: 'hsl(327.5676 90.2439% 91.9608%)',
+    input: 'hsl(327.5676 90.2439% 91.9608%)',
+    ring: 'hsl(315.1351 91.7355% 76.2745%)',
+    chart1: 'hsl(315.1351 91.7355% 76.2745%)',
+    chart2: 'hsl(318.3117 89.5349% 66.2745%)',
+    chart3: 'hsl(322.1229 83.2558% 57.8431%)',
+    chart4: 'hsl(323.3898 69.9605% 50.3922%)',
+    chart5: 'hsl(323.3557 69.3023% 42.1569%)',
+    sidebar: 'hsl(327.5676 90.2439% 91.9608%)',
+    sidebarForeground: 'hsl(276.9231 19.1176% 26.6667%)',
+    sidebarPrimary: 'hsl(315.1351 91.7355% 76.2745%)',
+    sidebarPrimaryForeground: 'hsl(0 0% 100%)',
+    sidebarAccent: 'hsl(352.5000 44.4444% 92.9412%)',
+    sidebarAccentForeground: 'hsl(276.9231 19.1176% 26.6667%)',
+    sidebarBorder: 'hsl(327.5676 90.2439% 91.9608%)',
+    sidebarRing: 'hsl(315.1351 91.7355% 76.2745%)',
+    fontSans: 'Open Sans, sans-serif',
+    fontSerif: 'Source Serif 4, serif',
+    fontMono: 'IBM Plex Mono, monospace',
+    radius: '0.525rem',
+    shadowX: '0px',
+    shadowY: '8px',
+    shadowBlur: '16px',
+    shadowSpread: '-4px',
+    shadowOpacity: '0.08',
+    shadowColor: '#1a1a1a',
+    shadow2xs: '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.04)',
+    shadowXs: '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.04)',
+    shadowSm:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 1px 2px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadow:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 1px 2px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadowMd:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 2px 4px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadowLg:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 4px 6px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadowXl:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 8px 10px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadow2xl: '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.20)',
+    trackingNormal: '0em',
+    spacing: '0.25rem',
   },
 
   // Add more light themes here:
-  // 'light-2': { ... },
-  // 'light-3': { ... },
-  // 'light-4': { ... },
-  // 'light-5': { ... },
+  // Example: light-2 theme
+  // 'light-2': {
+  //   background: 'hsl(220 20% 95%)',
+  //   foreground: 'hsl(220 10% 20%)',
+  //   card: 'hsl(0 0% 100%)',
+  //   cardForeground: 'hsl(220 10% 20%)',
+  //   popover: 'hsl(0 0% 100%)',
+  //   popoverForeground: 'hsl(220 10% 20%)',
+  //   primary: 'hsl(220 70% 50%)',
+  //   primaryForeground: 'hsl(0 0% 100%)',
+  //   secondary: 'hsl(220 30% 90%)',
+  //   secondaryForeground: 'hsl(220 10% 30%)',
+  //   muted: 'hsl(220 20% 92%)',
+  //   mutedForeground: 'hsl(220 8% 45%)',
+  //   accent: 'hsl(220 40% 88%)',
+  //   accentForeground: 'hsl(220 10% 20%)',
+  //   destructive: 'hsl(0 93% 82%)',
+  //   destructiveForeground: 'hsl(0 0% 100%)',
+  //   border: 'hsl(220 30% 90%)',
+  //   input: 'hsl(220 30% 90%)',
+  //   ring: 'hsl(220 70% 50%)',
+  //   radius: '1.5rem',
+  //   chart1: 'hsl(220 70% 50%)',
+  //   chart2: 'hsl(240 70% 50%)',
+  //   chart3: 'hsl(260 70% 50%)',
+  //   chart4: 'hsl(280 70% 50%)',
+  //   chart5: 'hsl(300 70% 50%)',
+  // },
 
   // Dark Theme 1 (Default Dark)
   'dark-1': {
-    background: 'hsl(24 9.8039% 10%)',
-    foreground: 'hsl(226.4516 100% 93.9216%)',
-    card: 'hsl(270 17.7778% 17.6471%)',
-    cardForeground: 'hsl(226.4516 100% 93.9216%)',
-    popover: 'hsl(270 17.7778% 17.6471%)',
-    popoverForeground: 'hsl(226.4516 100% 93.9216%)',
-    primary: 'hsl(255.9036 95.4023% 82.9412%)',
-    primaryForeground: 'hsl(24 9.8039% 10%)',
-    secondary: 'hsl(272.5 19.3548% 24.3137%)',
-    secondaryForeground: 'hsl(216 12.1951% 83.9216%)',
-    muted: 'hsl(265.2632 28.3582% 13.1373%)',
-    mutedForeground: 'hsl(217.8947 10.6145% 64.902%)',
-    accent: 'hsl(266.8966 19.2053% 29.6078%)',
-    accentForeground: 'hsl(216 12.1951% 83.9216%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(24 9.8039% 10%)',
-    border: 'hsl(272.5 19.3548% 24.3137%)',
-    input: 'hsl(272.5 19.3548% 24.3137%)',
-    ring: 'hsl(255.9036 95.4023% 82.9412%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.9036 95.4023% 82.9412%)',
-    chart2: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart3: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart4: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart5: 'hsl(263.3898 69.9605% 50.3922%)',
+    background: 'hsl(84 9.8039% 10%)',
+    foreground: 'hsl(286.4516 100% 93.9216%)',
+    card: 'hsl(330 17.7778% 17.6471%)',
+    cardForeground: 'hsl(286.4516 100% 93.9216%)',
+    popover: 'hsl(330 17.7778% 17.6471%)',
+    popoverForeground: 'hsl(286.4516 100% 93.9216%)',
+    primary: 'hsl(315.9036 95.4023% 82.9412%)',
+    primaryForeground: 'hsl(84 9.8039% 10%)',
+    secondary: 'hsl(332.5000 19.3548% 24.3137%)',
+    secondaryForeground: 'hsl(276.0000 12.1951% 83.9216%)',
+    muted: 'hsl(325.2632 28.3582% 13.1373%)',
+    mutedForeground: 'hsl(277.8947 10.6145% 64.9020%)',
+    accent: 'hsl(326.8966 19.2053% 29.6078%)',
+    accentForeground: 'hsl(276.0000 12.1951% 83.9216%)',
+    destructive: 'hsl(60 93.5484% 81.7647%)',
+    destructiveForeground: 'hsl(84 9.8039% 10%)',
+    border: 'hsl(332.5000 19.3548% 24.3137%)',
+    input: 'hsl(332.5000 19.3548% 24.3137%)',
+    ring: 'hsl(315.9036 95.4023% 82.9412%)',
+    chart1: 'hsl(315.9036 95.4023% 82.9412%)',
+    chart2: 'hsl(315.1351 91.7355% 76.2745%)',
+    chart3: 'hsl(318.3117 89.5349% 66.2745%)',
+    chart4: 'hsl(322.1229 83.2558% 57.8431%)',
+    chart5: 'hsl(323.3898 69.9605% 50.3922%)',
+    sidebar: 'hsl(332.5000 19.3548% 24.3137%)',
+    sidebarForeground: 'hsl(286.4516 100% 93.9216%)',
+    sidebarPrimary: 'hsl(315.9036 95.4023% 82.9412%)',
+    sidebarPrimaryForeground: 'hsl(84 9.8039% 10%)',
+    sidebarAccent: 'hsl(326.8966 19.2053% 29.6078%)',
+    sidebarAccentForeground: 'hsl(276.0000 12.1951% 83.9216%)',
+    sidebarBorder: 'hsl(332.5000 19.3548% 24.3137%)',
+    sidebarRing: 'hsl(315.9036 95.4023% 82.9412%)',
+    fontSans: 'Open Sans, sans-serif',
+    fontSerif: 'Source Serif 4, serif',
+    fontMono: 'IBM Plex Mono, monospace',
+    radius: '0.525rem',
+    shadowX: '0px',
+    shadowY: '8px',
+    shadowBlur: '16px',
+    shadowSpread: '-4px',
+    shadowOpacity: '0.08',
+    shadowColor: '#1a1a1a',
+    shadow2xs: '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.04)',
+    shadowXs: '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.04)',
+    shadowSm:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 1px 2px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadow:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 1px 2px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadowMd:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 2px 4px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadowLg:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 4px 6px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadowXl:
+      '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.08), 0px 8px 10px -5px hsl(0 0% 10.1961% / 0.08)',
+    shadow2xl: '0px 8px 16px -4px hsl(0 0% 10.1961% / 0.20)',
+    trackingNormal: '0em',
+    spacing: '0.25rem',
   },
 
   // Add more dark themes here:
-  // 'dark-2': { ... },
-  // 'dark-3': { ... },
-  // 'dark-4': { ... },
-  // 'dark-5': { ... },
-  // 'dark-6': { ... },
-
-  // Hot themes (popular/vibrant themes)
-  'hot-1': {
-    background: 'hsl(24 9.8039% 10%)',
-    foreground: 'hsl(226.4516 100% 93.9216%)',
-    card: 'hsl(270 17.7778% 17.6471%)',
-    cardForeground: 'hsl(226.4516 100% 93.9216%)',
-    popover: 'hsl(270 17.7778% 17.6471%)',
-    popoverForeground: 'hsl(226.4516 100% 93.9216%)',
-    primary: 'hsl(255.9036 95.4023% 82.9412%)',
-    primaryForeground: 'hsl(24 9.8039% 10%)',
-    secondary: 'hsl(272.5 19.3548% 24.3137%)',
-    secondaryForeground: 'hsl(216 12.1951% 83.9216%)',
-    muted: 'hsl(265.2632 28.3582% 13.1373%)',
-    mutedForeground: 'hsl(217.8947 10.6145% 64.902%)',
-    accent: 'hsl(266.8966 19.2053% 29.6078%)',
-    accentForeground: 'hsl(216 12.1951% 83.9216%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(24 9.8039% 10%)',
-    border: 'hsl(272.5 19.3548% 24.3137%)',
-    input: 'hsl(272.5 19.3548% 24.3137%)',
-    ring: 'hsl(255.9036 95.4023% 82.9412%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.9036 95.4023% 82.9412%)',
-    chart2: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart3: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart4: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart5: 'hsl(263.3898 69.9605% 50.3922%)',
-  },
-  'hot-2': {
-    background: 'hsl(280 33.3333% 96.4706%)',
-    foreground: 'hsl(216.9231 19.1176% 26.6667%)',
-    card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    primary: 'hsl(255.1351 91.7355% 76.2745%)',
-    primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(267.5676 90.2439% 91.9608%)',
-    secondaryForeground: 'hsl(215 13.7931% 34.1176%)',
-    muted: 'hsl(268.6957 100% 95.4902%)',
-    mutedForeground: 'hsl(220 8.9362% 46.0784%)',
-    accent: 'hsl(292.5 44.4444% 92.9412%)',
-    accentForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(267.5676 90.2439% 91.9608%)',
-    input: 'hsl(267.5676 90.2439% 91.9608%)',
-    ring: 'hsl(255.1351 91.7355% 76.2745%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart2: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart3: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart4: 'hsl(263.3898 69.9605% 50.3922%)',
-    chart5: 'hsl(263.3557 69.3023% 42.1569%)',
-  },
-  'hot-3': {
-    background: 'hsl(280 33.3333% 96.4706%)',
-    foreground: 'hsl(216.9231 19.1176% 26.6667%)',
-    card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    primary: 'hsl(255.1351 91.7355% 76.2745%)',
-    primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(267.5676 90.2439% 91.9608%)',
-    secondaryForeground: 'hsl(215 13.7931% 34.1176%)',
-    muted: 'hsl(268.6957 100% 95.4902%)',
-    mutedForeground: 'hsl(220 8.9362% 46.0784%)',
-    accent: 'hsl(292.5 44.4444% 92.9412%)',
-    accentForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(267.5676 90.2439% 91.9608%)',
-    input: 'hsl(267.5676 90.2439% 91.9608%)',
-    ring: 'hsl(255.1351 91.7355% 76.2745%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart2: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart3: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart4: 'hsl(263.3898 69.9605% 50.3922%)',
-    chart5: 'hsl(263.3557 69.3023% 42.1569%)',
-  },
-  'hot-4': {
-    background: 'hsl(24 9.8039% 10%)',
-    foreground: 'hsl(226.4516 100% 93.9216%)',
-    card: 'hsl(270 17.7778% 17.6471%)',
-    cardForeground: 'hsl(226.4516 100% 93.9216%)',
-    popover: 'hsl(270 17.7778% 17.6471%)',
-    popoverForeground: 'hsl(226.4516 100% 93.9216%)',
-    primary: 'hsl(255.9036 95.4023% 82.9412%)',
-    primaryForeground: 'hsl(24 9.8039% 10%)',
-    secondary: 'hsl(272.5 19.3548% 24.3137%)',
-    secondaryForeground: 'hsl(216 12.1951% 83.9216%)',
-    muted: 'hsl(265.2632 28.3582% 13.1373%)',
-    mutedForeground: 'hsl(217.8947 10.6145% 64.902%)',
-    accent: 'hsl(266.8966 19.2053% 29.6078%)',
-    accentForeground: 'hsl(216 12.1951% 83.9216%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(24 9.8039% 10%)',
-    border: 'hsl(272.5 19.3548% 24.3137%)',
-    input: 'hsl(272.5 19.3548% 24.3137%)',
-    ring: 'hsl(255.9036 95.4023% 82.9412%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.9036 95.4023% 82.9412%)',
-    chart2: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart3: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart4: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart5: 'hsl(263.3898 69.9605% 50.3922%)',
-  },
-  'hot-5': {
-    background: 'hsl(24 9.8039% 10%)',
-    foreground: 'hsl(226.4516 100% 93.9216%)',
-    card: 'hsl(270 17.7778% 17.6471%)',
-    cardForeground: 'hsl(226.4516 100% 93.9216%)',
-    popover: 'hsl(270 17.7778% 17.6471%)',
-    popoverForeground: 'hsl(226.4516 100% 93.9216%)',
-    primary: 'hsl(255.9036 95.4023% 82.9412%)',
-    primaryForeground: 'hsl(24 9.8039% 10%)',
-    secondary: 'hsl(272.5 19.3548% 24.3137%)',
-    secondaryForeground: 'hsl(216 12.1951% 83.9216%)',
-    muted: 'hsl(265.2632 28.3582% 13.1373%)',
-    mutedForeground: 'hsl(217.8947 10.6145% 64.902%)',
-    accent: 'hsl(266.8966 19.2053% 29.6078%)',
-    accentForeground: 'hsl(216 12.1951% 83.9216%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(24 9.8039% 10%)',
-    border: 'hsl(272.5 19.3548% 24.3137%)',
-    input: 'hsl(272.5 19.3548% 24.3137%)',
-    ring: 'hsl(255.9036 95.4023% 82.9412%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.9036 95.4023% 82.9412%)',
-    chart2: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart3: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart4: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart5: 'hsl(263.3898 69.9605% 50.3922%)',
-  },
-  'hot-6': {
-    background: 'hsl(24 9.8039% 10%)',
-    foreground: 'hsl(226.4516 100% 93.9216%)',
-    card: 'hsl(270 17.7778% 17.6471%)',
-    cardForeground: 'hsl(226.4516 100% 93.9216%)',
-    popover: 'hsl(270 17.7778% 17.6471%)',
-    popoverForeground: 'hsl(226.4516 100% 93.9216%)',
-    primary: 'hsl(255.9036 95.4023% 82.9412%)',
-    primaryForeground: 'hsl(24 9.8039% 10%)',
-    secondary: 'hsl(272.5 19.3548% 24.3137%)',
-    secondaryForeground: 'hsl(216 12.1951% 83.9216%)',
-    muted: 'hsl(265.2632 28.3582% 13.1373%)',
-    mutedForeground: 'hsl(217.8947 10.6145% 64.902%)',
-    accent: 'hsl(266.8966 19.2053% 29.6078%)',
-    accentForeground: 'hsl(216 12.1951% 83.9216%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(24 9.8039% 10%)',
-    border: 'hsl(272.5 19.3548% 24.3137%)',
-    input: 'hsl(272.5 19.3548% 24.3137%)',
-    ring: 'hsl(255.9036 95.4023% 82.9412%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.9036 95.4023% 82.9412%)',
-    chart2: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart3: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart4: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart5: 'hsl(263.3898 69.9605% 50.3922%)',
-  },
-  'hot-7': {
-    background: 'hsl(280 33.3333% 96.4706%)',
-    foreground: 'hsl(216.9231 19.1176% 26.6667%)',
-    card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    primary: 'hsl(255.1351 91.7355% 76.2745%)',
-    primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(267.5676 90.2439% 91.9608%)',
-    secondaryForeground: 'hsl(215 13.7931% 34.1176%)',
-    muted: 'hsl(268.6957 100% 95.4902%)',
-    mutedForeground: 'hsl(220 8.9362% 46.0784%)',
-    accent: 'hsl(292.5 44.4444% 92.9412%)',
-    accentForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(267.5676 90.2439% 91.9608%)',
-    input: 'hsl(267.5676 90.2439% 91.9608%)',
-    ring: 'hsl(255.1351 91.7355% 76.2745%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart2: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart3: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart4: 'hsl(263.3898 69.9605% 50.3922%)',
-    chart5: 'hsl(263.3557 69.3023% 42.1569%)',
-  },
-  'hot-8': {
-    background: 'hsl(280 33.3333% 96.4706%)',
-    foreground: 'hsl(216.9231 19.1176% 26.6667%)',
-    card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    primary: 'hsl(255.1351 91.7355% 76.2745%)',
-    primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(267.5676 90.2439% 91.9608%)',
-    secondaryForeground: 'hsl(215 13.7931% 34.1176%)',
-    muted: 'hsl(268.6957 100% 95.4902%)',
-    mutedForeground: 'hsl(220 8.9362% 46.0784%)',
-    accent: 'hsl(292.5 44.4444% 92.9412%)',
-    accentForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(267.5676 90.2439% 91.9608%)',
-    input: 'hsl(267.5676 90.2439% 91.9608%)',
-    ring: 'hsl(255.1351 91.7355% 76.2745%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart2: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart3: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart4: 'hsl(263.3898 69.9605% 50.3922%)',
-    chart5: 'hsl(263.3557 69.3023% 42.1569%)',
-  },
-  'hot-9': {
-    background: 'hsl(280 33.3333% 96.4706%)',
-    foreground: 'hsl(216.9231 19.1176% 26.6667%)',
-    card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    primary: 'hsl(255.1351 91.7355% 76.2745%)',
-    primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(267.5676 90.2439% 91.9608%)',
-    secondaryForeground: 'hsl(215 13.7931% 34.1176%)',
-    muted: 'hsl(268.6957 100% 95.4902%)',
-    mutedForeground: 'hsl(220 8.9362% 46.0784%)',
-    accent: 'hsl(292.5 44.4444% 92.9412%)',
-    accentForeground: 'hsl(216.9231 19.1176% 26.6667%)',
-    destructive: 'hsl(0 93.5484% 81.7647%)',
-    destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(267.5676 90.2439% 91.9608%)',
-    input: 'hsl(267.5676 90.2439% 91.9608%)',
-    ring: 'hsl(255.1351 91.7355% 76.2745%)',
-    radius: '1.5rem',
-    chart1: 'hsl(255.1351 91.7355% 76.2745%)',
-    chart2: 'hsl(258.3117 89.5349% 66.2745%)',
-    chart3: 'hsl(262.1229 83.2558% 57.8431%)',
-    chart4: 'hsl(263.3898 69.9605% 50.3922%)',
-    chart5: 'hsl(263.3557 69.3023% 42.1569%)',
-  },
+  // Example: dark-2 theme
+  // 'dark-2': {
+  //   background: 'hsl(220 15% 8%)',
+  //   foreground: 'hsl(220 10% 95%)',
+  //   card: 'hsl(220 20% 12%)',
+  //   cardForeground: 'hsl(220 10% 95%)',
+  //   popover: 'hsl(220 20% 12%)',
+  //   popoverForeground: 'hsl(220 10% 95%)',
+  //   primary: 'hsl(220 70% 60%)',
+  //   primaryForeground: 'hsl(220 15% 8%)',
+  //   secondary: 'hsl(220 25% 18%)',
+  //   secondaryForeground: 'hsl(220 10% 85%)',
+  //   muted: 'hsl(220 20% 15%)',
+  //   mutedForeground: 'hsl(220 8% 65%)',
+  //   accent: 'hsl(220 25% 22%)',
+  //   accentForeground: 'hsl(220 10% 85%)',
+  //   destructive: 'hsl(0 93% 82%)',
+  //   destructiveForeground: 'hsl(220 15% 8%)',
+  //   border: 'hsl(220 25% 18%)',
+  //   input: 'hsl(220 25% 18%)',
+  //   ring: 'hsl(220 70% 60%)',
+  //   radius: '1.5rem',
+  //   chart1: 'hsl(220 70% 60%)',
+  //   chart2: 'hsl(240 70% 60%)',
+  //   chart3: 'hsl(260 70% 60%)',
+  //   chart4: 'hsl(280 70% 60%)',
+  //   chart5: 'hsl(300 70% 60%)',
+  // },
 }
-
-/**
- * Get theme colors by theme ID
- */
 export function getThemeColors(themeId: string) {
-  return THEME[themeId]
+  return THEME[themeId as keyof typeof THEME]
 }
 
-/**
- * Check if a theme ID exists
- */
 export function isValidThemeId(themeId: string): boolean {
   return themeId in THEME
 }
 
-/**
- * Generate navigation theme from theme colors
- */
 function createNavTheme(
-  colors: (typeof THEME)[string],
+  colors: (typeof THEME)[keyof typeof THEME],
   isDark: boolean
 ): Theme {
   const baseTheme = isDark ? DarkTheme : DefaultTheme
@@ -393,26 +234,12 @@ function createNavTheme(
   }
 }
 
-/**
- * Get navigation theme by theme ID
- */
 export function getNavTheme(themeId: string): Theme {
-  const colors = THEME[themeId]
+  const colors = THEME[themeId as keyof typeof THEME]
   if (!colors) {
-    // Fallback to default light theme
     return createNavTheme(THEME['light-1'], false)
   }
 
-  // Determine if it's a dark theme based on theme ID
-  const isDark = themeId.startsWith('dark-') || themeId.startsWith('hot-')
+  const isDark = themeId.startsWith('dark-')
   return createNavTheme(colors, isDark)
-}
-
-/**
- * Legacy support: Map old 'light'/'dark' keys to new theme IDs
- * This ensures backward compatibility
- */
-export const NAV_THEME: Record<'light' | 'dark', Theme> = {
-  light: getNavTheme('light-1'),
-  dark: getNavTheme('dark-1'),
 }

@@ -68,7 +68,7 @@ export default function Theme() {
             >
               <Text
                 className={cn(
-                  'text-base font-medium',
+                  'font-medium',
                   isSelected ? 'text-primary' : 'text-muted-foreground'
                 )}
               >

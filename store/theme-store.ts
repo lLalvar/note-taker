@@ -16,7 +16,6 @@ interface ThemeState {
   getCategory: () => ThemeCategory | null
 }
 
-// Lazy initialization of MMKV storage
 let storageInstance: MMKV | null = null
 
 function getStorage(): MMKV {
@@ -31,7 +30,6 @@ function getStorage(): MMKV {
   }
 }
 
-// Safe storage access that returns null if storage is unavailable
 function safeGetStorage(): MMKV | null {
   try {
     return getStorage()
@@ -46,7 +44,6 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   theme: 'light-1',
   setTheme: (theme: ThemeId) => {
     try {
-      // Validate theme ID
       if (isValidRegistryThemeId(theme)) {
         const storage = safeGetStorage()
         if (storage) {
@@ -67,7 +64,6 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
       if (storage) {
         const savedTheme = storage.getString(STORAGE_KEY)
         if (savedTheme) {
-          // Migrate old theme format ('light'/'dark'/'system') to new format ('light-1'/'dark-1')
           if (savedTheme === 'light' || savedTheme === 'system') {
             const defaultLight = getDefaultThemeId('light')
             set({ theme: defaultLight })
@@ -81,14 +77,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
             return
           }
 
-          // Validate new format
           if (isValidRegistryThemeId(savedTheme)) {
             set({ theme: savedTheme })
             return
           }
         }
       }
-      // Default to light-1
       set({ theme: 'light-1' })
     } catch (error) {
       console.error('Error loading theme:', error)
@@ -97,9 +91,6 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   },
   getCategory: () => {
     const theme = get().theme
-    if (theme.startsWith('hot-')) {
-      return 'hot'
-    }
     if (theme.startsWith('light-')) {
       return 'light'
     }

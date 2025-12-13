@@ -77,14 +77,14 @@ export function Notes({ entries }: NotesProps) {
               })}
             >
               <Card
-                style={{
-                  backgroundColor: isDark
-                    ? `${colors.card}E6` // 90% opacity
-                    : `${colors.secondary}80`, // 50% opacity
-                  borderColor: colors.border,
-                }}
+              // style={{
+              //   backgroundColor: isDark
+              //     ? `${colors.card}E6`
+              //     : `${colors.secondary}`,
+              //   borderColor: colors.border,
+              // }}
               >
-                <CardContent className='p-4'>
+                <CardContent>
                   <View className='flex-row items-start gap-4'>
                     {/* Date Section */}
                     <View className='items-center'>
@@ -103,7 +103,7 @@ export function Notes({ entries }: NotesProps) {
                     <View className='flex-1 gap-1'>
                       {entry.title ? (
                         <Text
-                          className='text-base font-semibold text-foreground'
+                          className='font-semibold text-foreground'
                           numberOfLines={1}
                           ellipsizeMode='tail'
                         >
@@ -128,11 +128,7 @@ export function Notes({ entries }: NotesProps) {
 
                     {/* Emoji */}
                     <View className='items-center justify-center'>
-                      <Icon
-                        as={NotebookPen}
-                        size={28}
-                        className='text-primary'
-                      />
+                      <Icon as={NotebookPen} size={28} color={colors.primary} />
                     </View>
                   </View>
                 </CardContent>

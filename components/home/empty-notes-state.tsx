@@ -23,7 +23,7 @@ export function EmptyNotesState() {
           <Text className='text-center text-xl font-semibold text-foreground'>
             No notes yet
           </Text>
-          <Text className='text-center text-base text-muted-foreground'>
+          <Text className='text-center text-muted-foreground'>
             Start your note-taking journey by creating your first note. Capture
             your thoughts, memories, and moments.
           </Text>

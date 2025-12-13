@@ -15,19 +15,13 @@ export function HabitChallengeCard({
   show,
   onDismiss,
 }: HabitChallengeCardProps) {
-  const { colors, isDark } = useTheme()
+  const { colors } = useTheme()
 
   if (!show) return null
 
   return (
     <View className='px-4 pt-4'>
-      <Card
-        className='relative overflow-hidden'
-        style={{
-          backgroundColor: isDark ? colors.secondary : `${colors.secondary}CC`, // 80% opacity
-          borderColor: colors.border,
-        }}
-      >
+      <Card className='relative overflow-hidden'>
         <CardContent className='p-4'>
           <View className='flex-row items-center justify-between'>
             <View className='flex-1 gap-3'>
@@ -36,32 +30,13 @@ export function HabitChallengeCard({
               </Text>
               {/* Progress Bar */}
               <View className='flex-row items-center gap-2'>
-                <View
-                  className='h-2 flex-1 rounded-full'
-                  style={{
-                    backgroundColor: isDark
-                      ? colors.muted
-                      : `${colors.muted}80`,
-                  }}
-                >
-                  <View
-                    className='h-2 w-1/3 rounded-full'
-                    style={{ backgroundColor: colors.primary }}
-                  />
+                <View className='h-2 flex-1 rounded-full'>
+                  <View className='h-2 w-1/3 rounded-full bg-primary' />
                 </View>
-                <View
-                  className='h-6 w-6 items-center justify-center rounded-full'
-                  style={{ backgroundColor: colors.primary }}
-                >
-                  <View
-                    className='h-3 w-3 rounded-full'
-                    style={{ backgroundColor: colors.primaryForeground }}
-                  />
+                <View className='h-6 w-6 items-center justify-center rounded-full bg-primary'>
+                  <View className='h-3 w-3 rounded-full bg-primary-foreground' />
                 </View>
-                <View
-                  className='h-6 w-6 rounded-full border-2 bg-transparent'
-                  style={{ borderColor: colors.mutedForeground }}
-                />
+                <View className='h-6 w-6 rounded-full border-2 border-muted-foreground bg-transparent' />
               </View>
             </View>
             {/* Gift Box Icon */}
@@ -75,7 +50,7 @@ export function HabitChallengeCard({
               onPress={onDismiss}
               className='absolute right-2 top-2 h-auto w-auto p-1'
             >
-              <X size={18} color={colors.mutedForeground} />
+              <X color={colors.mutedForeground} />
             </Button>
           </View>
         </CardContent>
