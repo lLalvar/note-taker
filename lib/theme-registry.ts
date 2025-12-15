@@ -17,9 +17,8 @@ export interface ThemeMetadata {
   description: string
   category: ThemeCategory
   icon: LucideIcon
-  previewColor?: string // Optional: primary color for preview
-  isFree?: boolean // Whether theme is free
-  previewImage?: string // Optional: background image URL or asset path
+  isFree?: boolean
+  previewImage?: string
 }
 
 /**
@@ -39,19 +38,16 @@ export const THEME_REGISTRY: ThemeMetadata[] = [
     description: 'Default light theme',
     category: 'light',
     icon: Sun,
-    previewColor: 'hsl(255.1351 91.7355% 76.2745%)',
     isFree: true,
   },
-  // Add more light themes here:
-  // {
-  //   id: 'light-2',
-  //   name: 'Light 2',
-  //   description: 'Second light theme',
-  //   category: 'light',
-  //   icon: Sun,
-  //   previewColor: '#your-color',
-  //   isFree: true,
-  // },
+  {
+    id: 'light-2',
+    name: 'Light 2',
+    description: 'Second light theme',
+    category: 'light',
+    icon: Sun,
+    isFree: true,
+  },
 
   // Dark themes
   {
@@ -60,19 +56,16 @@ export const THEME_REGISTRY: ThemeMetadata[] = [
     description: 'Default dark theme',
     category: 'dark',
     icon: MoonStar,
-    previewColor: 'hsl(255.9036 95.4023% 82.9412%)',
     isFree: true,
   },
-  // Add more dark themes here:
-  // {
-  //   id: 'dark-2',
-  //   name: 'Dark 2',
-  //   description: 'Second dark theme',
-  //   category: 'dark',
-  //   icon: MoonStar,
-  //   previewColor: '#your-color',
-  //   isFree: true,
-  // },
+  {
+    id: 'dark-2',
+    name: 'Dark 2',
+    description: 'Second dark theme',
+    category: 'dark',
+    icon: MoonStar,
+    isFree: true,
+  },
 ]
 
 export function getThemeMetadata(themeId: string): ThemeMetadata | undefined {

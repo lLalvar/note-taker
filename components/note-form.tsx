@@ -194,14 +194,9 @@ export function NoteForm({ noteId }: NoteFormProps) {
               </CardTitle>
               <CardDescription className='text-center sm:text-left'>
                 {isEditMode ? (
-                  <Trans>
-                    Update the title and description for your note (both
-                    optional).
-                  </Trans>
+                  <Trans>Update the title and description for your note</Trans>
                 ) : (
-                  <Trans>
-                    Add a title and description for your note (both optional).
-                  </Trans>
+                  <Trans>Add a title and description for your note</Trans>
                 )}
               </CardDescription>
             </CardHeader>
@@ -223,10 +218,6 @@ export function NoteForm({ noteId }: NoteFormProps) {
                         <FormItem>
                           <FormLabel>
                             <Trans>Title</Trans>
-                            <Text className='text-muted-foreground'>
-                              {' '}
-                              (Optional)
-                            </Text>
                           </FormLabel>
                           <Input
                             {...field}
@@ -245,16 +236,12 @@ export function NoteForm({ noteId }: NoteFormProps) {
                         <FormItem>
                           <FormLabel>
                             <Trans>Description</Trans>
-                            <Text className='text-muted-foreground'>
-                              {' '}
-                              (Optional)
-                            </Text>
                           </FormLabel>
                           <Textarea
                             {...field}
                             placeholder={t`Write your note description here...`}
-                            numberOfLines={8}
-                            textAlignVertical='top'
+                            numberOfLines={10}
+                            className='min-h-40'
                             editable={!isLoadingNote}
                           />
                           <FormMessage />

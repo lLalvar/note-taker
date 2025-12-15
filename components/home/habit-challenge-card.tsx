@@ -30,7 +30,7 @@ export function HabitChallengeCard({
               </Text>
               {/* Progress Bar */}
               <View className='flex-row items-center gap-2'>
-                <View className='h-2 flex-1 rounded-full'>
+                <View className='h-2 flex-1 rounded-full bg-muted'>
                   <View className='h-2 w-1/3 rounded-full bg-primary' />
                 </View>
                 <View className='h-6 w-6 items-center justify-center rounded-full bg-primary'>

@@ -58,6 +58,7 @@ export default Sentry.wrap(function RootLayout() {
         <BottomSheetModalProvider>
           <QueryClientProvider client={queryClient}>
             <I18nProvider i18n={i18n} defaultComponent={TransText}>
+              {/* <View style={[{ flex: 1 }]}> */}
               <View style={[{ flex: 1 }, cssVariables]}>
                 <ThemeProvider value={navTheme}>
                   {/* <DiaryLockGuard> */}

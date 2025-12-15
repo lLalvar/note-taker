@@ -19,28 +19,28 @@ export function useTheme() {
   }, [initialize])
 
   const effectiveThemeId = useMemo(() => {
-    return storedThemeId || 'light-1'
+    return storedThemeId
   }, [storedThemeId])
 
   useEffect(() => {
-    if (effectiveThemeId) {
-      updateThemeCSSVariables(effectiveThemeId)
-    }
+    updateThemeCSSVariables(effectiveThemeId)
   }, [effectiveThemeId])
 
   const cssVariables = useMemo(() => {
-    const variables = getThemeCSSVariables(effectiveThemeId)
-    const result = vars(variables)
-    // Ensure we always return a valid object with CSS variables
-    if (!result || Object.keys(result).length === 0) {
-      console.warn('cssVariables is empty, falling back to direct variables', {
-        effectiveThemeId,
-        variablesKeys: Object.keys(variables),
-      })
-      // If vars() fails, return the variables directly formatted for React Native
-      return variables
-    }
-    return result
+    const allVars = getThemeCSSVariables(effectiveThemeId)
+    // Only pass color-related variables to vars()
+    // Exclude radius, shadows, etc. as they're handled by CSS
+    const colorVars = Object.fromEntries(
+      Object.entries(allVars).filter(
+        ([key]) =>
+          !key.includes('radius') &&
+          !key.includes('shadow') &&
+          !key.includes('font') &&
+          !key.includes('tracking') &&
+          !key.includes('spacing')
+      )
+    )
+    return vars(colorVars)
   }, [effectiveThemeId])
 
   useEffect(() => {

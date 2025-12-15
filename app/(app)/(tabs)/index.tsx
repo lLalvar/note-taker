@@ -51,10 +51,10 @@ export default function HomeScreen() {
 
         <HeaderImage />
 
-        <HabitChallengeCard
+        {/* <HabitChallengeCard
           show={showChallenge}
           onDismiss={() => setShowChallenge(false)}
-        />
+        /> */}
 
         {!isLoading && <Notes entries={notes} />}
       </ScrollView>

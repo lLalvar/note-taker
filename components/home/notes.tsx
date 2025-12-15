@@ -18,14 +18,12 @@ interface NotesProps {
 }
 
 export function Notes({ entries }: NotesProps) {
-  const { colors, isDark } = useTheme()
+  const { colors } = useTheme()
 
-  // Calculate year from entries (use most recent entry's year, or current year if no entries)
   const year = useMemo(() => {
     if (entries.length === 0) {
       return dayjs().year()
     }
-    // Get year from first entry (most recent) or use current year as fallback
     const firstEntry = entries[0]
     if (firstEntry?.createdAt) {
       const createdAt = firstEntry.createdAt.toDate()
@@ -34,9 +32,7 @@ export function Notes({ entries }: NotesProps) {
     return dayjs().year()
   }, [entries])
 
-  // Group entries by year (for future use if needed)
   const entriesByYear = useMemo(() => {
-    // Filter entries for the current year, or show all if no year specified
     const targetYear = year
     return entries.filter((entry) => {
       if (!entry.createdAt) return false
@@ -51,13 +47,11 @@ export function Notes({ entries }: NotesProps) {
 
   return (
     <>
-      {/* Year Header */}
       <View className='px-4 pt-6'>
-        <Text className='text-2xl font-bold text-foreground'>{year}</Text>
+        <Text className='font-bold text-muted-foreground'>{year}</Text>
       </View>
       <View className='gap-3 px-4 pt-4'>
         {entriesByYear.map((entry) => {
-          // Format date from Note's createdAt timestamp
           const createdAt = entry.createdAt?.toDate() || new Date()
           const dateObj = dayjs(createdAt)
           const day = dateObj.format('DD')
@@ -76,14 +70,7 @@ export function Notes({ entries }: NotesProps) {
                 opacity: pressed ? 0.7 : 1,
               })}
             >
-              <Card
-              // style={{
-              //   backgroundColor: isDark
-              //     ? `${colors.card}E6`
-              //     : `${colors.secondary}`,
-              //   borderColor: colors.border,
-              // }}
-              >
+              <Card>
                 <CardContent>
                   <View className='flex-row items-start gap-4'>
                     {/* Date Section */}
