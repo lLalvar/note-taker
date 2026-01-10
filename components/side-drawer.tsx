@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { Trans, useLingui } from '@lingui/react/macro'
+import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import {
   BookOpen,
@@ -34,8 +35,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
+import { useShareApp } from '@/hooks/use-share-app'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
+
+const icon = require('@/assets/images/icon.png')
 
 const DRAWER_WIDTH = 280
 const BACKDROP_OPACITY = 0.5
@@ -56,6 +60,7 @@ interface SideDrawerProps {
 export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
   const { t } = useLingui()
   const { colors } = useTheme()
+  const { shareApp } = useShareApp()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { width: screenWidth } = useWindowDimensions()
@@ -261,7 +266,12 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       label: t`Share App`,
       icon: Share2,
       onPress: () => {
-        // TODO: Implement share functionality
+        // TODO: Add app store links when app is published
+        // shareApp({
+        //   iosLink: 'https://apps.apple.com/app/...',
+        //   androidLink: 'https://play.google.com/store/apps/details?id=...',
+        // })
+        shareApp()
       },
     },
     {
@@ -269,8 +279,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       label: t`Help Center`,
       icon: HelpCircle,
       onPress: () => {
-        // TODO: Navigate to help screen
-        // router.push('/(tabs)/help')
+        router.push('/(app)/help')
       },
     },
     {
@@ -416,27 +425,23 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
               <View className='px-6 pb-8 pt-6'>
                 <View className='flex-row items-center gap-3'>
                   {/* Diary Icon */}
-                  <View
-                    className='h-12 w-12 items-center justify-center rounded-lg'
-                    style={{
-                      backgroundColor: colors.muted,
-                    }}
-                  >
-                    <Icon
-                      as={BookOpen}
-                      size={28}
-                      className={cn('text-foreground')}
+                  <View className='relative size-12 overflow-hidden rounded-full'>
+                    <Image
+                      source={icon}
+                      contentFit='cover'
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                      }}
                     />
                   </View>
                   {/* App Name */}
                   <View>
-                    <Text
-                      className='text-2xl font-bold'
-                      style={{
-                        color: colors.foreground,
-                      }}
-                    >
-                      <Trans>MyDiary</Trans>
+                    <Text className='font-bold leading-tight'>
+                      <Trans>DailyMood</Trans>
+                    </Text>
+                    <Text className='font-bold leading-tight'>
+                      <Trans>Journal</Trans>
                     </Text>
                   </View>
                 </View>
@@ -462,7 +467,9 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         // Close drawer after action (navigation will happen via router)
                         onClose()
                       }}
-                      className={cn(item.isPro ? 'bg-accent' : undefined)}
+                      className={cn(
+                        item.isPro ? 'bg-sidebar-accent' : undefined
+                      )}
                     >
                       <Icon
                         as={IconComponent}

@@ -115,7 +115,7 @@ export function Notes({ entries }: NotesProps) {
 
                     {/* Emoji */}
                     <View className='items-center justify-center'>
-                      <Icon as={NotebookPen} size={28} color={colors.primary} />
+                      <Icon as={NotebookPen} size={20} color={colors.primary} />
                     </View>
                   </View>
                 </CardContent>

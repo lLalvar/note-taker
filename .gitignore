@@ -46,3 +46,6 @@ app-example
 # firebase config files
 GoogleService-Info.plist
 google-services.json
+
+# cursor
+.cursor/mcp.json

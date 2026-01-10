@@ -17,6 +17,13 @@ export default function AppLayout() {
           animation: 'slide_from_right',
         }}
       />
+      <Stack.Screen
+        name='help'
+        options={{
+          presentation: 'card',
+          animation: 'slide_from_right',
+        }}
+      />
     </Stack>
   )
 }
