@@ -19,11 +19,10 @@ import { Icon } from '@/components/ui/icon'
 import { useTheme } from '@/hooks/use-theme'
 import { getNotes } from '@/services/notes'
 
-const SCROLL_THRESHOLD = 50
+const SCROLL_THRESHOLD = 40
 
 export default function HomeScreen() {
   const { colors } = useTheme()
-  // const [showChallenge, setShowChallenge] = useState(true)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const { data: notes = [], isLoading } = useQuery({
@@ -39,7 +38,6 @@ export default function HomeScreen() {
     },
   })
 
-  // Animated style for header background
   const headerAnimatedStyle = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       scrollOffset.value,
@@ -66,10 +64,10 @@ export default function HomeScreen() {
               size='icon'
               onPress={() => setIsDrawerOpen(true)}
             >
-              <Icon as={Menu} className='size-5' />
+              <Icon as={Menu} />
             </Button>
             <Button variant='ghost' size='icon'>
-              <Icon as={Search} className='size-5' />
+              <Icon as={Search} />
             </Button>
           </View>
         </SafeAreaView>
@@ -82,20 +80,10 @@ export default function HomeScreen() {
         scrollEventThrottle={16}
         onScroll={scrollHandler}
       >
-        {/* Spacer to account for fixed header */}
-        {/* <View className='h-16' /> */}
-
         <HeaderImage />
-
-        {/* <HabitChallengeCard
-          show={showChallenge}
-          onDismiss={() => setShowChallenge(false)}
-        /> */}
-
         {!isLoading && <Notes entries={notes} />}
       </Animated.ScrollView>
 
-      {/* Side Drawer */}
       <SideDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

@@ -243,13 +243,11 @@ export default function ResetPassword() {
                             {showPassword ? (
                               <Icon
                                 as={EyeOff}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             ) : (
                               <Icon
                                 as={Eye}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             )}
@@ -294,13 +292,11 @@ export default function ResetPassword() {
                             {showConfirmPassword ? (
                               <Icon
                                 as={EyeOff}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             ) : (
                               <Icon
                                 as={Eye}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             )}

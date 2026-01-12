@@ -43,13 +43,8 @@ export default function Theme() {
     <View className='flex-1 bg-background' style={{ paddingTop: insets.top }}>
       {/* Header */}
       <View className='flex-row items-center gap-4 px-6 py-4'>
-        <Button
-          variant='ghost'
-          size='icon'
-          onPress={() => router.back()}
-          className='h-10 w-10'
-        >
-          <Icon as={ArrowLeft} size={24} />
+        <Button variant='ghost' size='icon' onPress={() => router.back()}>
+          <Icon as={ArrowLeft} />
         </Button>
         <Text className='flex-1 text-2xl font-bold text-foreground'>
           <Trans>Themes</Trans>

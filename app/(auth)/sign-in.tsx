@@ -31,6 +31,7 @@ import { Icon } from '@/components/ui/icon'
 // import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
+import { getAuthErrorMessage } from '@/lib/utils'
 import { signInWithEmail } from '@/services/auth'
 
 const signInSchema = z.object({
@@ -70,10 +71,8 @@ export default function SignIn() {
     },
     onError: (error: unknown) => {
       console.error('Sign In Error:', error)
-      Alert.alert(
-        t`Sign in failed`,
-        t`Please check your credentials and try again.`
-      )
+      const errorMessage = getAuthErrorMessage(error)
+      Alert.alert(t`Sign in failed`, errorMessage)
     },
   })
 
@@ -180,13 +179,11 @@ export default function SignIn() {
                             {showPassword ? (
                               <Icon
                                 as={EyeOff}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             ) : (
                               <Icon
                                 as={Eye}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             )}

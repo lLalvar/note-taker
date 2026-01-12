@@ -256,13 +256,11 @@ export default function DiaryLock() {
                                   {showPassword ? (
                                     <Icon
                                       as={EyeOff}
-                                      size={20}
                                       className='text-muted-foreground'
                                     />
                                   ) : (
                                     <Icon
                                       as={Eye}
-                                      size={20}
                                       className='text-muted-foreground'
                                     />
                                   )}
@@ -352,7 +350,6 @@ export default function DiaryLock() {
                       >
                         <Icon
                           as={Fingerprint}
-                          size={20}
                           className='mr-2 text-foreground'
                         />
                         <Text>

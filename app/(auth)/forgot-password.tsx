@@ -84,14 +84,10 @@ export default function ForgotPassword() {
                   onPress={() => router.back()}
                   className='-ml-2 mr-4 p-2'
                 >
-                  <Icon
-                    as={ArrowLeft}
-                    size={24}
-                    className='text-muted-foreground'
-                  />
+                  <Icon as={ArrowLeft} className='text-muted-foreground' />
                 </Pressable>
                 <CardTitle className='flex-1 text-xl'>
-                  <Trans>Reset Password</Trans>
+                  {/* <Trans>Reset Password</Trans> */}
                 </CardTitle>
               </View>
               <CardDescription>

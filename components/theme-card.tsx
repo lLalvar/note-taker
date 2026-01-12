@@ -1,10 +1,11 @@
 import React from 'react'
 
 import { Image } from 'expo-image'
-import { Calendar, Gift, Home, NotebookPen } from 'lucide-react-native'
+import { Calendar, Home, NotebookPen } from 'lucide-react-native'
 import { Pressable, View } from 'react-native'
 
 import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { getThemeColors } from '@/lib/theme'
 import { type ThemeMetadata } from '@/lib/theme-registry'
@@ -62,83 +63,30 @@ export function ThemeCard({
 
             {/* Content Area */}
             <View className='gap-1 px-1.5 py-1'>
-              {/* Habit Challenge Card */}
-              <View
-                className='rounded-md p-1.5'
-                style={{
-                  backgroundColor: isDark
-                    ? previewColors.secondary
-                    : toHsla(previewColors.secondary, 0.8),
-                }}
-              >
-                <View className='flex-row items-center justify-between'>
-                  <View className='flex-1 gap-1'>
-                    <View
-                      className='h-1.5 w-16 rounded'
-                      style={{
-                        backgroundColor: toHsla(previewColors.foreground, 0.8),
-                      }}
-                    />
-                    {/* Progress Bar */}
-                    <View className='flex-row items-center gap-1'>
-                      <View
-                        className='h-0.5 flex-1 rounded-full'
-                        style={{
-                          backgroundColor: toHsla(previewColors.muted, 0.5),
-                        }}
-                      >
-                        <View
-                          className='h-0.5 w-1/3 rounded-full'
-                          style={{
-                            backgroundColor: previewColors.primary,
-                          }}
-                        />
-                      </View>
-                      <View
-                        className='h-2 w-2 rounded-full'
-                        style={{ backgroundColor: previewColors.primary }}
-                      />
-                      <View
-                        className='h-2 w-2 rounded-full border'
-                        style={{
-                          borderColor: toHsla(
-                            previewColors.mutedForeground,
-                            0.5
-                          ),
-                        }}
-                      />
-                    </View>
-                  </View>
-                  <Gift size={12} color={previewColors.primary} />
-                </View>
-              </View>
-
               {/* Year Header */}
-              <View className='px-1'>
+              <View className='px-1 pt-1.5'>
                 <View
                   className='h-2 w-8 rounded'
                   style={{
-                    backgroundColor: toHsla(previewColors.foreground, 0.9),
+                    backgroundColor: toHsla(previewColors.mutedForeground, 0.8),
                   }}
                 />
               </View>
 
               {/* Note Cards */}
-              <View className='gap-1'>
+              <View className='gap-1 px-1 pt-1'>
                 {/* First Note Card */}
                 <View
                   className='rounded-md p-1.5'
                   style={{
-                    backgroundColor: isDark
-                      ? toHsla(previewColors.card, 0.9)
-                      : previewColors.secondary,
+                    backgroundColor: previewColors.card,
                   }}
                 >
                   <View className='flex-row items-start gap-1.5'>
-                    {/* Date */}
+                    {/* Date Section */}
                     <View className='items-center'>
                       <View
-                        className='h-2.5 w-3 rounded'
+                        className='h-3 w-4 rounded'
                         style={{
                           backgroundColor: toHsla(
                             previewColors.foreground,
@@ -147,8 +95,9 @@ export function ThemeCard({
                         }}
                       />
                       <View className='mt-0.5 flex-row items-center gap-0.5'>
-                        <Calendar
-                          size={6}
+                        <Icon
+                          as={Calendar}
+                          className='size-1.5'
                           color={previewColors.mutedForeground}
                         />
                         <View
@@ -162,14 +111,14 @@ export function ThemeCard({
                         />
                       </View>
                     </View>
-                    {/* Content */}
+                    {/* Content Section */}
                     <View className='flex-1 gap-0.5'>
                       <View
                         className='h-1 w-12 rounded'
                         style={{
                           backgroundColor: toHsla(
                             previewColors.foreground,
-                            0.7
+                            0.8
                           ),
                         }}
                       />
@@ -177,14 +126,20 @@ export function ThemeCard({
                         className='h-0.5 w-full rounded'
                         style={{
                           backgroundColor: toHsla(
-                            previewColors.foreground,
-                            0.3
+                            previewColors.mutedForeground,
+                            0.5
                           ),
                         }}
                       />
                     </View>
                     {/* Icon */}
-                    <NotebookPen size={10} color={previewColors.primary} />
+                    <View className='items-center justify-center'>
+                      <Icon
+                        as={NotebookPen}
+                        className='size-2.5'
+                        color={previewColors.primary}
+                      />
+                    </View>
                   </View>
                 </View>
 
@@ -192,16 +147,14 @@ export function ThemeCard({
                 <View
                   className='rounded-md p-1.5'
                   style={{
-                    backgroundColor: isDark
-                      ? toHsla(previewColors.card, 0.9)
-                      : previewColors.secondary,
+                    backgroundColor: previewColors.card,
                   }}
                 >
                   <View className='flex-row items-start gap-1.5'>
-                    {/* Date */}
+                    {/* Date Section */}
                     <View className='items-center'>
                       <View
-                        className='h-2.5 w-3 rounded'
+                        className='h-3 w-4 rounded'
                         style={{
                           backgroundColor: toHsla(
                             previewColors.foreground,
@@ -210,8 +163,9 @@ export function ThemeCard({
                         }}
                       />
                       <View className='mt-0.5 flex-row items-center gap-0.5'>
-                        <Calendar
-                          size={6}
+                        <Icon
+                          as={Calendar}
+                          className='size-1.5'
                           color={previewColors.mutedForeground}
                         />
                         <View
@@ -225,14 +179,14 @@ export function ThemeCard({
                         />
                       </View>
                     </View>
-                    {/* Content */}
+                    {/* Content Section */}
                     <View className='flex-1 gap-0.5'>
                       <View
                         className='h-1 w-10 rounded'
                         style={{
                           backgroundColor: toHsla(
                             previewColors.foreground,
-                            0.7
+                            0.8
                           ),
                         }}
                       />
@@ -240,14 +194,20 @@ export function ThemeCard({
                         className='h-0.5 w-3/4 rounded'
                         style={{
                           backgroundColor: toHsla(
-                            previewColors.foreground,
-                            0.3
+                            previewColors.mutedForeground,
+                            0.5
                           ),
                         }}
                       />
                     </View>
                     {/* Icon */}
-                    <NotebookPen size={10} color={previewColors.primary} />
+                    <View className='items-center justify-center'>
+                      <Icon
+                        as={NotebookPen}
+                        className='size-2.5'
+                        color={previewColors.primary}
+                      />
+                    </View>
                   </View>
                 </View>
               </View>
@@ -260,7 +220,11 @@ export function ThemeCard({
                 backgroundColor: previewColors.card,
               }}
             >
-              <Home size={8} color={previewColors.mutedForeground} />
+              <Icon
+                as={Home}
+                className='size-2'
+                color={previewColors.mutedForeground}
+              />
               <View
                 className='h-4 w-4 items-center justify-center rounded-full'
                 style={{ backgroundColor: previewColors.primary }}

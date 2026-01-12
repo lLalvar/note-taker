@@ -31,7 +31,7 @@ export function ThemeToggle() {
       variant='ghost'
       className='ios:size-9 rounded-full web:mx-4'
     >
-      <Icon as={isDark ? MoonStar : Sun} className='size-5' />
+      <Icon as={isDark ? MoonStar : Sun} />
     </Button>
   )
 }

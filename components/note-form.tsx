@@ -32,6 +32,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { Textarea } from '@/components/ui/textarea'
@@ -140,10 +141,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
           onPress={() => router.back()}
           disabled={isLoading}
         >
-          <ArrowLeft
-            size={24}
-            color={isLoading ? colors.mutedForeground : colors.foreground}
-          />
+          <Icon as={ArrowLeft} />
         </Button>
         <Button
           variant='ghost'

@@ -1,6 +1,7 @@
 import { BookOpen } from 'lucide-react-native'
 import { View } from 'react-native'
 
+import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
 
@@ -17,7 +18,7 @@ export function EmptyNotesState() {
             opacity: 0.5,
           }}
         >
-          <BookOpen size={40} color={colors.mutedForeground} />
+          <Icon as={BookOpen} className='size-10 text-muted-foreground' />
         </View>
         <View className='items-center gap-2'>
           <Text className='text-center text-xl font-semibold text-foreground'>

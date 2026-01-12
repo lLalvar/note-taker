@@ -3,6 +3,7 @@ import { View } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
 
@@ -41,7 +42,7 @@ export function HabitChallengeCard({
             </View>
             {/* Gift Box Icon */}
             <View className='ml-4'>
-              <Gift size={48} color={colors.primary} />
+              <Icon as={Gift} className='size-12 text-primary' />
             </View>
             {/* Dismiss Button */}
             <Button
@@ -50,7 +51,7 @@ export function HabitChallengeCard({
               onPress={onDismiss}
               className='absolute right-2 top-2 h-auto w-auto p-1'
             >
-              <X color={colors.mutedForeground} />
+              <Icon as={X} className='text-muted-foreground' />
             </Button>
           </View>
         </CardContent>

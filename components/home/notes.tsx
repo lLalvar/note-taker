@@ -6,7 +6,6 @@ import { Pressable, View } from 'react-native'
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
-import { useTheme } from '@/hooks/use-theme'
 import dayjs from '@/lib/dayjs'
 import type { Note } from '@/types'
 
@@ -18,8 +17,6 @@ interface NotesProps {
 }
 
 export function Notes({ entries }: NotesProps) {
-  const { colors } = useTheme()
-
   const year = useMemo(() => {
     if (entries.length === 0) {
       return dayjs().year()
@@ -71,52 +68,53 @@ export function Notes({ entries }: NotesProps) {
               })}
             >
               <Card>
-                <CardContent>
-                  <View className='flex-row items-start gap-4'>
-                    {/* Date Section */}
-                    <View className='items-center'>
-                      <Text className='text-2xl font-bold text-foreground'>
-                        {day}
+                <CardContent className='flex-row items-start gap-4'>
+                  {/* Date Section */}
+                  <View className='items-center'>
+                    <Text className='text-2xl font-bold text-foreground'>
+                      {day}
+                    </Text>
+                    <View className='flex-row items-center gap-1'>
+                      <Icon
+                        as={Calendar}
+                        className='size-3 text-muted-foreground'
+                      />
+                      <Text className='text-xs text-muted-foreground'>
+                        {month}
                       </Text>
-                      <View className='flex-row items-center gap-1'>
-                        <Calendar size={12} color={colors.mutedForeground} />
-                        <Text className='text-xs text-muted-foreground'>
-                          {month}
-                        </Text>
-                      </View>
                     </View>
+                  </View>
 
-                    {/* Content Section */}
-                    <View className='flex-1 gap-1'>
-                      {entry.title ? (
-                        <Text
-                          className='font-semibold text-foreground'
-                          numberOfLines={1}
-                          ellipsizeMode='tail'
-                        >
-                          {entry.title}
-                        </Text>
-                      ) : null}
-                      {entry.description ? (
-                        <Text
-                          className='text-sm text-muted-foreground'
-                          numberOfLines={2}
-                          ellipsizeMode='tail'
-                        >
-                          {entry.description}
-                        </Text>
-                      ) : null}
-                      {!entry.title && !entry.description && (
-                        <Text className='text-sm text-muted-foreground'>
-                          No content
-                        </Text>
-                      )}
-                    </View>
+                  {/* Content Section */}
+                  <View className='flex-1 gap-1'>
+                    {entry.title ? (
+                      <Text
+                        className='font-semibold text-foreground'
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                      >
+                        {entry.title}
+                      </Text>
+                    ) : null}
+                    {entry.description ? (
+                      <Text
+                        className='text-sm text-muted-foreground'
+                        numberOfLines={2}
+                        ellipsizeMode='tail'
+                      >
+                        {entry.description}
+                      </Text>
+                    ) : null}
+                    {!entry.title && !entry.description && (
+                      <Text className='text-sm text-muted-foreground'>
+                        No content
+                      </Text>
+                    )}
+                  </View>
 
-                    {/* Emoji */}
-                    <View className='items-center justify-center'>
-                      <Icon as={NotebookPen} size={20} color={colors.primary} />
-                    </View>
+                  {/* Emoji */}
+                  <View className='items-center justify-center'>
+                    <Icon as={NotebookPen} className='text-primary' />
                   </View>
                 </CardContent>
               </Card>

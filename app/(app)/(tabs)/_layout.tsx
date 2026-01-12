@@ -6,6 +6,7 @@ import { Platform, View } from 'react-native'
 
 import { HapticTab } from '@/components/haptic-tab'
 import { TabBarIcon } from '@/components/ui/TabBarIcon'
+import { Icon } from '@/components/ui/icon'
 import { useTheme } from '@/hooks/use-theme'
 
 export default function TabsLayout() {
@@ -57,11 +58,7 @@ export default function TabsLayout() {
                     elevation: 8,
                   }}
                 >
-                  <Plus
-                    size={28}
-                    color={colors.primaryForeground}
-                    strokeWidth={3}
-                  />
+                  <Icon as={Plus} className='size-7 text-primary-foreground' />
                 </View>
               </View>
             )
@@ -71,6 +68,7 @@ export default function TabsLayout() {
             paddingTop: 0,
             paddingBottom: 0,
             borderTopWidth: 0,
+            overflow: 'hidden',
           }, // Hide tab bar on create screen
         }}
       />
@@ -92,6 +90,7 @@ export default function TabsLayout() {
             paddingTop: 0,
             paddingBottom: 0,
             borderTopWidth: 0,
+            overflow: 'hidden',
           }, // Hide tab bar on edit screen
         }}
       />

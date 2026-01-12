@@ -7,6 +7,7 @@ import { Link, router } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -42,6 +43,7 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
+import { getAuthErrorMessage } from '@/lib/utils'
 import { signUpWithEmail } from '@/services/auth'
 
 // import { useGoogleAuth } from '@/services/authService'
@@ -103,7 +105,8 @@ export default function SignUp() {
       router.replace('/(app)/(tabs)')
     },
     onError: (error: unknown) => {
-      console.error('Sign Up Error:', error)
+      const errorMessage = getAuthErrorMessage(error)
+      Alert.alert(t`Sign up failed`, errorMessage)
     },
   })
 
@@ -236,13 +239,11 @@ export default function SignUp() {
                             {showPassword ? (
                               <Icon
                                 as={EyeOff}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             ) : (
                               <Icon
                                 as={Eye}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             )}
@@ -286,13 +287,11 @@ export default function SignUp() {
                             {showConfirmPassword ? (
                               <Icon
                                 as={EyeOff}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             ) : (
                               <Icon
                                 as={Eye}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             )}

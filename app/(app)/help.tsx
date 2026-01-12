@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Trans } from '@lingui/react/macro'
+import { Trans, useLingui } from '@lingui/react/macro'
 import { useRouter } from 'expo-router'
 import { ArrowLeft, HelpCircle, Mail, MessageCircle } from 'lucide-react-native'
 import { ScrollView, View } from 'react-native'
@@ -17,42 +17,38 @@ interface HelpSection {
   description: string
 }
 
-const helpSections: HelpSection[] = [
-  {
-    id: 'getting-started',
-    title: 'Getting Started',
-    icon: HelpCircle,
-    description: 'Learn the basics of using DailyMood Journal',
-  },
-  {
-    id: 'faq',
-    title: 'Frequently Asked Questions',
-    icon: MessageCircle,
-    description: 'Find answers to common questions',
-  },
-  {
-    id: 'contact',
-    title: 'Contact Support',
-    icon: Mail,
-    description: 'Get in touch with our support team',
-  },
-]
-
 export default function HelpCenter() {
+  const { t } = useLingui()
   const router = useRouter()
   const insets = useSafeAreaInsets()
+
+  const helpSections: HelpSection[] = [
+    {
+      id: 'getting-started',
+      title: t`Getting Started`,
+      icon: HelpCircle,
+      description: t`Learn the basics of using DailyMood Journal`,
+    },
+    {
+      id: 'faq',
+      title: t`Frequently Asked Questions`,
+      icon: MessageCircle,
+      description: t`Find answers to common questions`,
+    },
+    {
+      id: 'contact',
+      title: t`Contact Support`,
+      icon: Mail,
+      description: t`Get in touch with our support team`,
+    },
+  ]
 
   return (
     <View className='flex-1 bg-background' style={{ paddingTop: insets.top }}>
       {/* Header */}
       <View className='flex-row items-center gap-4 px-6 py-4'>
-        <Button
-          variant='ghost'
-          size='icon'
-          onPress={() => router.back()}
-          className='h-10 w-10'
-        >
-          <Icon as={ArrowLeft} size={24} />
+        <Button variant='ghost' size='icon' onPress={() => router.back()}>
+          <Icon as={ArrowLeft} />
         </Button>
         <Text className='flex-1 text-2xl font-bold text-foreground'>
           <Trans>Help Center</Trans>
@@ -92,7 +88,7 @@ export default function HelpCenter() {
               >
                 <View className='mb-3 flex-row items-center gap-3'>
                   <View className='rounded-full bg-muted p-2'>
-                    <Icon as={IconComponent} className='size-5 text-primary' />
+                    <Icon as={IconComponent} className='text-primary' />
                   </View>
                   <Text className='flex-1 text-lg font-semibold text-foreground'>
                     {section.title}

@@ -4,7 +4,6 @@ import { Trans, useLingui } from '@lingui/react/macro'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import {
-  BookOpen,
   Crown,
   // Heart,
   HelpCircle,
@@ -213,6 +212,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     )
     return {
       opacity: BACKDROP_OPACITY * progress,
+      backgroundColor: 'black',
     }
   })
 
@@ -366,16 +366,12 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       onRequestClose={onClose}
     >
       <GestureDetector gesture={combinedGesture}>
-        <View style={{ flex: 1 }}>
+        <View className='flex-1'>
           {/* Backdrop */}
           <Animated.View
+            className='absolute inset-0'
             style={[
               {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
                 backgroundColor: colors.foreground,
               },
               backdropStyle,
@@ -383,22 +379,16 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
           >
             {/* Left half - do nothing on touch */}
             <View
+              className='absolute bottom-0 left-0 top-0'
               style={{
-                position: 'absolute',
-                left: 0,
                 width: screenWidth / 2,
-                top: 0,
-                bottom: 0,
               }}
             />
             {/* Right half - close on touch */}
             <Pressable
+              className='absolute bottom-0 right-0 top-0'
               style={{
-                position: 'absolute',
-                right: 0,
                 width: screenWidth / 2,
-                top: 0,
-                bottom: 0,
               }}
               onPress={onClose}
             />
@@ -406,12 +396,9 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
 
           {/* Drawer */}
           <Animated.View
+            className='absolute bottom-0 left-0 top-0'
             style={[
               {
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
                 width: DRAWER_WIDTH,
                 backgroundColor: colors.card,
                 paddingTop: insets.top,
@@ -437,12 +424,8 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                   </View>
                   {/* App Name */}
                   <View>
-                    <Text className='font-bold leading-tight'>
-                      <Trans>DailyMood</Trans>
-                    </Text>
-                    <Text className='font-bold leading-tight'>
-                      <Trans>Journal</Trans>
-                    </Text>
+                    <Text className='font-bold leading-tight'>DailyMood</Text>
+                    <Text className='font-bold leading-tight'>Journal</Text>
                   </View>
                 </View>
               </View>
@@ -464,7 +447,6 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                       variant='ghost'
                       onPress={() => {
                         item.onPress?.()
-                        // Close drawer after action (navigation will happen via router)
                         onClose()
                       }}
                       className={cn(
@@ -473,18 +455,19 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                     >
                       <Icon
                         as={IconComponent}
-                        size={22}
                         className={cn(
                           item.isPro ? 'text-primary' : 'text-foreground'
                         )}
                       />
                       <Text
-                        className='flex-1'
+                        className={cn(
+                          'flex-1',
+                          item.isPro ? 'font-semibold' : 'font-normal'
+                        )}
                         style={{
                           color: item.isPro
                             ? colors.primary
                             : colors.foreground,
-                          fontWeight: item.isPro ? '600' : '400',
                         }}
                       >
                         {item.label}

@@ -7,7 +7,6 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
 import { Languages } from 'lucide-react-native'
-import { Pressable } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
@@ -23,7 +22,7 @@ const LOCALES = [
 
 export function LanguageSelector() {
   const { locale, setLocale } = useLanguageStore()
-  const { colors } = useTheme()
+  const { colors, cssVariables } = useTheme()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   const handleOpenSheet = () => {
@@ -55,7 +54,7 @@ export function LanguageSelector() {
         variant='ghost'
         className='ios:size-9 rounded-full web:mx-4'
       >
-        <Icon as={Languages} className='size-5' />
+        <Icon as={Languages} />
       </Button>
       <BottomSheetModal
         ref={bottomSheetModalRef}
@@ -65,24 +64,26 @@ export function LanguageSelector() {
         handleIndicatorStyle={{ backgroundColor: colors.mutedForeground }}
         backdropComponent={renderBackdrop}
       >
-        <BottomSheetView
-        // className='rounded-t-3xl bg-background'
-        >
+        <BottomSheetView style={cssVariables}>
           {LOCALES.map((loc) => (
-            <Pressable
+            <Button
               key={loc.code}
               onPress={() => handleSelectLanguage(loc.code)}
-              className={cn('px-6 py-4', locale === loc.code && 'bg-muted')}
+              variant='default'
+              className={cn(
+                'justify-start bg-background',
+                locale === loc.code && 'bg-muted'
+              )}
             >
               <Text
                 className={cn(
-                  'text-foreground',
-                  locale === loc.code && 'font-semibold'
+                  'text-muted-foreground',
+                  locale === loc.code && 'font-semibold text-foreground'
                 )}
               >
                 {loc.label}
               </Text>
-            </Pressable>
+            </Button>
           ))}
         </BottomSheetView>
       </BottomSheetModal>
