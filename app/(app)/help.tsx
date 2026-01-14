@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Trans, useLingui } from '@lingui/react/macro'
-import { useRouter } from 'expo-router'
 import { HelpCircle, Mail, MessageCircle } from 'lucide-react-native'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'

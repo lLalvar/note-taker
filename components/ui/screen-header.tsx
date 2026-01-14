@@ -37,7 +37,7 @@ export function ScreenHeader({
   return (
     <View
       className={cn(
-        'min-h-16 flex-row items-center gap-2 px-4 ps-2',
+        'min-h-14 flex-row items-center gap-2 px-4 ps-2',
         !showBackButton && 'ps-4',
         className
       )}

@@ -3,10 +3,11 @@ import { useMemo } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { Calendar, NotebookPen } from 'lucide-react-native'
-import { Pressable, View } from 'react-native'
+import { ActivityIndicator, Pressable, View } from 'react-native'
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
+import { useTheme } from '@/hooks/use-theme'
 import { getNote } from '@/services/notes'
 import { useLanguageStore } from '@/store/language-store'
 import type { Note } from '@/types'
@@ -18,14 +19,17 @@ interface NotesProps {
   entries: Note[]
   isSearchResult?: boolean
   searchQuery?: string
+  isLoading?: boolean
 }
 
 export function Notes({
   entries,
   isSearchResult = false,
   searchQuery,
+  isLoading = false,
 }: NotesProps) {
   const { locale } = useLanguageStore()
+  const { colors } = useTheme()
   const queryClient = useQueryClient()
 
   const intlLocale = locale === 'ru' ? 'ru-RU' : 'en-US'
@@ -59,6 +63,17 @@ export function Notes({
       .sort(([a], [b]) => Number(b) - Number(a))
       .map(([year, notes]) => ({ year: Number(year), notes }))
   }, [entries])
+
+  if (isLoading) {
+    return (
+      <View className='flex-1 items-center justify-center px-8 py-16'>
+        <ActivityIndicator size='large' color={colors.primary} />
+        <Text className='mt-4 text-center text-muted-foreground'>
+          Loading notes...
+        </Text>
+      </View>
+    )
+  }
 
   if (entries.length === 0) {
     return (

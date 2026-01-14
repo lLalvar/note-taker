@@ -13,17 +13,34 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/note-form.tsx:197
-msgid "Add a title and description for your note"
-msgstr "Добавьте заголовок и описание для вашей заметки"
+#: app/(app)/settings.tsx:102
+msgid "Account"
+msgstr ""
 
 #: app/(auth)/sign-up.tsx:321
 msgid "Already have an account?"
 msgstr "У вас уже есть аккаунт?"
 
+#: app/(app)/settings.tsx:84
+msgid "Appearance"
+msgstr ""
+
+#: components/theme-card.tsx:262
+msgid "Apply"
+msgstr "Применить"
+
 #: app/(auth)/diary-lock.tsx:427
 msgid "Back to {lockTypeLabel}"
 msgstr "Назад к {lockTypeLabel}"
+
+#: components/profile/profile-content.tsx:271
+#: components/profile/profile-content.tsx:307
+msgid "Bio"
+msgstr ""
+
+#: components/profile/profile-content.tsx:338
+msgid "Cancel"
+msgstr ""
 
 #: app/(auth)/reset-password.tsx:268
 msgid "Confirm New Password"
@@ -41,11 +58,11 @@ msgstr "Подтвердите ваш новый пароль"
 msgid "Confirm your password"
 msgstr "Подтвердите ваш пароль"
 
-#: app/(app)/help.tsx:40
+#: app/(app)/help.tsx:38
 msgid "Contact Support"
 msgstr "Связаться с поддержкой"
 
-#: app/(app)/help.tsx:102
+#: app/(app)/help.tsx:92
 msgid "Content coming soon..."
 msgstr "Контент скоро появится..."
 
@@ -53,7 +70,7 @@ msgstr "Контент скоро появится..."
 msgid "Continue"
 msgstr "Продолжить"
 
-#: components/note-form.tsx:162
+#: components/note-form.tsx:250
 msgid "Create"
 msgstr "Создать"
 
@@ -65,37 +82,44 @@ msgstr "Создайте пароль"
 msgid "Create Account"
 msgstr "Создать аккаунт"
 
-#: components/note-form.tsx:190
-msgid "Create Note"
-msgstr "Создать заметку"
-
 #: app/(auth)/sign-up.tsx:163
 msgid "Create your account"
 msgstr "Создайте свой аккаунт"
 
-#: components/note-form.tsx:157
+#: components/note-form.tsx:245
 msgid "Creating..."
 msgstr "Создание..."
 
-#: components/note-form.tsx:236
+#: components/note-form.tsx:305
 msgid "Description"
 msgstr "Описание"
+
+#: components/profile/profile-content.tsx:258
+#: components/profile/profile-content.tsx:283
+msgid "Display Name"
+msgstr ""
 
 #: app/(auth)/sign-in.tsx:216
 msgid "Don't have an account?"
 msgstr "Нет аккаунта?"
 
-#: components/note-form.tsx:188
-msgid "Edit Note"
-msgstr "Редактировать заметку"
+#: app/(app)/profile.tsx:31
+#: components/profile/profile-content.tsx:209
+msgid "Edit"
+msgstr ""
+
+#: components/profile/profile-content.tsx:236
+msgid "Edit Profile"
+msgstr ""
 
 #: app/(auth)/forgot-password.tsx:111
 #: app/(auth)/sign-in.tsx:143
 #: app/(auth)/sign-up.tsx:199
+#: components/profile/profile-content.tsx:293
 msgid "Email"
 msgstr "Электронная почта"
 
-#: components/note-form.tsx:222
+#: components/note-form.tsx:291
 msgid "Enter note title..."
 msgstr "Введите заголовок заметки..."
 
@@ -106,6 +130,10 @@ msgstr "Введите ваш {lockTypeLabel} для доступа к днев�
 #: app/(auth)/diary-lock.tsx:394
 msgid "Enter your answer"
 msgstr "Введите ваш ответ"
+
+#: components/profile/profile-content.tsx:259
+msgid "Enter your display name"
+msgstr ""
 
 #: app/(auth)/forgot-password.tsx:94
 msgid "Enter your email address and we'll send you a link to reset your password."
@@ -132,7 +160,11 @@ msgstr "Введите ваш PIN"
 msgid "Error"
 msgstr "Ошибка"
 
-#: app/(app)/help.tsx:36
+#: components/profile/profile-content.tsx:182
+msgid "Error loading profile"
+msgstr ""
+
+#: app/(app)/help.tsx:34
 msgid "Find answers to common questions"
 msgstr "Найдите ответы на распространенные вопросы"
 
@@ -140,7 +172,7 @@ msgstr "Найдите ответы на распространенные воп
 msgid "Forgot {lockTypeLabel}?"
 msgstr "Забыли {lockTypeLabel}?"
 
-#: app/(app)/help.tsx:34
+#: app/(app)/help.tsx:32
 msgid "Frequently Asked Questions"
 msgstr "Часто задаваемые вопросы"
 
@@ -148,20 +180,20 @@ msgstr "Часто задаваемые вопросы"
 msgid "Full Name"
 msgstr "Полное имя"
 
-#: app/(app)/help.tsx:42
+#: app/(app)/help.tsx:40
 msgid "Get in touch with our support team"
 msgstr "Свяжитесь с нашей командой поддержки"
 
-#: app/(app)/help.tsx:28
+#: app/(app)/help.tsx:26
 msgid "Getting Started"
 msgstr "Начало работы"
 
-#: app/(app)/help.tsx:54
-#: components/side-drawer.tsx:279
+#: app/(app)/help.tsx:46
+#: components/side-drawer.tsx:252
 msgid "Help Center"
 msgstr "Центр помощи"
 
-#: app/(app)/help.tsx:116
+#: app/(app)/help.tsx:106
 msgid "If you have an urgent question or need assistance, please check back soon as we're working on adding comprehensive help content."
 msgstr "Если у вас срочный вопрос или нужна помощь, пожалуйста, зайдите позже, мы работаем над добавлением полного контента помощи."
 
@@ -173,13 +205,21 @@ msgstr "Неверный {lockTypeLabel}. Пожалуйста, попробуй
 msgid "Invalid security answer. Please try again."
 msgstr "Неверный ответ на вопрос безопасности. Пожалуйста, попробуйте снова."
 
-#: app/(app)/help.tsx:30
+#: app/(app)/settings.tsx:94
+msgid "Language"
+msgstr ""
+
+#: app/(app)/help.tsx:28
 msgid "Learn the basics of using DailyMood Journal"
 msgstr "Изучите основы использования DailyMood Journal"
 
-#: components/note-form.tsx:206
+#: components/note-form.tsx:275
 msgid "Loading note..."
 msgstr "Загрузка заметки..."
+
+#: components/profile/profile-content.tsx:172
+msgid "Loading profile..."
+msgstr ""
 
 #: app/(auth)/forgot-password.tsx:112
 #: app/(auth)/sign-in.tsx:144
@@ -191,13 +231,25 @@ msgstr "m@example.com"
 msgid "Make sure your new password is secure and different from your previous one."
 msgstr "Убедитесь, что ваш новый пароль надежен и отличается от предыдущего."
 
-#: app/(app)/help.tsx:113
+#: components/profile/profile-content.tsx:274
+msgid "Maximum 500 characters"
+msgstr ""
+
+#: app/(app)/help.tsx:103
 msgid "Need Immediate Help?"
 msgstr "Нужна срочная помощь?"
 
 #: app/(auth)/reset-password.tsx:221
 msgid "New Password"
 msgstr "Новый пароль"
+
+#: components/profile/profile-content.tsx:312
+msgid "No bio added yet"
+msgstr ""
+
+#: components/profile/profile-content.tsx:158
+msgid "Not authenticated"
+msgstr ""
 
 #: app/(auth)/diary-lock.tsx:342
 #: app/(auth)/sign-in.tsx:231
@@ -223,21 +275,53 @@ msgstr "Пожалуйста, введите ваш новый пароль ни
 msgid "Please enter your security answer"
 msgstr "Пожалуйста, введите ваш ответ на вопрос безопасности"
 
+#: components/profile/profile-content.tsx:161
+msgid "Please sign in to view your profile"
+msgstr ""
+
+#: components/profile/profile-content.tsx:185
+msgid "Please try again later"
+msgstr ""
+
+#: app/(app)/profile.tsx:25
+#: app/(app)/settings.tsx:105
+#: components/profile/profile-content.tsx:202
+msgid "Profile"
+msgstr ""
+
+#: components/profile/profile-content.tsx:238
+msgid "Profile Information"
+msgstr ""
+
 #: app/(auth)/forgot-password.tsx:139
 msgid "Remember your password?"
 msgstr "Помните ваш пароль?"
 
-#: components/note-form.tsx:160
+#: components/profile/profile-content.tsx:192
+msgid "Retry"
+msgstr ""
+
+#: components/note-form.tsx:248
+#: components/profile/profile-content.tsx:348
 msgid "Save"
 msgstr "Сохранить"
 
-#: components/note-form.tsx:155
+#: components/note-form.tsx:243
 msgid "Saving..."
 msgstr "Сохранение..."
 
 #: app/(auth)/diary-lock.tsx:379
 msgid "Security Question"
 msgstr "Вопрос безопасности"
+
+#: components/ui/language-picker.tsx:83
+#: components/ui/language-picker.tsx:97
+msgid "Select Language"
+msgstr ""
+
+#: components/ui/ThemeToggle.tsx:49
+msgid "Select Theme"
+msgstr ""
 
 #: app/(auth)/forgot-password.tsx:130
 msgid "Send Reset Email"
@@ -247,11 +331,12 @@ msgstr "Отправить письмо для сброса"
 msgid "Set New Password"
 msgstr "Установить новый пароль"
 
-#: components/side-drawer.tsx:287
+#: app/(app)/settings.tsx:71
+#: components/side-drawer.tsx:258
 msgid "Settings"
 msgstr "Настройки"
 
-#: components/side-drawer.tsx:266
+#: components/side-drawer.tsx:239
 msgid "Share App"
 msgstr "Поделиться приложением"
 
@@ -268,6 +353,11 @@ msgstr "Вход не удался"
 msgid "Sign in to your app"
 msgstr "Войдите в приложение"
 
+#: app/(app)/settings.tsx:111
+msgid "Sign Out"
+msgstr ""
+
+#: app/(app)/settings.tsx:61
 #: components/ui/SignOutButton.tsx:24
 msgid "Sign out failed"
 msgstr "Выход не удался"
@@ -288,15 +378,20 @@ msgstr "Зарегистрируйтесь, чтобы начать"
 msgid "Signing in..."
 msgstr "Вход..."
 
-#: components/side-drawer.tsx:232
+#: components/profile/profile-content.tsx:272
+msgid "Tell us about yourself..."
+msgstr ""
+
+#: app/(app)/settings.tsx:87
+#: components/side-drawer.tsx:207
 msgid "Theme"
 msgstr "Тема"
 
-#: app/(app)/theme.tsx:50
+#: app/(app)/theme.tsx:56
 msgid "Themes"
 msgstr "Темы"
 
-#: components/note-form.tsx:218
+#: components/note-form.tsx:287
 msgid "Title"
 msgstr "Заголовок"
 
@@ -322,13 +417,9 @@ msgstr "Разблокировка..."
 msgid "Update Password"
 msgstr "Обновить пароль"
 
-#: components/note-form.tsx:195
-msgid "Update the title and description for your note"
-msgstr "Обновите заголовок и описание для вашей заметки"
-
-#: components/side-drawer.tsx:222
-msgid "Upgrade to PRO"
-msgstr "Обновить до PRO"
+#: components/profile/profile-content.tsx:243
+msgid "Update your profile information"
+msgstr ""
 
 #: app/(auth)/diary-lock.tsx:356
 msgid "Use Biometric"
@@ -350,7 +441,7 @@ msgstr "Проверка ссылки для сброса..."
 msgid "Verifying..."
 msgstr "Проверка..."
 
-#: app/(app)/help.tsx:73
+#: app/(app)/help.tsx:63
 msgid "We're here to help you get the most out of DailyMood Journal. Content will be available soon."
 msgstr "Мы здесь, чтобы помочь вам максимально использовать DailyMood Journal. Контент скоро появится."
 
@@ -358,13 +449,17 @@ msgstr "Мы здесь, чтобы помочь вам максимально �
 msgid "Welcome back! Please sign in to continue"
 msgstr "С возвращением! Пожалуйста, войдите, чтобы продолжить"
 
-#: app/(app)/help.tsx:70
+#: app/(app)/help.tsx:60
 msgid "Welcome to Help Center"
 msgstr "Добро пожаловать в Центр помощи"
 
-#: components/note-form.tsx:240
+#: components/note-form.tsx:309
 msgid "Write your note description here..."
 msgstr "Напишите описание вашей заметки здесь..."
+
+#: components/profile/profile-content.tsx:245
+msgid "Your account details"
+msgstr ""
 
 #: app/(auth)/diary-lock.tsx:388
 msgid "Your Answer"

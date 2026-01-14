@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Menu, Search } from 'lucide-react-native'
-import { View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import Animated, {
   interpolateColor,
   useAnimatedScrollHandler,
@@ -45,13 +45,11 @@ export default function HomeScreen() {
     queryFn: () => getNotes(shouldSearch ? trimmedSearchQuery : undefined),
   })
 
-  // Reset search when closing
   const handleCloseSearch = () => {
     setIsSearchActive(false)
     setSearchQuery('')
   }
 
-  // Toggle search
   const handleToggleSearch = () => {
     if (isSearchActive) {
       handleCloseSearch()
@@ -141,7 +139,8 @@ export default function HomeScreen() {
         <HeaderImage />
         {isLoading && shouldSearch ? (
           <View className='flex-1 items-center justify-center px-8 py-16'>
-            <Text className='text-center text-muted-foreground'>
+            <ActivityIndicator size='large' color={colors.primary} />
+            <Text className='mt-4 text-center text-muted-foreground'>
               Searching...
             </Text>
           </View>
@@ -150,6 +149,7 @@ export default function HomeScreen() {
             entries={notes}
             isSearchResult={shouldSearch}
             searchQuery={trimmedSearchQuery}
+            isLoading={isLoading && !shouldSearch}
           />
         )}
       </Animated.ScrollView>

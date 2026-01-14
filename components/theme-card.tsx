@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Trans } from '@lingui/react/macro'
 import { Image } from 'expo-image'
 import { Calendar, Home, NotebookPen, User } from 'lucide-react-native'
 import { Pressable, View } from 'react-native'
@@ -22,7 +23,6 @@ export const ThemeCard = React.memo(function ThemeCard({
   selectedThemeId,
   onThemeChange,
 }: ThemeCardProps) {
-  // Get colors for THIS specific theme (not the current one)
   const previewColors = getThemeColors(themeMetadata.id)!
   const isSelected = selectedThemeId === themeMetadata.id
   const backgroundImage = getThemeBackgroundImage(themeMetadata.id)
@@ -252,13 +252,8 @@ export const ThemeCard = React.memo(function ThemeCard({
         variant={isSelected ? 'default' : 'outline'}
         className='mt-2 w-full'
       >
-        <Text
-          className={cn(
-            'text-sm font-medium',
-            isSelected ? 'text-primary-foreground' : 'text-foreground'
-          )}
-        >
-          APPLY
+        <Text>
+          <Trans>Apply</Trans>
         </Text>
       </Button>
     </View>
