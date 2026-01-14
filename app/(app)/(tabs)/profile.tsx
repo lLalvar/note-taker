@@ -1,41 +1,13 @@
-import { StyleSheet, View } from 'react-native'
+import React from 'react'
 
-import ParallaxScrollView from '@/components/parallax-scroll-view'
-import { IconSymbol } from '@/components/ui/IconSymbol'
-import { Text } from '@/components/ui/text'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function TabTwoScreen() {
+import { ProfileContent } from '@/components/profile/profile-content'
+
+export default function ProfileScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color='#808080'
-          name='chevron.left.forwardslash.chevron.right'
-          style={styles.headerImage}
-        />
-      }
-    >
-      <View style={styles.titleContainer}>
-        <Text variant='h1'>Explore</Text>
-      </View>
-      <Text variant='p'>
-        This app includes example code to help you get started.
-      </Text>
-    </ParallaxScrollView>
+    <SafeAreaView className='flex-1 bg-background' edges={['top']}>
+      <ProfileContent showHeader />
+    </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-})

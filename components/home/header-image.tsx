@@ -3,17 +3,16 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { View } from 'react-native'
 
 import { useTheme } from '@/hooks/use-theme'
-
-const bgDark = require('@/assets/images/bg/bg-dark-default.png')
-const bgLight = require('@/assets/images/bg/bg-light-default.png')
+import { getThemeBackgroundImage } from '@/lib/theme'
 
 export function HeaderImage() {
-  const { isDark, colors } = useTheme()
+  const { theme, colors } = useTheme()
+  const backgroundImage = getThemeBackgroundImage(theme)
 
   return (
     <View className='relative h-48 w-full overflow-hidden'>
       <Image
-        source={isDark ? bgDark : bgLight}
+        source={backgroundImage}
         contentFit='cover'
         style={{
           width: '100%',

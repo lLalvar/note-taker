@@ -1,18 +1,15 @@
 import React, { useEffect } from 'react'
 
-import { Trans, useLingui } from '@lingui/react/macro'
+import { useLingui } from '@lingui/react/macro'
 import { Image } from 'expo-image'
-import { useRouter } from 'expo-router'
+import { LinearGradient } from 'expo-linear-gradient'
+import { Link, RelativePathString } from 'expo-router'
 import {
-  Crown,
-  // Heart,
   HelpCircle,
-  // Lock,
   type LucideIcon,
   Palette,
   Settings,
   Share2,
-  // Tag,
 } from 'lucide-react-native'
 import {
   Modal,
@@ -24,19 +21,19 @@ import {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   clamp,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { scheduleOnRN } from 'react-native-worklets'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
 import { useShareApp } from '@/hooks/use-share-app'
 import { useTheme } from '@/hooks/use-theme'
-import { cn } from '@/lib/utils'
 
 const icon = require('@/assets/images/icon.png')
 
@@ -47,8 +44,8 @@ interface MenuItem {
   id: string
   label: string
   icon: LucideIcon
+  href?: string
   onPress?: () => void
-  isPro?: boolean
 }
 
 interface SideDrawerProps {
@@ -61,7 +58,6 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
   const { colors } = useTheme()
   const { shareApp } = useShareApp()
   const insets = useSafeAreaInsets()
-  const router = useRouter()
   const { width: screenWidth } = useWindowDimensions()
   const translateX = useSharedValue(-DRAWER_WIDTH)
   const isDragging = useSharedValue(false)
@@ -86,19 +82,16 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     }
   }, [isOpen, translateX])
 
-  // Pan gesture for drawer - allows bidirectional dragging
-  // Only activates for horizontal swipes to allow vertical scrolling
   const drawerStartX = useSharedValue(0)
 
   const drawerPanGesture = Gesture.Pan()
-    .activeOffsetX([-10, 10]) // Activate for horizontal movement
-    .failOffsetY([-10, 10]) // Fail if vertical movement is too large (allows scrolling)
+    .activeOffsetX([-10, 10])
+    .failOffsetY([-10, 10])
     .onStart(() => {
       drawerStartX.value = translateX.value
       isDragging.value = true
     })
     .onUpdate((event) => {
-      // Allow dragging in both directions (left to close, right to open back)
       const newValue = clamp(
         drawerStartX.value + event.translationX,
         -DRAWER_WIDTH,
@@ -118,7 +111,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
           stiffness: 200,
           overshootClamping: true,
         })
-        runOnJS(closeDrawer)()
+        scheduleOnRN(closeDrawer)
       } else {
         translateX.value = withSpring(0, {
           damping: 30,
@@ -128,7 +121,6 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       }
     })
 
-  // Pan gesture for backdrop - handles touch zones and dragging
   const backdropStartX = useSharedValue(0)
   const touchStartX = useSharedValue(0)
 
@@ -139,7 +131,6 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       isDragging.value = true
     })
     .onUpdate((event) => {
-      // Allow dragging in both directions (left to close, right to open back)
       const newValue = clamp(
         backdropStartX.value + event.translationX,
         -DRAWER_WIDTH,
@@ -150,7 +141,6 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     .onEnd((event) => {
       isDragging.value = false
 
-      // If it was just a tap (not a drag), handle touch zones
       if (
         Math.abs(event.translationX) < 10 &&
         Math.abs(event.translationY) < 10
@@ -158,21 +148,18 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
         const touchX = touchStartX.value
         const leftHalf = screenWidth / 2
 
-        // Right half (second half) - close on tap
         if (touchX > leftHalf) {
           translateX.value = withSpring(-DRAWER_WIDTH, {
             damping: 30,
             stiffness: 200,
             overshootClamping: true,
           })
-          runOnJS(closeDrawer)()
+          scheduleOnRN(closeDrawer)
           return
         }
-        // Left half - do nothing on tap (unless it's a TouchableOpacity)
         return
       }
 
-      // Handle drag gesture
       const currentValue = translateX.value
       const threshold = -DRAWER_WIDTH / 2
       const shouldClose = currentValue < threshold || event.velocityX < -500
@@ -183,7 +170,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
           stiffness: 200,
           overshootClamping: true,
         })
-        runOnJS(closeDrawer)()
+        scheduleOnRN(closeDrawer)
       } else {
         translateX.value = withSpring(0, {
           damping: 30,
@@ -193,19 +180,17 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       }
     })
 
-  // Combine gestures - backdrop gesture has priority for touch zones
   const combinedGesture = Gesture.Race(backdropPanGesture, drawerPanGesture)
 
   const drawerStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: clamp(translateX.value, -DRAWER_WIDTH, 0), // Clamp to prevent going beyond bounds
+        translateX: clamp(translateX.value, -DRAWER_WIDTH, 0),
       },
     ],
   }))
 
   const backdropStyle = useAnimatedStyle(() => {
-    // Also update opacity based on drawer position for live updates
     const progress = Math.max(
       0,
       Math.min(1, (translateX.value + DRAWER_WIDTH) / DRAWER_WIDTH)
@@ -218,22 +203,10 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
 
   const menuItems: MenuItem[] = [
     {
-      id: 'upgrade',
-      label: t`Upgrade to PRO`,
-      icon: Crown,
-      isPro: true,
-      onPress: () => {
-        // TODO: Navigate to upgrade screen or open upgrade modal
-        console.log('Navigate to upgrade')
-      },
-    },
-    {
       id: 'theme',
       label: t`Theme`,
       icon: Palette,
-      onPress: () => {
-        router.push('/(app)/theme')
-      },
+      href: '/(app)/theme',
     },
     // {
     //   id: 'tags',
@@ -278,18 +251,13 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       id: 'help',
       label: t`Help Center`,
       icon: HelpCircle,
-      onPress: () => {
-        router.push('/(app)/help')
-      },
+      href: '/(app)/help',
     },
     {
       id: 'settings',
       label: t`Settings`,
       icon: Settings,
-      onPress: () => {
-        // TODO: Navigate to settings screen
-        // router.push('/(tabs)/settings')
-      },
+      href: '/(app)/settings',
     },
     // {
     //   id: 'checkit-task-1',
@@ -369,13 +337,8 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
         <View className='flex-1'>
           {/* Backdrop */}
           <Animated.View
-            className='absolute inset-0'
-            style={[
-              {
-                backgroundColor: colors.foreground,
-              },
-              backdropStyle,
-            ]}
+            className='absolute inset-0 bg-foreground'
+            style={backdropStyle}
           >
             {/* Left half - do nothing on touch */}
             <View
@@ -396,11 +359,10 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
 
           {/* Drawer */}
           <Animated.View
-            className='absolute bottom-0 left-0 top-0'
+            className='absolute bottom-0 left-0 top-0 bg-card'
             style={[
               {
                 width: DRAWER_WIDTH,
-                backgroundColor: colors.card,
                 paddingTop: insets.top,
                 paddingBottom: insets.bottom,
               },
@@ -409,38 +371,60 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
           >
             <View className='flex-1'>
               {/* Header */}
-              <View className='px-6 pb-8 pt-6'>
-                <View className='flex-row items-center gap-3'>
-                  {/* Diary Icon */}
-                  <View className='relative size-12 overflow-hidden rounded-full'>
-                    <Image
-                      source={icon}
-                      contentFit='cover'
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                      }}
-                    />
-                  </View>
-                  {/* App Name */}
-                  <View>
-                    <Text className='font-bold leading-tight'>DailyMood</Text>
-                    <Text className='font-bold leading-tight'>Journal</Text>
-                  </View>
+              <LinearGradient
+                colors={['transparent', colors.muted]}
+                className='flex-row items-center gap-3 px-6 pb-6 pt-6'
+              >
+                <View className='relative size-12 overflow-hidden rounded-full'>
+                  <Image
+                    source={icon}
+                    contentFit='cover'
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
                 </View>
-              </View>
+                <View>
+                  <Text className='font-bold leading-tight'>DailyMood</Text>
+                  <Text className='font-bold leading-tight'>Journal</Text>
+                </View>
+              </LinearGradient>
+
+              <Separator />
 
               {/* Menu Items - Scrollable */}
               <ScrollView
                 className='flex-1'
                 contentContainerStyle={{
-                  paddingHorizontal: 16,
-                  paddingBottom: 16,
+                  paddingVertical: 16,
                 }}
                 showsVerticalScrollIndicator={false}
               >
                 {menuItems.map((item) => {
                   const IconComponent = item.icon
+                  const menuItemContent = (
+                    <>
+                      <Icon as={IconComponent} />
+                      <Text>{item.label}</Text>
+                    </>
+                  )
+
+                  if (item.href) {
+                    return (
+                      <Link
+                        asChild
+                        key={item.id}
+                        href={item.href as RelativePathString}
+                        onPress={onClose}
+                      >
+                        <Button variant='ghost' className='justify-start'>
+                          {menuItemContent}
+                        </Button>
+                      </Link>
+                    )
+                  }
+
                   return (
                     <Button
                       key={item.id}
@@ -449,29 +433,9 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         item.onPress?.()
                         onClose()
                       }}
-                      className={cn(
-                        item.isPro ? 'bg-sidebar-accent' : undefined
-                      )}
+                      className='justify-start'
                     >
-                      <Icon
-                        as={IconComponent}
-                        className={cn(
-                          item.isPro ? 'text-primary' : 'text-foreground'
-                        )}
-                      />
-                      <Text
-                        className={cn(
-                          'flex-1',
-                          item.isPro ? 'font-semibold' : 'font-normal'
-                        )}
-                        style={{
-                          color: item.isPro
-                            ? colors.primary
-                            : colors.foreground,
-                        }}
-                      >
-                        {item.label}
-                      </Text>
+                      {menuItemContent}
                     </Button>
                   )
                 })}
@@ -479,12 +443,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
 
               {/* Bottom Handle Indicator */}
               <View className='items-center pb-4'>
-                <View
-                  className='h-1 w-12 rounded-full'
-                  style={{
-                    backgroundColor: colors.mutedForeground,
-                  }}
-                />
+                <View className='h-1 w-12 rounded-full bg-muted-foreground' />
               </View>
             </View>
           </Animated.View>

@@ -43,6 +43,37 @@ alwaysApply: true
 </View>
 ```
 
+## Documentation Comments
+
+**NEVER add JSDoc comments to TypeScript code.**
+
+- TypeScript provides type information through its type system
+- Function signatures and types are self-documenting
+- Do not add `/** */` JSDoc blocks with `@param`, `@returns`, etc.
+- Type information is already available through TypeScript types
+
+### Examples
+
+```typescript
+// ❌ WRONG - Do not add JSDoc comments
+/**
+ * Upload image to Firebase Storage and return download URL
+ * @param localUri - Local file URI from image picker
+ * @param path - Storage path
+ * @returns Download URL of the uploaded image
+ */
+export async function uploadImageToStorage(
+  localUri: string,
+  path: string
+): Promise<string> {
+
+// ✅ CORRECT - TypeScript types are sufficient
+export async function uploadImageToStorage(
+  localUri: string,
+  path: string
+): Promise<string> {
+```
+
 ## Icons
 
 **Always use the Icon component pattern for rendering icons.**

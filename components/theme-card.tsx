@@ -1,18 +1,15 @@
 import React from 'react'
 
 import { Image } from 'expo-image'
-import { Calendar, Home, NotebookPen } from 'lucide-react-native'
+import { Calendar, Home, NotebookPen, User } from 'lucide-react-native'
 import { Pressable, View } from 'react-native'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
-import { getThemeColors } from '@/lib/theme'
+import { getThemeBackgroundImage, getThemeColors } from '@/lib/theme'
 import { type ThemeMetadata } from '@/lib/theme-registry'
 import { cn, toHsla } from '@/lib/utils'
-
-const bgDark = require('@/assets/images/bg/bg-dark-default.png')
-const bgLight = require('@/assets/images/bg/bg-light-default.png')
 
 interface ThemeCardProps {
   themeMetadata: ThemeMetadata
@@ -20,7 +17,7 @@ interface ThemeCardProps {
   onThemeChange: (themeId: string) => void
 }
 
-export function ThemeCard({
+export const ThemeCard = React.memo(function ThemeCard({
   themeMetadata,
   selectedThemeId,
   onThemeChange,
@@ -28,7 +25,7 @@ export function ThemeCard({
   // Get colors for THIS specific theme (not the current one)
   const previewColors = getThemeColors(themeMetadata.id)!
   const isSelected = selectedThemeId === themeMetadata.id
-  const isDark = themeMetadata.id.startsWith('dark-')
+  const backgroundImage = getThemeBackgroundImage(themeMetadata.id)
 
   return (
     <View className='mb-4 w-[31%]'>
@@ -52,7 +49,7 @@ export function ThemeCard({
             {/* Header Image/Banner */}
             <View className='relative h-12 w-full overflow-hidden'>
               <Image
-                source={isDark ? bgDark : bgLight}
+                source={backgroundImage}
                 contentFit='cover'
                 style={{
                   width: '100%',
@@ -215,16 +212,12 @@ export function ThemeCard({
 
             {/* Bottom Navigation Bar */}
             <View
-              className='absolute bottom-0 left-0 right-0 h-3 flex-row items-center justify-between px-2'
+              className='absolute bottom-0 left-0 right-0 h-6 flex-row items-center justify-between px-2'
               style={{
                 backgroundColor: previewColors.card,
               }}
             >
-              <Icon
-                as={Home}
-                className='size-2'
-                color={previewColors.mutedForeground}
-              />
+              <Icon as={Home} size={8} color={previewColors.mutedForeground} />
               <View
                 className='h-4 w-4 items-center justify-center rounded-full'
                 style={{ backgroundColor: previewColors.primary }}
@@ -236,12 +229,7 @@ export function ThemeCard({
                   }}
                 />
               </View>
-              <View
-                className='h-2 w-2 rounded-full'
-                style={{
-                  backgroundColor: toHsla(previewColors.mutedForeground, 0.5),
-                }}
-              />
+              <Icon as={User} size={8} color={previewColors.mutedForeground} />
             </View>
           </View>
         </Pressable>
@@ -275,4 +263,4 @@ export function ThemeCard({
       </Button>
     </View>
   )
-}
+})

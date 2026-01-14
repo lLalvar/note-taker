@@ -24,6 +24,20 @@ export default function AppLayout() {
           animation: 'slide_from_right',
         }}
       />
+      <Stack.Screen
+        name='settings'
+        options={{
+          presentation: 'card',
+          animation: 'slide_from_right',
+        }}
+      />
+      <Stack.Screen
+        name='profile'
+        options={{
+          presentation: 'card',
+          animation: 'slide_from_right',
+        }}
+      />
     </Stack>
   )
 }

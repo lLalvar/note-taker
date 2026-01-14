@@ -12,14 +12,19 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import '~/global.css'
 
-import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { SignOutButton } from '@/components/ui/SignOutButton'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { LanguagePicker } from '@/components/ui/language-picker'
 import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
 import { i18n, useI18n } from '@/lib/i18n'
 import { queryClient } from '@/lib/query-client'
 import Sentry from '@/lib/sentry'
+
+if (__DEV__) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('~/lib/reactotron')
+}
 
 const TransText = ({ translation }: TransRenderProps) => {
   return <RNText>{translation}</RNText>
@@ -82,7 +87,7 @@ export default Sentry.wrap(function RootLayout() {
                   <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
                     {isAuthenticated && <SignOutButton />}
                     <ThemeToggle />
-                    <LanguageSelector />
+                    <LanguagePicker asIcon />
                   </View>
                   <StatusBar style={isDark ? 'light' : 'dark'} />
                   <PortalHost />

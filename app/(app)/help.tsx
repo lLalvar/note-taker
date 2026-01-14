@@ -2,12 +2,12 @@ import React from 'react'
 
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useRouter } from 'expo-router'
-import { ArrowLeft, HelpCircle, Mail, MessageCircle } from 'lucide-react-native'
+import { HelpCircle, Mail, MessageCircle } from 'lucide-react-native'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { ScreenHeader } from '@/components/ui/screen-header'
 import { Text } from '@/components/ui/text'
 
 interface HelpSection {
@@ -19,7 +19,6 @@ interface HelpSection {
 
 export default function HelpCenter() {
   const { t } = useLingui()
-  const router = useRouter()
   const insets = useSafeAreaInsets()
 
   const helpSections: HelpSection[] = [
@@ -45,15 +44,7 @@ export default function HelpCenter() {
 
   return (
     <View className='flex-1 bg-background' style={{ paddingTop: insets.top }}>
-      {/* Header */}
-      <View className='flex-row items-center gap-4 px-6 py-4'>
-        <Button variant='ghost' size='icon' onPress={() => router.back()}>
-          <Icon as={ArrowLeft} />
-        </Button>
-        <Text className='flex-1 text-2xl font-bold text-foreground'>
-          <Trans>Help Center</Trans>
-        </Text>
-      </View>
+      <ScreenHeader title={<Trans>Help Center</Trans>} />
 
       {/* Content */}
       <ScrollView

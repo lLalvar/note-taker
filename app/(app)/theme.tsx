@@ -1,14 +1,11 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Trans } from '@lingui/react/macro'
-import { useRouter } from 'expo-router'
-import { ArrowLeft } from 'lucide-react-native'
-import { Pressable, ScrollView, View } from 'react-native'
+import { InteractionManager, Pressable, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { ThemeCard } from '@/components/theme-card'
-import { Button } from '@/components/ui/button'
-import { Icon } from '@/components/ui/icon'
+import { ScreenHeader } from '@/components/ui/screen-header'
 import { Text } from '@/components/ui/text'
 import { getNewThemes, getThemesByCategory } from '@/lib/theme-registry'
 import { cn } from '@/lib/utils'
@@ -17,21 +14,36 @@ import { useThemeStore } from '@/store/theme-store'
 type DisplayCategory = 'new' | 'light' | 'dark'
 
 export default function Theme() {
-  const router = useRouter()
   const insets = useSafeAreaInsets()
   const { theme: selectedThemeId, setTheme } = useThemeStore()
   const [selectedCategory, setSelectedCategory] =
     useState<DisplayCategory>('new')
+  const [isReady, setIsReady] = useState(false)
 
-  const handleThemeChange = (themeId: string) => {
-    setTheme(themeId)
-  }
+  useEffect(() => {
+    const interaction = InteractionManager.runAfterInteractions(() => {
+      setIsReady(true)
+    })
 
-  // Get themes for selected category
-  const themes =
-    selectedCategory === 'new'
-      ? getNewThemes()
-      : getThemesByCategory(selectedCategory)
+    return () => {
+      interaction.cancel()
+    }
+  }, [])
+
+  const handleThemeChange = useCallback(
+    (themeId: string) => {
+      setTheme(themeId)
+    },
+    [setTheme]
+  )
+
+  const themes = useMemo(
+    () =>
+      selectedCategory === 'new'
+        ? getNewThemes()
+        : getThemesByCategory(selectedCategory),
+    [selectedCategory]
+  )
 
   const categories: { id: DisplayCategory; label: string }[] = [
     { id: 'new', label: 'NEW' },
@@ -41,15 +53,7 @@ export default function Theme() {
 
   return (
     <View className='flex-1 bg-background' style={{ paddingTop: insets.top }}>
-      {/* Header */}
-      <View className='flex-row items-center gap-4 px-6 py-4'>
-        <Button variant='ghost' size='icon' onPress={() => router.back()}>
-          <Icon as={ArrowLeft} />
-        </Button>
-        <Text className='flex-1 text-2xl font-bold text-foreground'>
-          <Trans>Themes</Trans>
-        </Text>
-      </View>
+      <ScreenHeader title={<Trans>Themes</Trans>} />
 
       {/* Category Tabs */}
       <View className='flex-row border-b border-border px-4'>
@@ -88,14 +92,16 @@ export default function Theme() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {themes.map((themeMetadata) => (
-          <ThemeCard
-            key={themeMetadata.id}
-            themeMetadata={themeMetadata}
-            selectedThemeId={selectedThemeId}
-            onThemeChange={handleThemeChange}
-          />
-        ))}
+        {isReady
+          ? themes.map((themeMetadata) => (
+              <ThemeCard
+                key={themeMetadata.id}
+                themeMetadata={themeMetadata}
+                selectedThemeId={selectedThemeId}
+                onThemeChange={handleThemeChange}
+              />
+            ))
+          : null}
       </ScrollView>
     </View>
   )

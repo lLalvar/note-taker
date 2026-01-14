@@ -1,5 +1,24 @@
 import { DarkTheme, DefaultTheme, type Theme } from '@react-navigation/native'
 
+// Background images for each theme
+const bgLightDefault = require('@/assets/images/bg/bg-light-default.png')
+const bgLight2 = require('@/assets/images/bg/bg-light-2.png')
+const bgDarkDefault = require('@/assets/images/bg/bg-dark-default.png')
+const bgDark2 = require('@/assets/images/bg/bg-dark-2.png')
+
+/**
+ * Theme Background Image Mapping
+ *
+ * Maps each theme ID to its corresponding background image.
+ * When adding a new theme, add its background image here.
+ */
+export const THEME_BACKGROUND_IMAGES: Record<string, any> = {
+  'light-1': bgLightDefault,
+  'light-2': bgLight2,
+  'dark-1': bgDarkDefault,
+  'dark-2': bgDark2,
+}
+
 /**
  * Theme Color Definitions
  *
@@ -13,11 +32,13 @@ import { DarkTheme, DefaultTheme, type Theme } from '@react-navigation/native'
  *
  * 2. Add theme metadata to THEME_REGISTRY in theme-registry.ts
  *
- * 3. CSS variables in global.css are automatically synced via theme-css-sync.ts
+ * 3. Add background image to THEME_BACKGROUND_IMAGES above
+ *
+ * 4. CSS variables in global.css are automatically synced via theme-css-sync.ts
  *    when the theme is selected. The default values in global.css match light-1
  *    and dark-1, but they update dynamically.
  *
- * 4. To verify CSS sync, you can run: node scripts/sync-theme-css.js [theme-id]
+ * 5. To verify CSS sync, you can run: node scripts/sync-theme-css.js [theme-id]
  *
  * Theme IDs should follow the pattern: '{category}-{number}'
  * Examples: 'light-1', 'light-2', 'dark-1', 'dark-2'
@@ -112,14 +133,14 @@ export const THEME = {
     chart3: 'hsl(260 70% 50%)',
     chart4: 'hsl(280 70% 50%)',
     chart5: 'hsl(300 70% 50%)',
-    sidebar: 'hsl(220 25% 18%)',
-    sidebarForeground: 'hsl(220 10% 85%)',
-    sidebarPrimary: 'hsl(220 70% 60%)',
-    sidebarPrimaryForeground: 'hsl(220 15% 8%)',
-    sidebarAccent: 'hsl(220 25% 22%)',
-    sidebarAccentForeground: 'hsl(220 10% 85%)',
-    sidebarBorder: 'hsl(220 25% 18%)',
-    sidebarRing: 'hsl(220 70% 60%)',
+    sidebar: 'hsl(220 30% 92%)',
+    sidebarForeground: 'hsl(220 10% 20%)',
+    sidebarPrimary: 'hsl(220 70% 50%)',
+    sidebarPrimaryForeground: 'hsl(0 0% 100%)',
+    sidebarAccent: 'hsl(220 40% 88%)',
+    sidebarAccentForeground: 'hsl(220 10% 20%)',
+    sidebarBorder: 'hsl(220 30% 90%)',
+    sidebarRing: 'hsl(220 70% 50%)',
     fontSans: 'Open Sans, sans-serif',
     fontSerif: 'Source Serif 4, serif',
     fontMono: 'IBM Plex Mono, monospace',
@@ -302,4 +323,16 @@ export function getNavTheme(themeId: string): Theme {
 
   const isDark = themeId.startsWith('dark-')
   return createNavTheme(colors, isDark)
+}
+
+export function getThemeBackgroundImage(themeId: string): any {
+  const image = THEME_BACKGROUND_IMAGES[themeId]
+  if (image) {
+    return image
+  }
+
+  if (themeId.startsWith('dark-')) {
+    return bgDarkDefault
+  }
+  return bgLightDefault
 }
