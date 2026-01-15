@@ -1,5 +1,11 @@
 import { type VariantProps, cva } from 'class-variance-authority'
-import { ActivityIndicator, Platform, Pressable } from 'react-native'
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  type PressableStateCallbackType,
+  View,
+} from 'react-native'
 
 import { TextClassContext } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
@@ -112,9 +118,10 @@ function Button({
   variant,
   size,
   loading = false,
+  children,
   ...props
 }: ButtonProps) {
-  const { disabled, children, ...restProps } = props
+  const { disabled, ...restProps } = props
   const isDisabled = disabled || loading
 
   const { colors } = useTheme()
@@ -130,6 +137,22 @@ function Button({
             ? colors.primary
             : colors.primaryForeground
 
+  const renderChildren = (state: PressableStateCallbackType) => {
+    const content = typeof children === 'function' ? children(state) : children
+
+    return (
+      <View className='flex-row items-center justify-center gap-2'>
+        {loading && (
+          <ActivityIndicator
+            color={spinnerColor}
+            size={size === 'sm' ? 'small' : 'small'}
+          />
+        )}
+        {content}
+      </View>
+    )
+  }
+
   return (
     <TextClassContext.Provider value={buttonTextVariants({ variant, size })}>
       <Pressable
@@ -142,7 +165,7 @@ function Button({
         disabled={isDisabled}
         {...restProps}
       >
-        {loading ? <ActivityIndicator color={spinnerColor} /> : children}
+        {renderChildren}
       </Pressable>
     </TextClassContext.Provider>
   )

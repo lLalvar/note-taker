@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
+import { useMutation } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,9 +15,8 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 import { z } from 'zod'
-
-// import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -37,8 +36,8 @@ import {
 import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
-
-// import { auth } from '@/lib/firebase'
+import { getAuthErrorMessage } from '@/lib/utils'
+import { resetPassword, verifyResetCode } from '@/services/auth'
 
 const resetPasswordSchema = z
   .object({
@@ -72,7 +71,6 @@ export default function ResetPassword() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onChange',
   })
 
   const {
@@ -80,67 +78,58 @@ export default function ResetPassword() {
     formState: { isSubmitting },
   } = form
 
-  // Verify the reset code on component mount
+  const resetPasswordMutation = useMutation({
+    mutationFn: ({ code, password }: { code: string; password: string }) =>
+      resetPassword(code, password),
+    onSuccess: () => {
+      toast.success(t`Password Reset Successful`, {
+        description: t`Your password has been reset successfully. Please sign in with your new password.`,
+      })
+      router.replace('/(auth)/sign-in')
+    },
+    onError: (error: unknown) => {
+      const errorMessage = getAuthErrorMessage(error)
+      toast.error(t`Reset Failed`, {
+        description: errorMessage,
+      })
+    },
+  })
+
   useEffect(() => {
     if (oobCode) {
-      // verifyPasswordResetCode(auth, oobCode)
-      //   .then(() => {
-      //     setIsValidCode(true)
-      //     setIsVerifying(false)
-      //   })
-      //   .catch(() => {
-      //     Alert.alert(
-      //       'Invalid Reset Link',
-      //       'This password reset link is invalid or has expired.',
-      //       [{ text: 'OK', onPress: () => router.replace('/(auth)/sign-in') }]
-      //     )
-      //     setIsVerifying(false)
-      //   })
-      // For now, just set as valid for development
-      setIsValidCode(true)
-      setIsVerifying(false)
+      verifyResetCode(oobCode)
+        .then(() => {
+          setIsValidCode(true)
+          setIsVerifying(false)
+        })
+        .catch((error) => {
+          const errorMessage = getAuthErrorMessage(error)
+          toast.error(t`Invalid Reset Link`, {
+            description:
+              errorMessage ||
+              t`This password reset link is invalid or has expired.`,
+          })
+          setIsVerifying(false)
+          router.replace('/(auth)/sign-in')
+        })
     } else {
-      Alert.alert('Invalid Reset Link', 'No reset code found in the link.', [
-        { text: 'OK', onPress: () => router.replace('/(auth)/sign-in') },
-      ])
+      toast.error(t`Invalid Reset Link`, {
+        description: t`No reset code found in the link.`,
+      })
       setIsVerifying(false)
+      router.replace('/(auth)/sign-in')
     }
-  }, [oobCode])
+  }, [oobCode, t])
 
   const onSubmit = (data: ResetPasswordFormData) => {
     if (!oobCode) {
-      Alert.alert('Error', 'No reset code available')
+      toast.error(t`Error`, {
+        description: t`No reset code available`,
+      })
       return
     }
 
-    // confirmPasswordReset(auth, oobCode, data.password)
-    //   .then(() => {
-    //     Alert.alert(
-    //       'Password Reset Successful',
-    //       'Your password has been reset successfully. Please sign in with your new password.',
-    //       [{ text: 'OK', onPress: () => router.replace('/(auth)/sign-in') }]
-    //     )
-    //   })
-    //   .catch((error: any) => {
-    //     let message = 'Failed to reset password'
-
-    //     switch (error.code) {
-    //       case 'auth/expired-action-code':
-    //         message = 'This reset link has expired. Please request a new one.'
-    //         break
-    //       case 'auth/invalid-action-code':
-    //         message = 'This reset link is invalid. Please request a new one.'
-    //         break
-    //       case 'auth/weak-password':
-    //         message = 'Password should be at least 6 characters'
-    //         break
-    //       default:
-    //         message = error.message || message
-    //     }
-
-    //     Alert.alert('Reset Failed', message)
-    //   })
-    console.log('Reset Password Data:', data)
+    resetPasswordMutation.mutate({ code: oobCode, password: data.password })
   }
 
   function onPasswordSubmitEditing() {
@@ -311,10 +300,15 @@ export default function ResetPassword() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || resetPasswordMutation.isPending}
+                    loading={resetPasswordMutation.isPending}
                   >
                     <Text>
-                      <Trans>Update Password</Trans>
+                      {resetPasswordMutation.isPending ? (
+                        <Trans>Updating...</Trans>
+                      ) : (
+                        <Trans>Update Password</Trans>
+                      )}
                     </Text>
                   </Button>
                 </View>

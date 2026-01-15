@@ -6,11 +6,9 @@ import { Timestamp } from '@react-native-firebase/firestore'
 import { useFocusEffect } from '@react-navigation/native'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
-import { ArrowLeft } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
   ActivityIndicator,
-  Alert,
   BackHandler,
   KeyboardAvoidingView,
   Platform,
@@ -19,23 +17,23 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 import { z } from 'zod'
 
 import {
   MoodPickerModal,
   type MoodPickerModalHandle,
 } from '@/components/mood/mood-picker-modal'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   Form,
   FormField,
@@ -43,8 +41,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
+import { ScreenHeader } from '@/components/ui/screen-header'
 import { Text } from '@/components/ui/text'
 import { Textarea } from '@/components/ui/textarea'
 import { DEFAULT_MOOD } from '@/constants/moods'
@@ -135,6 +133,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
         return () => clearTimeout(timer)
       }
     }, [isEditMode, noteData, refetch, form, defaultValues])
+    // }, [isEditMode])
   )
 
   const mutation = useMutation({
@@ -224,7 +223,9 @@ export function NoteForm({ noteId }: NoteFormProps) {
           : isEditMode
             ? 'Failed to update note'
             : 'Failed to create note'
-      Alert.alert('Error', errorMessage, [{ text: 'OK' }])
+      toast.error(t`Error`, {
+        description: errorMessage,
+      })
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] })
@@ -282,7 +283,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
         'hardwareBackPress',
         () => {
           if (isDirty && !shouldNavigate && !mutation.isPending) {
-            handleShowDiscardDialog()
+            setShowDiscardDialog(true)
             return true
           }
           return false
@@ -301,7 +302,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
 
   const handleBackPress = () => {
     if (isDirty && !shouldNavigate && !mutation.isPending) {
-      handleShowDiscardDialog()
+      setShowDiscardDialog(true)
     } else {
       router.back()
     }
@@ -311,37 +312,34 @@ export function NoteForm({ noteId }: NoteFormProps) {
 
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
-      {/* Header with Back and Save buttons */}
-      <View className='flex-row items-center justify-between border-b border-border bg-background px-4 py-3'>
-        <Button
-          variant='ghost'
-          size='icon'
-          onPress={handleBackPress}
-          disabled={isLoading}
-        >
-          <Icon as={ArrowLeft} />
-        </Button>
-        <Button
-          variant='ghost'
-          onPress={form.handleSubmit(handleSubmit)}
-          disabled={isLoading || isLoadingNote}
-          loading={mutation.isPending}
-        >
-          <Text className='font-medium'>
-            {isLoading ? (
-              isEditMode ? (
-                <Trans>Saving...</Trans>
+      <ScreenHeader
+        title={
+          isEditMode ? <Trans>Edit Note</Trans> : <Trans>Create Note</Trans>
+        }
+        rightAction={
+          <Button
+            // variant='ghost'
+            onPress={form.handleSubmit(handleSubmit)}
+            disabled={isLoading || isLoadingNote}
+            loading={mutation.isPending}
+          >
+            <Text>
+              {isLoading ? (
+                isEditMode ? (
+                  <Trans>Saving...</Trans>
+                ) : (
+                  <Trans>Creating...</Trans>
+                )
+              ) : isEditMode ? (
+                <Trans>Save</Trans>
               ) : (
-                <Trans>Creating...</Trans>
-              )
-            ) : isEditMode ? (
-              <Trans>Save</Trans>
-            ) : (
-              <Trans>Create</Trans>
-            )}
-          </Text>
-        </Button>
-      </View>
+                <Trans>Create</Trans>
+              )}
+            </Text>
+          </Button>
+        }
+        onBack={handleBackPress}
+      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -444,28 +442,30 @@ export function NoteForm({ noteId }: NoteFormProps) {
       />
 
       {/* Discard Changes Dialog */}
-      <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
+      <Dialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
               {isEditMode ? 'Discard changes?' : 'Discard note?'}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
+            </DialogTitle>
+            <DialogDescription>
               {isEditMode
                 ? 'You have unsaved changes. Are you sure you want to discard them?'
                 : 'You have an unsaved note. Are you sure you want to discard it?'}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onPress={handleCancelDiscard}>
-              <Text>Cancel</Text>
-            </AlertDialogCancel>
-            <AlertDialogAction onPress={handleDiscard}>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant='outline' onPress={handleCancelDiscard}>
+                <Text>Cancel</Text>
+              </Button>
+            </DialogClose>
+            <Button onPress={handleDiscard}>
               <Text>Discard</Text>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SafeAreaView>
   )
 }

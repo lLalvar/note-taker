@@ -7,7 +7,6 @@ import { Link, router } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -15,6 +14,7 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 import { z } from 'zod'
 
 import { SocialConnections } from '@/components/social-connections'
@@ -70,9 +70,10 @@ export default function SignIn() {
       router.replace('/(app)/(tabs)')
     },
     onError: (error: unknown) => {
-      console.error('Sign In Error:', error)
       const errorMessage = getAuthErrorMessage(error)
-      Alert.alert(t`Sign in failed`, errorMessage)
+      toast.error(t`Sign in failed`, {
+        description: errorMessage,
+      })
     },
   })
 
@@ -156,44 +157,53 @@ export default function SignIn() {
                     )}
                   />
 
-                  {/* Password Field */}
-                  <FormField
-                    control={form.control}
-                    name='password'
-                    render={({ field }) => (
-                      <FormInput
-                        {...field}
-                        name='password'
-                        label={t`Password`}
-                        ref={passwordInputRef}
-                        placeholder={t`Enter your password`}
-                        secureTextEntry={!showPassword}
-                        returnKeyType='send'
-                        onSubmitEditing={handleSubmit(onSubmit)}
-                        rightIcon={
-                          <Button
-                            variant='ghost'
-                            size='icon'
-                            onPress={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <Icon
-                                as={EyeOff}
-                                className='text-muted-foreground'
-                              />
-                            ) : (
-                              <Icon
-                                as={Eye}
-                                className='text-muted-foreground'
-                              />
-                            )}
-                          </Button>
-                        }
-                      />
-                    )}
-                  />
+                  <View className='gap-2'>
+                    <FormField
+                      control={form.control}
+                      name='password'
+                      render={({ field }) => (
+                        <FormInput
+                          {...field}
+                          name='password'
+                          label={t`Password`}
+                          ref={passwordInputRef}
+                          placeholder={t`Enter your password`}
+                          secureTextEntry={!showPassword}
+                          returnKeyType='send'
+                          onSubmitEditing={handleSubmit(onSubmit)}
+                          rightIcon={
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              onPress={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? (
+                                <Icon
+                                  as={EyeOff}
+                                  className='text-muted-foreground'
+                                />
+                              ) : (
+                                <Icon
+                                  as={Eye}
+                                  className='text-muted-foreground'
+                                />
+                              )}
+                            </Button>
+                          }
+                        />
+                      )}
+                    />
+                    <View className='items-end'>
+                      <Link href='/(auth)/forgot-password' asChild>
+                        <Button variant='link' className='h-6 p-0'>
+                          <Text>
+                            <Trans>Forgot Password?</Trans>
+                          </Text>
+                        </Button>
+                      </Link>
+                    </View>
+                  </View>
 
-                  {/* Sign In Button */}
                   <Button
                     className='w-full bg-primary'
                     onPress={handleSubmit(onSubmit)}

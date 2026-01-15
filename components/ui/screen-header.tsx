@@ -47,7 +47,7 @@ export function ScreenHeader({
           <Icon as={ArrowLeft} />
         </Button>
       )}
-      <Text variant='h4' className='flex-1'>
+      <Text variant='large' className='flex-1'>
         {title}
       </Text>
       {rightAction && <View>{rightAction}</View>}

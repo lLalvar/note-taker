@@ -7,7 +7,6 @@ import { router } from 'expo-router'
 import { Eye, EyeOff, Fingerprint, Lock } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -15,6 +14,7 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -142,10 +142,9 @@ export default function DiaryLock() {
     onError: (error: unknown) => {
       console.error('Unlock Error:', error)
       const lockTypeLabel = currentLockType === 'password' ? 'password' : 'PIN'
-      Alert.alert(
-        t`Unlock failed`,
-        t`Invalid ${lockTypeLabel}. Please try again.`
-      )
+      toast.error(t`Unlock failed`, {
+        description: t`Invalid ${lockTypeLabel}. Please try again.`,
+      })
       // Clear form
       if (currentLockType === 'password') {
         passwordForm.reset()
@@ -169,10 +168,9 @@ export default function DiaryLock() {
       router.replace('/(app)/(tabs)')
     },
     onError: () => {
-      Alert.alert(
-        t`Verification failed`,
-        t`Invalid security answer. Please try again.`
-      )
+      toast.error(t`Verification failed`, {
+        description: t`Invalid security answer. Please try again.`,
+      })
       setSecurityAnswer('')
     },
   })
@@ -183,7 +181,9 @@ export default function DiaryLock() {
 
   const onSecurityAnswerSubmit = () => {
     if (!securityAnswer.trim()) {
-      Alert.alert(t`Error`, t`Please enter your security answer`)
+      toast.error(t`Error`, {
+        description: t`Please enter your security answer`,
+      })
       return
     }
     securityAnswerMutation.mutate(securityAnswer)

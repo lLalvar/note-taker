@@ -111,6 +111,22 @@ export function getAuthErrorMessage(error: unknown): string {
         return i18n._(
           defineMessage`Invalid email or password. Please check your credentials.`
         )
+      case 'auth/expired-action-code':
+        return i18n._(
+          defineMessage`This reset link has expired. Please request a new one.`
+        )
+      case 'auth/invalid-action-code':
+        return i18n._(
+          defineMessage`This reset link is invalid. Please request a new one.`
+        )
+      case 'auth/invalid-verification-code':
+        return i18n._(
+          defineMessage`Invalid verification code. Please check and try again.`
+        )
+      case 'auth/code-expired':
+        return i18n._(
+          defineMessage`The verification code has expired. Please request a new one.`
+        )
       default:
         return i18n._(defineMessage`Sign up failed. Please try again.`)
     }

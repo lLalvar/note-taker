@@ -10,6 +10,7 @@ import { StatusBar } from 'expo-status-bar'
 import { ActivityIndicator, Text as RNText, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { Toaster } from 'sonner-native'
 import '~/global.css'
 
 import { SignOutButton } from '@/components/ui/SignOutButton'
@@ -91,6 +92,7 @@ export default Sentry.wrap(function RootLayout() {
                   </View>
                   <StatusBar style={isDark ? 'light' : 'dark'} />
                   <PortalHost />
+                  <Toaster />
                 </ThemeProvider>
               </View>
             </I18nProvider>

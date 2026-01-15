@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
+import { useMutation } from '@tanstack/react-query'
 import { Link, router } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
@@ -13,7 +14,7 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-// import { useForgotPasswordMutation } from '@/hooks/useAuthMutations'
+import { toast } from 'sonner-native'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -27,6 +28,8 @@ import {
 import { Form, FormField, FormInput } from '@/components/ui/form'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
+import { getAuthErrorMessage } from '@/lib/utils'
+import { sendPasswordReset } from '@/services/auth'
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -44,7 +47,6 @@ export default function ForgotPassword() {
     defaultValues: {
       email: '',
     },
-    mode: 'onChange',
   })
 
   const {
@@ -52,9 +54,24 @@ export default function ForgotPassword() {
     formState: { isSubmitting },
   } = form
 
+  const forgotPasswordMutation = useMutation({
+    mutationFn: (email: string) => sendPasswordReset(email),
+    onSuccess: () => {
+      toast.success(t`Reset Email Sent`, {
+        description: t`We've sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.`,
+      })
+      router.replace('/(auth)/sign-in')
+    },
+    onError: (error: unknown) => {
+      const errorMessage = getAuthErrorMessage(error)
+      toast.error(t`Failed to send reset email`, {
+        description: errorMessage,
+      })
+    },
+  })
+
   const onSubmit = (data: ForgotPasswordFormData) => {
-    // forgotPasswordMutation.mutate(data.email)
-    console.log('Forgot Password Data:', data)
+    forgotPasswordMutation.mutate(data.email)
   }
 
   return (
@@ -87,7 +104,7 @@ export default function ForgotPassword() {
                   <Icon as={ArrowLeft} className='text-muted-foreground' />
                 </Pressable>
                 <CardTitle className='flex-1 text-xl'>
-                  {/* <Trans>Reset Password</Trans> */}
+                  <Trans>Reset Password</Trans>
                 </CardTitle>
               </View>
               <CardDescription>
@@ -124,10 +141,15 @@ export default function ForgotPassword() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || forgotPasswordMutation.isPending}
+                    loading={forgotPasswordMutation.isPending}
                   >
                     <Text>
-                      <Trans>Send Reset Email</Trans>
+                      {forgotPasswordMutation.isPending ? (
+                        <Trans>Sending...</Trans>
+                      ) : (
+                        <Trans>Send Reset Email</Trans>
+                      )}
                     </Text>
                   </Button>
                 </View>

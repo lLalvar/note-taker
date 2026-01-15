@@ -7,13 +7,13 @@ import { Mail } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   View,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -108,15 +108,17 @@ export function ProfileContent({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] })
       setIsEditMode(false)
-      Alert.alert('Success', 'Profile updated successfully')
+      toast.success(t`Profile updated successfully`)
     },
     onError: (error: unknown) => {
       console.error('Profile update error:', error)
       const errorMessage =
         error instanceof Error
           ? error.message
-          : 'Failed to update profile. Please try again.'
-      Alert.alert('Error', errorMessage)
+          : t`Failed to update profile. Please try again.`
+      toast.error(t`Error`, {
+        description: errorMessage,
+      })
     },
   })
 
@@ -345,7 +347,11 @@ export function ProfileContent({
               disabled={updateMutation.isPending}
             >
               <Text>
-                <Trans>Save</Trans>
+                {updateMutation.isPending ? (
+                  <Trans>Saving...</Trans>
+                ) : (
+                  <Trans>Save</Trans>
+                )}
               </Text>
             </Button>
           </View>

@@ -2,7 +2,7 @@ import { useLingui } from '@lingui/react/macro'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { LogOut } from 'lucide-react-native'
-import { Alert } from 'react-native'
+import { toast } from 'sonner-native'
 
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
@@ -21,7 +21,9 @@ export function SignOutButton() {
     },
     onError: (error: unknown) => {
       const errorMessage = getAuthErrorMessage(error)
-      Alert.alert(t`Sign out failed`, errorMessage)
+      toast.error(t`Sign out failed`, {
+        description: errorMessage,
+      })
     },
   })
 

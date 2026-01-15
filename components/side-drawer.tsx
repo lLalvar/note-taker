@@ -418,7 +418,11 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         href={item.href as RelativePathString}
                         onPress={onClose}
                       >
-                        <Button variant='ghost' className='justify-start'>
+                        <Button
+                          variant='ghost'
+                          size='lg'
+                          className='justify-start'
+                        >
                           {menuItemContent}
                         </Button>
                       </Link>
@@ -429,6 +433,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                     <Button
                       key={item.id}
                       variant='ghost'
+                      size='lg'
                       onPress={() => {
                         item.onPress?.()
                         onClose()

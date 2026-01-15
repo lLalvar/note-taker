@@ -7,7 +7,6 @@ import { Link, router } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -16,6 +15,7 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 // import {
 //   useGoogleSignInMutation,
 //   useSignUpMutation,
@@ -90,7 +90,6 @@ export default function SignUp() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onChange',
   })
 
   const {
@@ -101,12 +100,17 @@ export default function SignUp() {
   const signUpMutation = useMutation({
     mutationFn: ({ name, email, password }: SignUpFormData) =>
       signUpWithEmail(name, email, password),
-    onSuccess: () => {
-      router.replace('/(app)/(tabs)')
+    onSuccess: (user) => {
+      toast.success(t`Account Created`, {
+        description: t`Your account has been created successfully! Please check your email to verify your account before signing in.`,
+      })
+      router.replace('/(auth)/sign-in')
     },
     onError: (error: unknown) => {
       const errorMessage = getAuthErrorMessage(error)
-      Alert.alert(t`Sign up failed`, errorMessage)
+      toast.error(t`Sign up failed`, {
+        description: errorMessage,
+      })
     },
   })
 
