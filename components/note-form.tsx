@@ -118,22 +118,16 @@ export function NoteForm({ noteId }: NoteFormProps) {
   useFocusEffect(
     useCallback(() => {
       if (isEditMode && noteData) {
-        form.reset({
-          title: noteData.title || '',
-          description: noteData.description || '',
-          mood: noteData.mood || DEFAULT_MOOD.emoji,
-        })
         refetch()
       } else if (!isEditMode) {
         form.reset(defaultValues)
-
         const timer = setTimeout(() => {
           moodPickerRef.current?.open()
         }, 300)
         return () => clearTimeout(timer)
       }
-    }, [isEditMode, noteData, refetch, form, defaultValues])
-    // }, [isEditMode])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isEditMode])
   )
 
   const mutation = useMutation({
@@ -145,13 +139,14 @@ export function NoteForm({ noteId }: NoteFormProps) {
       return createNote(data)
     },
     onMutate: async (data) => {
+      // Cancel outgoing queries to prevent them from overwriting optimistic updates
       if (isEditMode && noteId) {
         await queryClient.cancelQueries({ queryKey: ['note', noteId] })
         await queryClient.cancelQueries({ queryKey: ['notes'] })
 
         const previousNote = queryClient.getQueryData<Note>(['note', noteId])
-        const previousNotes = queryClient.getQueryData<Note[]>(['notes'])
 
+        // Optimistically update the individual note
         if (previousNote) {
           const optimisticNote: Note = {
             ...previousNote,
@@ -162,27 +157,32 @@ export function NoteForm({ noteId }: NoteFormProps) {
           queryClient.setQueryData(['note', noteId], optimisticNote)
         }
 
-        if (previousNotes) {
-          const optimisticNotes = previousNotes.map((note) =>
-            note.id === noteId
-              ? {
-                  ...note,
-                  title: data.title,
-                  description: data.description,
-                  mood: data.mood,
-                }
-              : note
-          )
-          queryClient.setQueryData(['notes'], optimisticNotes)
-        }
+        // Optimistically update ALL notes queries (regardless of search params)
+        queryClient.setQueriesData<Note[]>(
+          { queryKey: ['notes'] },
+          (oldNotes) => {
+            if (!oldNotes) return oldNotes
+            return oldNotes.map((note) =>
+              note.id === noteId
+                ? {
+                    ...note,
+                    title: data.title,
+                    description: data.description,
+                    mood: data.mood,
+                  }
+                : note
+            )
+          }
+        )
 
         router.back()
 
-        return { previousNote, previousNotes }
+        return { previousNote }
       } else {
+        // CREATE MODE
         await queryClient.cancelQueries({ queryKey: ['notes'] })
-        const previousNotes = queryClient.getQueryData<Note[]>(['notes'])
 
+        // Create temporary optimistic note
         const tempId = `temp-${Date.now()}`
         const optimisticNote: Note = {
           id: tempId,
@@ -194,27 +194,41 @@ export function NoteForm({ noteId }: NoteFormProps) {
           userId: user?.uid || '',
         }
 
-        if (previousNotes) {
-          queryClient.setQueryData(
-            ['notes'],
-            [optimisticNote, ...previousNotes]
-          )
-        }
+        // Add optimistic note to ALL notes queries
+        queryClient.setQueriesData<Note[]>(
+          { queryKey: ['notes'] },
+          (oldNotes) => {
+            if (!oldNotes) return [optimisticNote]
+            return [optimisticNote, ...oldNotes]
+          }
+        )
 
+        // Reset form and navigate back immediately
         form.reset({ title: '', description: '', mood: DEFAULT_MOOD.emoji })
         router.back()
 
-        return { previousNotes, tempId }
+        return { tempId }
       }
     },
     onError: (error, data, context) => {
       console.error('Note Error:', error)
 
-      if (isEditMode && context?.previousNote && context?.previousNotes) {
-        queryClient.setQueryData(['note', noteId], context.previousNote)
-        queryClient.setQueryData(['notes'], context.previousNotes)
-      } else if (!isEditMode && context?.previousNotes) {
-        queryClient.setQueryData(['notes'], context.previousNotes)
+      // Rollback optimistic updates on error
+      if (isEditMode && context?.previousNote) {
+        if (noteId) {
+          queryClient.setQueryData(['note', noteId], context.previousNote)
+        }
+        // Invalidate to refetch original data
+        queryClient.invalidateQueries({ queryKey: ['notes'] })
+      } else if (!isEditMode && context?.tempId) {
+        // Remove the temporary optimistic note from all notes queries
+        queryClient.setQueriesData<Note[]>(
+          { queryKey: ['notes'] },
+          (oldNotes) => {
+            if (!oldNotes) return oldNotes
+            return oldNotes.filter((note) => note.id !== context.tempId)
+          }
+        )
       }
 
       const errorMessage =
@@ -227,30 +241,37 @@ export function NoteForm({ noteId }: NoteFormProps) {
         description: errorMessage,
       })
     },
+    onSuccess: (data, variables, context) => {
+      // Update cache with real server data (even though we've navigated away)
+      if (isEditMode && noteId) {
+        queryClient.setQueryData(['note', noteId], data)
+
+        // Update the note in ALL notes queries
+        queryClient.setQueriesData<Note[]>(
+          { queryKey: ['notes'] },
+          (oldNotes) => {
+            if (!oldNotes) return oldNotes
+            return oldNotes.map((note) => (note.id === noteId ? data : note))
+          }
+        )
+      } else if (context?.tempId) {
+        // Replace temporary note with real note from server in ALL notes queries
+        queryClient.setQueriesData<Note[]>(
+          { queryKey: ['notes'] },
+          (oldNotes) => {
+            if (!oldNotes) return oldNotes
+            return oldNotes.map((note) =>
+              note.id === context.tempId ? data : note
+            )
+          }
+        )
+      }
+    },
     onSettled: () => {
+      // Refetch to ensure cache is in sync with server
       queryClient.invalidateQueries({ queryKey: ['notes'] })
       if (isEditMode && noteId) {
         queryClient.invalidateQueries({ queryKey: ['note', noteId] })
-      }
-    },
-    onSuccess: (data) => {
-      if (isEditMode && noteId) {
-        queryClient.setQueryData(['note', noteId], data)
-      }
-
-      const notes = queryClient.getQueryData<Note[]>(['notes'])
-      if (notes) {
-        if (isEditMode) {
-          const updatedNotes = notes.map((note) =>
-            note.id === noteId ? data : note
-          )
-          queryClient.setQueryData(['notes'], updatedNotes)
-        } else {
-          const updatedNotes = notes.map((note) =>
-            note.id.startsWith('temp-') ? data : note
-          )
-          queryClient.setQueryData(['notes'], updatedNotes)
-        }
       }
     },
   })

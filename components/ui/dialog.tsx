@@ -40,19 +40,8 @@ function DialogOverlay({
           className
         )}
         {...props}
-        asChild={Platform.OS !== 'web'}
       >
-        <NativeOnlyAnimatedView
-          entering={FadeIn.duration(200)}
-          exiting={FadeOut.duration(150)}
-        >
-          <NativeOnlyAnimatedView
-            entering={FadeIn.delay(50)}
-            exiting={FadeOut.duration(150)}
-          >
-            <>{children}</>
-          </NativeOnlyAnimatedView>
-        </NativeOnlyAnimatedView>
+        {children}
       </DialogPrimitive.Overlay>
     </FullWindowOverlay>
   )
@@ -69,35 +58,42 @@ function DialogContent({
   return (
     <DialogPortal hostName={portalHost}>
       <DialogOverlay>
-        <DialogPrimitive.Content
-          className={cn(
-            'z-50 mx-auto flex w-full max-w-[calc(100%-2rem)] flex-col gap-4 rounded-lg border border-border bg-background p-6 shadow-lg shadow-black/5 sm:max-w-lg',
-            Platform.select({
-              web: 'duration-200 animate-in fade-in-0 zoom-in-95',
-            }),
-            className
-          )}
-          {...props}
+        <NativeOnlyAnimatedView
+          pointerEvents='box-none'
+          entering={FadeIn.duration(200)}
+          exiting={FadeOut.duration(150)}
+          className='flex-1 items-center justify-center'
         >
-          <>{children}</>
-          <DialogPrimitive.Close
+          <DialogPrimitive.Content
             className={cn(
-              'absolute right-4 top-4 rounded opacity-70 active:opacity-100',
+              'z-50 mx-auto flex w-full max-w-[calc(100%-2rem)] flex-col gap-4 rounded-lg border border-border bg-background p-6 shadow-lg shadow-black/5 sm:max-w-lg',
               Platform.select({
-                web: 'ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 data-[state=open]:bg-accent',
-              })
+                web: 'duration-200 animate-in fade-in-0 zoom-in-95',
+              }),
+              className
             )}
-            hitSlop={12}
+            {...props}
           >
-            <Icon
-              as={X}
+            {children}
+            <DialogPrimitive.Close
               className={cn(
-                'size-4 shrink-0 text-accent-foreground web:pointer-events-none'
+                'absolute right-4 top-4 rounded opacity-70 active:opacity-100',
+                Platform.select({
+                  web: 'ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 data-[state=open]:bg-accent',
+                })
               )}
-            />
-            <Text className='sr-only'>Close</Text>
-          </DialogPrimitive.Close>
-        </DialogPrimitive.Content>
+              hitSlop={12}
+            >
+              <Icon
+                as={X}
+                className={cn(
+                  'size-4 shrink-0 text-accent-foreground web:pointer-events-none'
+                )}
+              />
+              <Text className='sr-only'>Close</Text>
+            </DialogPrimitive.Close>
+          </DialogPrimitive.Content>
+        </NativeOnlyAnimatedView>
       </DialogOverlay>
     </DialogPortal>
   )

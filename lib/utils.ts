@@ -71,6 +71,10 @@ export function toHsla(hsl: string, alpha: number = 1): string {
 }
 
 export function getAuthErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.name === 'EmailNotVerifiedError') {
+    return error.message
+  }
+
   if (error && typeof error === 'object' && 'code' in error) {
     const errorCode = error.code as string
 
@@ -110,6 +114,10 @@ export function getAuthErrorMessage(error: unknown): string {
       case 'auth/invalid-credential':
         return i18n._(
           defineMessage`Invalid email or password. Please check your credentials.`
+        )
+      case 'auth/email-not-verified':
+        return i18n._(
+          defineMessage`Please verify your email address before signing in. Check your inbox for the verification email.`
         )
       case 'auth/expired-action-code':
         return i18n._(

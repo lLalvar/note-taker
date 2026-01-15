@@ -32,7 +32,11 @@ import { Icon } from '@/components/ui/icon'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
 import { getAuthErrorMessage } from '@/lib/utils'
-import { signInWithEmail } from '@/services/auth'
+import {
+  EmailNotVerifiedError,
+  resendVerificationEmail,
+  signInWithEmail,
+} from '@/services/auth'
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -47,6 +51,8 @@ type SignInFormData = z.infer<typeof signInSchema>
 export default function SignIn() {
   const { t } = useLingui()
   const [showPassword, setShowPassword] = useState(false)
+  const [emailNotVerified, setEmailNotVerified] = useState(false)
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null)
   const passwordInputRef = React.useRef<TextInput>(null)
   const scrollViewRef = useRef<ScrollView>(null)
 
@@ -67,11 +73,38 @@ export default function SignIn() {
     mutationFn: ({ email, password }: SignInFormData) =>
       signInWithEmail(email, password),
     onSuccess: () => {
+      setEmailNotVerified(false)
       router.replace('/(app)/(tabs)')
     },
     onError: (error: unknown) => {
+      if (error instanceof EmailNotVerifiedError) {
+        setEmailNotVerified(true)
+        const emailValue = form.getValues('email')
+        setPendingEmail(emailValue)
+        toast.error(t`Email Not Verified`, {
+          description: error.message,
+        })
+      } else {
+        setEmailNotVerified(false)
+        const errorMessage = getAuthErrorMessage(error)
+        toast.error(t`Sign in failed`, {
+          description: errorMessage,
+        })
+      }
+    },
+  })
+
+  const resendVerificationMutation = useMutation({
+    mutationFn: ({ email, password }: SignInFormData) =>
+      resendVerificationEmail(email, password),
+    onSuccess: () => {
+      toast.success(t`Verification Email Sent`, {
+        description: t`Please check your inbox and verify your email address.`,
+      })
+    },
+    onError: (error: unknown) => {
       const errorMessage = getAuthErrorMessage(error)
-      toast.error(t`Sign in failed`, {
+      toast.error(t`Failed to send verification email`, {
         description: errorMessage,
       })
     },
@@ -217,6 +250,42 @@ export default function SignIn() {
                       )}
                     </Text>
                   </Button>
+
+                  {emailNotVerified && pendingEmail && (
+                    <View className='gap-2'>
+                      <View className='rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20'>
+                        <Text className='mb-2 text-center text-sm text-blue-800 dark:text-blue-200'>
+                          <Trans>
+                            Your email address has not been verified. Please
+                            check your inbox and click the verification link.
+                          </Trans>
+                        </Text>
+                        <Button
+                          variant='outline'
+                          className='w-full'
+                          onPress={() => {
+                            const password = form.getValues('password')
+                            if (password) {
+                              resendVerificationMutation.mutate({
+                                email: pendingEmail,
+                                password,
+                              })
+                            }
+                          }}
+                          loading={resendVerificationMutation.isPending}
+                          disabled={resendVerificationMutation.isPending}
+                        >
+                          <Text>
+                            {resendVerificationMutation.isPending ? (
+                              <Trans>Sending...</Trans>
+                            ) : (
+                              <Trans>Resend Verification Email</Trans>
+                            )}
+                          </Text>
+                        </Button>
+                      </View>
+                    </View>
+                  )}
                 </View>
               </Form>
 
