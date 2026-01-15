@@ -73,10 +73,7 @@ export default function ResetPassword() {
     },
   })
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form
+  const { handleSubmit } = form
 
   const resetPasswordMutation = useMutation({
     mutationFn: ({ code, password }: { code: string; password: string }) =>
@@ -300,7 +297,6 @@ export default function ResetPassword() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting || resetPasswordMutation.isPending}
                     loading={resetPasswordMutation.isPending}
                   >
                     <Text>

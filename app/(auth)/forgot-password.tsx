@@ -49,16 +49,14 @@ export default function ForgotPassword() {
     },
   })
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form
+  const { handleSubmit } = form
 
   const forgotPasswordMutation = useMutation({
     mutationFn: (email: string) => sendPasswordReset(email),
     onSuccess: () => {
       toast.success(t`Reset Email Sent`, {
         description: t`We've sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.`,
+        duration: 10000,
       })
       router.replace('/(auth)/sign-in')
     },
@@ -141,7 +139,6 @@ export default function ForgotPassword() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting || forgotPasswordMutation.isPending}
                     loading={forgotPasswordMutation.isPending}
                   >
                     <Text>

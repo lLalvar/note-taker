@@ -72,7 +72,8 @@ export default function SignIn() {
   const signInMutation = useMutation({
     mutationFn: ({ email, password }: SignInFormData) =>
       signInWithEmail(email, password),
-    onSuccess: () => {
+    onSuccess: (user) => {
+      // User is already verified at this point (checked in signInWithEmail)
       setEmailNotVerified(false)
       router.replace('/(app)/(tabs)')
     },
@@ -100,9 +101,11 @@ export default function SignIn() {
     onSuccess: () => {
       toast.success(t`Verification Email Sent`, {
         description: t`Please check your inbox and verify your email address.`,
+        duration: 10000,
       })
     },
     onError: (error: unknown) => {
+      console.log('🚀 ~ :107 ~ error:', error)
       const errorMessage = getAuthErrorMessage(error)
       toast.error(t`Failed to send verification email`, {
         description: errorMessage,
@@ -273,7 +276,6 @@ export default function SignIn() {
                             }
                           }}
                           loading={resendVerificationMutation.isPending}
-                          disabled={resendVerificationMutation.isPending}
                         >
                           <Text>
                             {resendVerificationMutation.isPending ? (

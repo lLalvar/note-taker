@@ -22,17 +22,8 @@ export interface LanguagePickerHandle {
 }
 
 interface LanguagePickerProps {
-  /**
-   * If true, renders as an icon button. If false, only renders the bottom sheet (controlled mode).
-   */
   asIcon?: boolean
-  /**
-   * Called when language is selected
-   */
   onLanguageChange?: (locale: Locale) => void
-  /**
-   * Additional className for the trigger button (only used when asIcon is true)
-   */
   className?: string
 }
 
@@ -42,7 +33,7 @@ export const LanguagePicker = forwardRef<
 >(({ asIcon = false, onLanguageChange, className }, ref) => {
   const { t } = useLingui()
   const { locale, setLocale } = useLanguageStore()
-  const bottomSheetRef = useRef<React.ElementRef<typeof BottomSheet>>(null)
+  const bottomSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -63,7 +54,6 @@ export const LanguagePicker = forwardRef<
     bottomSheetRef.current?.dismiss()
   }
 
-  // Render as icon button (standalone mode)
   if (asIcon) {
     return (
       <>
@@ -87,7 +77,6 @@ export const LanguagePicker = forwardRef<
     )
   }
 
-  // Controlled mode - only render the bottom sheet, parent handles the trigger
   return (
     <BottomSheet ref={bottomSheetRef}>
       <LanguagePickerContent

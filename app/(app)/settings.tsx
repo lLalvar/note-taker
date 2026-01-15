@@ -6,22 +6,26 @@ import { useRouter } from 'expo-router'
 import {
   ChevronRight,
   Languages,
+  Lock,
   LogOut,
   Palette,
   User,
 } from 'lucide-react-native'
-import { Alert, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SettingsItem } from '@/components/settings/SettingsItem'
 import { SettingsSection } from '@/components/settings/SettingsSection'
+import {
+  ChangePasswordSheet,
+  type ChangePasswordSheetHandle,
+} from '@/components/settings/change-password-sheet'
 import {
   LanguagePicker,
   type LanguagePickerHandle,
 } from '@/components/ui/language-picker'
 import { ScreenHeader } from '@/components/ui/screen-header'
 import { getThemeMetadata } from '@/lib/theme-registry'
-import { getAuthErrorMessage } from '@/lib/utils'
 import { signOutUser } from '@/services/auth'
 import { useLanguageStore } from '@/store/language-store'
 import { useThemeStore } from '@/store/theme-store'
@@ -38,6 +42,7 @@ export default function Settings() {
   const { theme: selectedThemeId } = useThemeStore()
   const { locale } = useLanguageStore()
   const languagePickerRef = useRef<LanguagePickerHandle>(null)
+  const changePasswordSheetRef = useRef<ChangePasswordSheetHandle>(null)
   const queryClient = useQueryClient()
 
   const currentTheme = getThemeMetadata(selectedThemeId)
@@ -48,6 +53,10 @@ export default function Settings() {
 
   const handleOpenLanguageSheet = () => {
     languagePickerRef.current?.open()
+  }
+
+  const handleOpenChangePassword = () => {
+    changePasswordSheetRef.current?.open()
   }
 
   const signOutMutation = useMutation({
@@ -106,6 +115,12 @@ export default function Settings() {
             rightIcon={ChevronRight}
           />
           <SettingsItem
+            icon={Lock}
+            title={t`Change Password`}
+            onPress={handleOpenChangePassword}
+            rightIcon={ChevronRight}
+          />
+          <SettingsItem
             icon={LogOut}
             title={t`Sign Out`}
             onPress={handleSignOut}
@@ -116,6 +131,7 @@ export default function Settings() {
 
       {/* Language Selection Bottom Sheet */}
       <LanguagePicker ref={languagePickerRef} />
+      <ChangePasswordSheet ref={changePasswordSheetRef} />
     </View>
   )
 }

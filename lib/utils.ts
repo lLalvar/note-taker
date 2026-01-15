@@ -75,9 +75,23 @@ export function getAuthErrorMessage(error: unknown): string {
     return error.message
   }
 
-  if (error && typeof error === 'object' && 'code' in error) {
-    const errorCode = error.code as string
+  let errorCode: string | undefined
 
+  if (error && typeof error === 'object') {
+    if ('code' in error) {
+      errorCode = (error as any).code
+    } else if (
+      'message' in error &&
+      typeof (error as any).message === 'string'
+    ) {
+      const match = (error as any).message.match(/\[(auth\/[\w-]+)\]/)
+      if (match) {
+        errorCode = match[1]
+      }
+    }
+  }
+
+  if (errorCode) {
     switch (errorCode) {
       case 'auth/email-already-in-use':
         return i18n._(
@@ -135,8 +149,16 @@ export function getAuthErrorMessage(error: unknown): string {
         return i18n._(
           defineMessage`The verification code has expired. Please request a new one.`
         )
+      case 'auth/quota-exceeded':
+        return i18n._(defineMessage`Quota exceeded. Please try again later.`)
+      case 'auth/missing-email':
+        return i18n._(
+          defineMessage`Email is required. Please check and try again.`
+        )
+      case 'auth/no-current-user':
+        return i18n._(defineMessage`Session invalid. Please sign in again.`)
       default:
-        return i18n._(defineMessage`Sign up failed. Please try again.`)
+        return i18n._(defineMessage`Authentication failed. Please try again.`)
     }
   }
 

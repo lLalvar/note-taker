@@ -344,7 +344,6 @@ export function ProfileContent({
               className='flex-1'
               onPress={() => form.handleSubmit(handleSubmit)()}
               loading={updateMutation.isPending}
-              disabled={updateMutation.isPending}
             >
               <Text>
                 {updateMutation.isPending ? (

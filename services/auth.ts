@@ -1,11 +1,13 @@
 import {
+  EmailAuthProvider,
   confirmPasswordReset,
   createUserWithEmailAndPassword,
   getAuth,
-  sendEmailVerification,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   updateProfile,
   verifyPasswordResetCode,
 } from '@react-native-firebase/auth'
@@ -22,6 +24,8 @@ export class EmailNotVerifiedError extends Error {
 export async function signInWithEmail(email: string, password: string) {
   const auth = getAuth()
   const credential = await signInWithEmailAndPassword(auth, email, password)
+
+  await credential.user.reload()
 
   if (!credential.user.emailVerified) {
     await signOut(auth)
@@ -77,11 +81,40 @@ export async function resetPassword(code: string, newPassword: string) {
 
 export async function resendVerificationEmail(email: string, password: string) {
   const auth = getAuth()
-  const credential = await signInWithEmailAndPassword(auth, email, password)
+  await signInWithEmailAndPassword(auth, email, password)
 
-  await sendEmailVerification(credential.user)
+  const user = auth.currentUser
+
+  if (!user) {
+    throw new Error('No user currently signed in')
+  }
+
+  await user.sendEmailVerification()
 
   await signOut(auth)
 
   return true
+}
+
+export async function reauthenticateUser(password: string) {
+  const auth = getAuth()
+  const user = auth.currentUser
+
+  if (!user || !user.email) {
+    throw new Error('No user currently signed in')
+  }
+
+  const credential = EmailAuthProvider.credential(user.email, password)
+  await reauthenticateWithCredential(user, credential)
+}
+
+export async function updateUserPassword(password: string) {
+  const auth = getAuth()
+  const user = auth.currentUser
+
+  if (!user) {
+    throw new Error('No user currently signed in')
+  }
+
+  await updatePassword(user, password)
 }

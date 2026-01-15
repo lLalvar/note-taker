@@ -103,6 +103,7 @@ export default function SignUp() {
     onSuccess: (user) => {
       toast.success(t`Account Created`, {
         description: t`Your account has been created successfully! Please check your email to verify your account before signing in.`,
+        duration: 10000,
       })
       router.replace('/(auth)/sign-in')
     },
@@ -310,10 +311,14 @@ export default function SignUp() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting}
+                    loading={isSubmitting || signUpMutation.isPending}
                   >
                     <Text>
-                      <Trans>Create Account</Trans>
+                      {signUpMutation.isPending ? (
+                        <Trans>Creating account...</Trans>
+                      ) : (
+                        <Trans>Create Account</Trans>
+                      )}
                     </Text>
                   </Button>
                 </View>

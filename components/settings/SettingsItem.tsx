@@ -35,7 +35,6 @@ export function SettingsItem({
     onPress()
   }
 
-  // Check if rightIcon is a React element (already rendered) or a component (needs rendering)
   const isRightIconComponent =
     rightIcon &&
     typeof rightIcon === 'function' &&
@@ -47,7 +46,7 @@ export function SettingsItem({
       onPress={handlePress}
       disabled={disabled || !onPress}
       className={cn(
-        'flex-row items-center gap-4 rounded-lg border border-border bg-card p-4 active:bg-accent',
+        'flex-row items-center gap-4 rounded-lg border border-border bg-card px-4 py-3 active:bg-accent',
         disabled && 'opacity-50',
         className
       )}
