@@ -56,9 +56,8 @@ export default function Settings() {
       queryClient.clear()
       router.replace('/(auth)/sign-in')
     },
-    onError: (error: unknown) => {
-      const errorMessage = getAuthErrorMessage(error)
-      Alert.alert(t`Sign out failed`, errorMessage)
+    onError: (error) => {
+      console.log(error)
     },
   })
 

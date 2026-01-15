@@ -318,7 +318,6 @@ function FormTextarea({
             : `${formDescriptionNativeID} ${formMessageNativeID}`
         }
         aria-invalid={!!error}
-        onChangeText={onChange}
         {...props}
       />
       {!!description && <FormDescription>{description}</FormDescription>}

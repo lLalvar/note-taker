@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { Timestamp } from '@react-native-firebase/firestore'
+import { useFocusEffect } from '@react-navigation/native'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
@@ -10,14 +11,30 @@ import { useForm } from 'react-hook-form'
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { z } from 'zod'
 
+import {
+  MoodPickerModal,
+  type MoodPickerModalHandle,
+} from '@/components/mood/mood-picker-modal'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -30,6 +47,7 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { Textarea } from '@/components/ui/textarea'
+import { DEFAULT_MOOD } from '@/constants/moods'
 import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
 import { createNote, getNote, updateNote } from '@/services/notes'
@@ -38,6 +56,7 @@ import type { Note } from '@/types'
 const noteSchema = z.object({
   title: z.string().max(200, 'Title is too long').optional(),
   description: z.string().max(5000, 'Description is too long').optional(),
+  mood: z.string().optional(),
 })
 
 type NoteFormData = z.infer<typeof noteSchema>
@@ -62,8 +81,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
   const {
     data: noteData,
     isLoading: isLoadingNote,
-    isFetching: isFetchingNote,
-    isError: isNoteError,
+    refetch,
   } = useQuery({
     queryKey: ['note', noteId],
     queryFn: () => getNote(noteId!),
@@ -71,33 +89,53 @@ export function NoteForm({ noteId }: NoteFormProps) {
     placeholderData: placeholderNote,
   })
 
-  const form = useForm<NoteFormData>({
-    resolver: zodResolver(noteSchema),
-    defaultValues: {
+  const moodPickerRef = useRef<MoodPickerModalHandle>(null)
+
+  const defaultValues: NoteFormData = useMemo(
+    () => ({
       title: '',
       description: '',
-    },
-  })
+      mood: DEFAULT_MOOD.emoji,
+    }),
+    []
+  )
 
-  useEffect(() => {
-    if (isNoteError && isEditMode) {
-      Alert.alert('Error', 'Failed to load note', [
-        {
-          text: 'OK',
-          onPress: () => router.back(),
-        },
-      ])
-    }
-  }, [isNoteError, isEditMode])
-
-  useEffect(() => {
-    if (isEditMode && noteData && !isFetchingNote) {
-      form.reset({
+  const serverValues = useMemo<NoteFormData | undefined>(() => {
+    if (isEditMode && noteData) {
+      return {
         title: noteData.title || '',
         description: noteData.description || '',
-      })
+        mood: noteData.mood || DEFAULT_MOOD.emoji,
+      }
     }
-  }, [isEditMode, noteData, isFetchingNote, form])
+    return undefined
+  }, [isEditMode, noteData])
+
+  const form = useForm<NoteFormData>({
+    resolver: zodResolver(noteSchema),
+    defaultValues,
+    ...(serverValues && { values: serverValues }),
+  })
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isEditMode && noteData) {
+        form.reset({
+          title: noteData.title || '',
+          description: noteData.description || '',
+          mood: noteData.mood || DEFAULT_MOOD.emoji,
+        })
+        refetch()
+      } else if (!isEditMode) {
+        form.reset(defaultValues)
+
+        const timer = setTimeout(() => {
+          moodPickerRef.current?.open()
+        }, 300)
+        return () => clearTimeout(timer)
+      }
+    }, [isEditMode, noteData, refetch, form, defaultValues])
+  )
 
   const mutation = useMutation({
     mutationFn: async (data: NoteFormData) => {
@@ -120,6 +158,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
             ...previousNote,
             title: data.title,
             description: data.description,
+            mood: data.mood,
           }
           queryClient.setQueryData(['note', noteId], optimisticNote)
         }
@@ -131,6 +170,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
                   ...note,
                   title: data.title,
                   description: data.description,
+                  mood: data.mood,
                 }
               : note
           )
@@ -149,6 +189,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
           id: tempId,
           title: data.title,
           description: data.description,
+          mood: data.mood,
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
           userId: user?.uid || '',
@@ -161,7 +202,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
           )
         }
 
-        form.reset({ title: '', description: '' })
+        form.reset({ title: '', description: '', mood: DEFAULT_MOOD.emoji })
         router.back()
 
         return { previousNotes, tempId }
@@ -217,6 +258,55 @@ export function NoteForm({ noteId }: NoteFormProps) {
     mutation.mutate(values)
   }
 
+  const isDirty = form.formState.isDirty
+  const [shouldNavigate, setShouldNavigate] = useState(false)
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false)
+
+  const handleShowDiscardDialog = useCallback(() => {
+    setShowDiscardDialog(true)
+  }, [])
+
+  const handleDiscard = () => {
+    setShouldNavigate(true)
+    setShowDiscardDialog(false)
+    router.back()
+  }
+
+  const handleCancelDiscard = () => {
+    setShowDiscardDialog(false)
+  }
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          if (isDirty && !shouldNavigate && !mutation.isPending) {
+            handleShowDiscardDialog()
+            return true
+          }
+          return false
+        }
+      )
+
+      return () => backHandler.remove()
+    }
+  }, [isDirty, shouldNavigate, mutation.isPending, handleShowDiscardDialog])
+
+  useEffect(() => {
+    if (!isDirty) {
+      setShouldNavigate(false)
+    }
+  }, [isDirty])
+
+  const handleBackPress = () => {
+    if (isDirty && !shouldNavigate && !mutation.isPending) {
+      handleShowDiscardDialog()
+    } else {
+      router.back()
+    }
+  }
+
   const isLoading = isLoadingNote || mutation.isPending
 
   return (
@@ -226,7 +316,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
         <Button
           variant='ghost'
           size='icon'
-          onPress={() => router.back()}
+          onPress={handleBackPress}
           disabled={isLoading}
         >
           <Icon as={ArrowLeft} />
@@ -278,23 +368,45 @@ export function NoteForm({ noteId }: NoteFormProps) {
           ) : (
             <Form {...form}>
               <View className='flex-1 gap-4 px-4 pb-8 pt-4'>
-                <FormField
-                  control={form.control}
-                  name='title'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        <Trans>Title</Trans>
-                      </FormLabel>
-                      <Input
-                        {...field}
-                        placeholder={t`Enter note title...`}
-                        editable={!isLoadingNote}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <View className='flex-row gap-2'>
+                  <FormField
+                    control={form.control}
+                    name='title'
+                    render={({ field }) => (
+                      <FormItem className='flex-1'>
+                        <FormLabel>
+                          <Trans>Title</Trans>
+                        </FormLabel>
+                        <Input
+                          {...field}
+                          placeholder={t`Enter note title...`}
+                          editable={!isLoadingNote}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='mood'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          <Trans>Mood</Trans>
+                        </FormLabel>
+                        <Pressable
+                          onPress={() => moodPickerRef.current?.open()}
+                          className='size-10 flex-row items-center justify-center rounded-lg border border-border bg-background'
+                        >
+                          <Text className='text-xl'>
+                            {field.value || DEFAULT_MOOD.emoji}
+                          </Text>
+                        </Pressable>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </View>
 
                 <FormField
                   control={form.control}
@@ -321,6 +433,39 @@ export function NoteForm({ noteId }: NoteFormProps) {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Mood Picker Modal */}
+      <MoodPickerModal
+        ref={moodPickerRef}
+        currentMood={form.watch('mood')}
+        onMoodSelect={(emoji) => {
+          form.setValue('mood', emoji)
+        }}
+      />
+
+      {/* Discard Changes Dialog */}
+      <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {isEditMode ? 'Discard changes?' : 'Discard note?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {isEditMode
+                ? 'You have unsaved changes. Are you sure you want to discard them?'
+                : 'You have an unsaved note. Are you sure you want to discard it?'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onPress={handleCancelDiscard}>
+              <Text>Cancel</Text>
+            </AlertDialogCancel>
+            <AlertDialogAction onPress={handleDiscard}>
+              <Text>Discard</Text>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </SafeAreaView>
   )
 }

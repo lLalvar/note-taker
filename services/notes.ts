@@ -30,6 +30,7 @@ export async function createNote(data: CreateNoteData): Promise<Note> {
   const noteData = {
     title: data.title || null,
     description: data.description || null,
+    mood: data.mood || null,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
     userId: user.uid,
@@ -58,6 +59,7 @@ export async function createNote(data: CreateNoteData): Promise<Note> {
     id: docRef.id,
     title: data.title,
     description: data.description,
+    mood: data.mood,
     createdAt,
     updatedAt,
     userId: user.uid,
@@ -121,6 +123,7 @@ export async function getNotes(searchQuery?: string): Promise<Note[]> {
               id: docSnapshot.id,
               title: data?.title || undefined,
               description: data?.description || undefined,
+              mood: data?.mood || undefined,
               createdAt: data?.createdAt,
               updatedAt: data?.updatedAt,
               userId: data?.userId || '',
@@ -142,6 +145,7 @@ export async function getNotes(searchQuery?: string): Promise<Note[]> {
                 id: docSnapshot.id,
                 title: data?.title || undefined,
                 description: data?.description || undefined,
+                mood: data?.mood || undefined,
                 createdAt: data?.createdAt,
                 updatedAt: data?.updatedAt,
                 userId: data?.userId || '',
@@ -178,6 +182,7 @@ export async function getNotes(searchQuery?: string): Promise<Note[]> {
         id: docSnapshot.id,
         title: data?.title || undefined,
         description: data?.description || undefined,
+        mood: data?.mood || undefined,
         createdAt: data?.createdAt,
         updatedAt: data?.updatedAt,
         userId: data?.userId || '',
@@ -211,6 +216,7 @@ export async function getNote(noteId: string): Promise<Note | null> {
     id: docSnapshot.id,
     title: data.title || undefined,
     description: data.description || undefined,
+    mood: data.mood || undefined,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
     userId: data.userId,
@@ -238,6 +244,9 @@ export async function updateNote(
   }
   if (data.description !== undefined) {
     updateData.description = data.description || null
+  }
+  if (data.mood !== undefined) {
+    updateData.mood = data.mood || null
   }
 
   const noteRef = doc(db, 'users', user.uid, 'notes', noteId)

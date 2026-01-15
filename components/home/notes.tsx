@@ -160,9 +160,13 @@ export function Notes({
                         )}
                       </View>
 
-                      {/* Emoji */}
+                      {/* Mood Emoji */}
                       <View className='items-center justify-center'>
-                        <Icon as={NotebookPen} className='text-primary' />
+                        {entry.mood ? (
+                          <Text className='text-2xl'>{entry.mood}</Text>
+                        ) : (
+                          <Icon as={NotebookPen} className='text-primary' />
+                        )}
                       </View>
                     </CardContent>
                   </Card>

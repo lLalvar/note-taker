@@ -4,6 +4,7 @@ export interface Note {
   id: string
   title?: string
   description?: string
+  mood?: string
   createdAt: Timestamp
   updatedAt: Timestamp
   userId: string
@@ -12,4 +13,5 @@ export interface Note {
 export interface CreateNoteData {
   title?: string
   description?: string
+  mood?: string
 }
