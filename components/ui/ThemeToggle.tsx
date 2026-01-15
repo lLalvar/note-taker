@@ -40,6 +40,7 @@ export function ThemeToggle() {
         size='icon'
         variant='ghost'
         className='ios:size-9 rounded-full web:mx-4'
+        accessibilityLabel='Select theme'
       >
         <Icon as={isDark ? MoonStar : Sun} />
       </Button>

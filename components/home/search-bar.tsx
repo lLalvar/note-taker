@@ -97,6 +97,7 @@ export function SearchBar({
             size='icon'
             className='absolute right-1 h-8 w-8'
             onPress={handleClear}
+            accessibilityLabel='Clear search'
           >
             <Icon as={X} className='size-4' />
           </Button>

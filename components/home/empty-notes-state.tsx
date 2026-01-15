@@ -8,11 +8,13 @@ import { useTheme } from '@/hooks/use-theme'
 interface EmptyNotesStateProps {
   isSearchResult?: boolean
   searchQuery?: string
+  isTrash?: boolean
 }
 
 export function EmptyNotesState({
   isSearchResult = false,
   searchQuery,
+  isTrash = false,
 }: EmptyNotesStateProps) {
   const { colors } = useTheme()
 
@@ -33,12 +35,18 @@ export function EmptyNotesState({
         </View>
         <View className='items-center gap-2'>
           <Text className='text-center text-xl font-semibold text-foreground'>
-            {isSearchResult ? 'No results found' : 'No notes yet'}
+            {isSearchResult
+              ? 'No results found'
+              : isTrash
+                ? 'Trash is empty'
+                : 'No notes yet'}
           </Text>
           <Text className='text-center text-muted-foreground'>
             {isSearchResult
               ? `No notes match "${searchQuery}". Try a different search term.`
-              : 'Start your note-taking journey by creating your first note. Capture your thoughts, memories, and moments.'}
+              : isTrash
+                ? 'Notes you delete will appear here. You can restore them or delete them permanently.'
+                : 'Start your note-taking journey by creating your first note. Capture your thoughts, memories, and moments.'}
           </Text>
         </View>
       </View>

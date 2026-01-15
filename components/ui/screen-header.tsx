@@ -43,7 +43,12 @@ export function ScreenHeader({
       )}
     >
       {showBackButton && (
-        <Button variant='ghost' size='icon' onPress={handleBack}>
+        <Button
+          variant='ghost'
+          size='icon'
+          onPress={handleBack}
+          accessibilityLabel='Go back'
+        >
           <Icon as={ArrowLeft} />
         </Button>
       )}

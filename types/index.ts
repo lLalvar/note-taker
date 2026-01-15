@@ -8,6 +8,7 @@ export interface Note {
   createdAt: Timestamp
   updatedAt: Timestamp
   userId: string
+  deletedAt?: Timestamp
 }
 
 export interface CreateNoteData {

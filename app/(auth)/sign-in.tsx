@@ -212,6 +212,7 @@ export default function SignIn() {
                               variant='ghost'
                               size='icon'
                               onPress={() => setShowPassword(!showPassword)}
+                              accessibilityLabel='Toggle password visibility'
                             >
                               {showPassword ? (
                                 <Icon

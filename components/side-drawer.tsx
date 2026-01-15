@@ -10,6 +10,7 @@ import {
   Palette,
   Settings,
   Share2,
+  Trash2,
 } from 'lucide-react-native'
 import {
   Modal,
@@ -34,6 +35,7 @@ import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
 import { useShareApp } from '@/hooks/use-share-app'
 import { useTheme } from '@/hooks/use-theme'
+import { useDrawerStore } from '@/store/drawer-store'
 
 const icon = require('@/assets/images/icon.png')
 
@@ -48,12 +50,7 @@ interface MenuItem {
   onPress?: () => void
 }
 
-interface SideDrawerProps {
-  isOpen: boolean
-  onClose: () => void
-}
-
-export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
+export function SideDrawer() {
   const { t } = useLingui()
   const { colors } = useTheme()
   const { shareApp } = useShareApp()
@@ -62,9 +59,8 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
   const translateX = useSharedValue(-DRAWER_WIDTH)
   const isDragging = useSharedValue(false)
 
-  const closeDrawer = () => {
-    onClose()
-  }
+  const isOpen = useDrawerStore((state) => state.isOpen)
+  const closeDrawer = useDrawerStore((state) => state.closeDrawer)
 
   useEffect(() => {
     if (isOpen) {
@@ -208,6 +204,12 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       icon: Palette,
       href: '/(app)/theme',
     },
+    {
+      id: 'trash',
+      label: t`Trash`,
+      icon: Trash2,
+      href: '/(app)/trash',
+    },
     // {
     //   id: 'tags',
     //   label: t`Tags`,
@@ -331,7 +333,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
       transparent
       animationType='none'
       statusBarTranslucent
-      onRequestClose={onClose}
+      onRequestClose={closeDrawer}
     >
       <GestureDetector gesture={combinedGesture}>
         <View className='flex-1'>
@@ -353,7 +355,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
               style={{
                 width: screenWidth / 2,
               }}
-              onPress={onClose}
+              onPress={closeDrawer}
             />
           </Animated.View>
 
@@ -416,7 +418,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         asChild
                         key={item.id}
                         href={item.href as RelativePathString}
-                        onPress={onClose}
+                        onPress={closeDrawer}
                       >
                         <Button
                           variant='ghost'
@@ -436,7 +438,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                       size='lg'
                       onPress={() => {
                         item.onPress?.()
-                        onClose()
+                        closeDrawer()
                       }}
                       className='justify-start'
                     >

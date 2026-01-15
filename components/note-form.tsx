@@ -6,6 +6,7 @@ import { Timestamp } from '@react-native-firebase/firestore'
 import { useFocusEffect } from '@react-navigation/native'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
+import { MoreVertical, Trash2 } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
   ActivityIndicator,
@@ -24,6 +25,7 @@ import {
   MoodPickerModal,
   type MoodPickerModalHandle,
 } from '@/components/mood/mood-picker-modal'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -41,6 +43,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { ScreenHeader } from '@/components/ui/screen-header'
 import { Text } from '@/components/ui/text'
@@ -48,7 +51,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { DEFAULT_MOOD } from '@/constants/moods'
 import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
-import { createNote, getNote, updateNote } from '@/services/notes'
+import { createNote, deleteNote, getNote, updateNote } from '@/services/notes'
 import type { Note } from '@/types'
 
 const noteSchema = z.object({
@@ -88,6 +91,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
   })
 
   const moodPickerRef = useRef<MoodPickerModalHandle>(null)
+  const optionsSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
 
   const defaultValues: NoteFormData = useMemo(
     () => ({
@@ -280,6 +284,67 @@ export function NoteForm({ noteId }: NoteFormProps) {
     mutation.mutate(values)
   }
 
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      if (!noteId) throw new Error('Note ID is required for deletion')
+      await deleteNote(noteId)
+    },
+    onMutate: async () => {
+      if (!noteId) return
+
+      // Cancel outgoing queries
+      await queryClient.cancelQueries({ queryKey: ['notes'] })
+      await queryClient.cancelQueries({ queryKey: ['note', noteId] })
+
+      // Get previous notes
+      const previousNotes = queryClient.getQueryData<Note[]>(['notes'])
+
+      // Optimistically remove note from cache
+      queryClient.setQueriesData<Note[]>(
+        { queryKey: ['notes'] },
+        (oldNotes) => {
+          if (!oldNotes) return oldNotes
+          return oldNotes.filter((note) => note.id !== noteId)
+        }
+      )
+
+      // Remove individual note from cache
+      queryClient.removeQueries({ queryKey: ['note', noteId] })
+
+      // Navigate back immediately
+      router.back()
+
+      return { previousNotes }
+    },
+    onError: (error, _, context) => {
+      // Rollback optimistic update
+      if (context?.previousNotes) {
+        queryClient.setQueryData(['notes'], context.previousNotes)
+      }
+
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to delete note'
+      toast.error(t`Error`, {
+        description: errorMessage,
+      })
+    },
+    onSuccess: () => {
+      toast.success(t`Note moved to trash`)
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+      queryClient.invalidateQueries({ queryKey: ['trash-notes'] })
+    },
+  })
+
+  const handleOpenOptions = () => {
+    optionsSheetRef.current?.present()
+  }
+
+  const handleDelete = () => {
+    optionsSheetRef.current?.dismiss()
+    deleteMutation.mutate()
+  }
+
   const isDirty = form.formState.isDirty
   const [shouldNavigate, setShouldNavigate] = useState(false)
   const [showDiscardDialog, setShowDiscardDialog] = useState(false)
@@ -338,26 +403,37 @@ export function NoteForm({ noteId }: NoteFormProps) {
           isEditMode ? <Trans>Edit Note</Trans> : <Trans>Create Note</Trans>
         }
         rightAction={
-          <Button
-            // variant='ghost'
-            onPress={form.handleSubmit(handleSubmit)}
-            disabled={isLoading || isLoadingNote}
-            loading={mutation.isPending}
-          >
-            <Text>
-              {isLoading ? (
-                isEditMode ? (
-                  <Trans>Saving...</Trans>
+          <View className='flex-row items-center gap-2'>
+            {isEditMode && (
+              <Button
+                variant='ghost'
+                size='icon'
+                onPress={handleOpenOptions}
+                accessibilityLabel='Options'
+              >
+                <Icon as={MoreVertical} />
+              </Button>
+            )}
+            <Button
+              onPress={form.handleSubmit(handleSubmit)}
+              disabled={isLoading || isLoadingNote}
+              loading={mutation.isPending}
+            >
+              <Text>
+                {isLoading ? (
+                  isEditMode ? (
+                    <Trans>Saving...</Trans>
+                  ) : (
+                    <Trans>Creating...</Trans>
+                  )
+                ) : isEditMode ? (
+                  <Trans>Save</Trans>
                 ) : (
-                  <Trans>Creating...</Trans>
-                )
-              ) : isEditMode ? (
-                <Trans>Save</Trans>
-              ) : (
-                <Trans>Create</Trans>
-              )}
-            </Text>
-          </Button>
+                  <Trans>Create</Trans>
+                )}
+              </Text>
+            </Button>
+          </View>
         }
         onBack={handleBackPress}
       />
@@ -461,6 +537,25 @@ export function NoteForm({ noteId }: NoteFormProps) {
           form.setValue('mood', emoji)
         }}
       />
+
+      {/* Options Menu */}
+      {isEditMode && (
+        <BottomSheet ref={optionsSheetRef}>
+          <View className='px-4 pb-4'>
+            <Button
+              onPress={handleDelete}
+              variant='ghost'
+              className='justify-start bg-background'
+              disabled={deleteMutation.isPending}
+            >
+              <Icon as={Trash2} className='text-destructive' />
+              <Text className='text-destructive'>
+                <Trans>Move to trash</Trans>
+              </Text>
+            </Button>
+          </View>
+        </BottomSheet>
+      )}
 
       {/* Discard Changes Dialog */}
       <Dialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>

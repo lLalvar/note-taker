@@ -1,18 +1,32 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
-import { useQueryClient } from '@tanstack/react-query'
+import { Trans, useLingui } from '@lingui/react/macro'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { Calendar, NotebookPen } from 'lucide-react-native'
 import { ActivityIndicator, Pressable, View } from 'react-native'
+import { toast } from 'sonner-native'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
-import { getNote } from '@/services/notes'
+import { getNote, restoreNote } from '@/services/notes'
 import { useLanguageStore } from '@/store/language-store'
+import { useSelectionStore } from '@/store/selection-store'
 import type { Note } from '@/types'
 
-import { Icon } from '../ui/icon'
 import { EmptyNotesState } from './empty-notes-state'
 
 interface NotesProps {
@@ -20,6 +34,8 @@ interface NotesProps {
   isSearchResult?: boolean
   searchQuery?: string
   isLoading?: boolean
+  isTrash?: boolean
+  onRestore?: () => void
 }
 
 export function Notes({
@@ -27,15 +43,52 @@ export function Notes({
   isSearchResult = false,
   searchQuery,
   isLoading = false,
+  isTrash = false,
+  onRestore,
 }: NotesProps) {
   const { locale } = useLanguageStore()
   const { colors } = useTheme()
+  const { t } = useLingui()
   const queryClient = useQueryClient()
+  const [showRestoreDialog, setShowRestoreDialog] = useState(false)
+  const [noteToRestore, setNoteToRestore] = useState<Note | null>(null)
+
+  // Selection state from store
+  const isSelectionMode = useSelectionStore((state) => state.isSelectionMode)
+  const selectedNoteIds = useSelectionStore((state) => state.selectedNoteIds)
+  const toggleNoteSelection = useSelectionStore(
+    (state) => state.toggleNoteSelection
+  )
+  const enterSelectionMode = useSelectionStore(
+    (state) => state.enterSelectionMode
+  )
 
   const intlLocale = locale === 'ru' ? 'ru-RU' : 'en-US'
 
+  // Restore mutation
+  const restoreMutation = useMutation({
+    mutationFn: async (noteId: string) => {
+      await restoreNote(noteId)
+    },
+    onSuccess: () => {
+      toast.success(t`Note restored`)
+      queryClient.invalidateQueries({ queryKey: ['trash-notes'] })
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+      onRestore?.()
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to restore note'
+      toast.error(t`Error`, {
+        description: errorMessage,
+      })
+    },
+  })
+
   // Prefetch note data when user starts pressing
   const handlePressIn = (entry: Note) => {
+    if (isSelectionMode) return // Don't prefetch in selection mode
+
     // Set the note from list as placeholder data for instant display
     queryClient.setQueryData(['note', entry.id], entry)
     // Prefetch the latest version in the background
@@ -43,6 +96,36 @@ export function Notes({
       queryKey: ['note', entry.id],
       queryFn: () => getNote(entry.id),
     })
+  }
+
+  // Enter selection mode on long press
+  const handleLongPress = (entry: Note) => {
+    if (isSelectionMode) return
+    enterSelectionMode(entry.id)
+  }
+
+  // Handle note press - navigate or toggle selection or show restore dialog
+  const handleNotePress = (entry: Note) => {
+    if (isSelectionMode) {
+      toggleNoteSelection(entry.id)
+    } else if (isTrash) {
+      // Show restore dialog for trashed notes
+      setNoteToRestore(entry)
+      setShowRestoreDialog(true)
+    } else {
+      router.push({
+        pathname: '/(app)/(tabs)/[id]/edit',
+        params: { id: entry.id },
+      })
+    }
+  }
+
+  const handleConfirmRestore = () => {
+    if (noteToRestore) {
+      restoreMutation.mutate(noteToRestore.id)
+      setShowRestoreDialog(false)
+      setNoteToRestore(null)
+    }
   }
 
   const entriesByYear = useMemo(() => {
@@ -80,12 +163,14 @@ export function Notes({
       <EmptyNotesState
         isSearchResult={isSearchResult}
         searchQuery={searchQuery}
+        isTrash={isTrash}
       />
     )
   }
 
   return (
     <>
+      {/* Notes List */}
       {entriesByYear.map(({ year, notes }) => (
         <View key={year}>
           <View className='px-4 pt-6'>
@@ -101,21 +186,25 @@ export function Notes({
                 month: 'short',
               }).format(createdAt)
 
+              const isSelected = selectedNoteIds.has(entry.id)
+
               return (
                 <Pressable
                   key={entry.id}
                   onPressIn={() => handlePressIn(entry)}
-                  onPress={() => {
-                    router.push({
-                      pathname: '/(app)/(tabs)/[id]/edit',
-                      params: { id: entry.id },
-                    })
-                  }}
+                  onPress={() => handleNotePress(entry)}
+                  onLongPress={() => handleLongPress(entry)}
                   style={({ pressed }) => ({
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <Card>
+                  <Card
+                    className={
+                      isSelectionMode && isSelected
+                        ? 'border-primary bg-primary/5'
+                        : ''
+                    }
+                  >
                     <CardContent className='flex-row items-start gap-4'>
                       {/* Date Section */}
                       <View className='items-center'>
@@ -176,6 +265,52 @@ export function Notes({
           </View>
         </View>
       ))}
+
+      {/* Restore Dialog for Trash */}
+      {isTrash && (
+        <AlertDialog
+          open={showRestoreDialog}
+          onOpenChange={setShowRestoreDialog}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                <Trans>Restore note?</Trans>
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <Trans>
+                  This note will be restored and moved back to your notes.
+                </Trans>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel asChild>
+                <Button
+                  variant='outline'
+                  onPress={() => {
+                    setShowRestoreDialog(false)
+                    setNoteToRestore(null)
+                  }}
+                >
+                  <Text>
+                    <Trans>Cancel</Trans>
+                  </Text>
+                </Button>
+              </AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <Button
+                  onPress={handleConfirmRestore}
+                  loading={restoreMutation.isPending}
+                >
+                  <Text>
+                    <Trans>Restore</Trans>
+                  </Text>
+                </Button>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </>
   )
 }

@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
 
+import { Trans } from '@lingui/react/macro'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { router } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { ActivityIndicator, BackHandler, Platform, View } from 'react-native'
 import Animated, {
   interpolateColor,
@@ -12,37 +15,27 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { HeaderImage } from '@/components/home/header-image'
-import { HomeHeader } from '@/components/home/home-header'
 import { Notes } from '@/components/home/notes'
-import { SelectionHeader } from '@/components/home/selection-header'
-import { SideDrawer } from '@/components/side-drawer'
+import { TrashSelectionHeader } from '@/components/home/trash-selection-header'
+import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
-import { useSearch } from '@/hooks/use-search'
 import { useTheme } from '@/hooks/use-theme'
-import { getNote, getNotes } from '@/services/notes'
+import { getNote, getTrashedNotes } from '@/services/notes'
 import { useSelectionStore } from '@/store/selection-store'
 
 const SCROLL_THRESHOLD = 40
 
-export default function HomeScreen() {
+export default function TrashScreen() {
   const { colors } = useTheme()
-  const { trimmedSearchQuery, shouldSearch } = useSearch()
   const queryClient = useQueryClient()
-
-  // Selection state
   const isSelectionMode = useSelectionStore((state) => state.isSelectionMode)
   const exitSelectionMode = useSelectionStore(
     (state) => state.exitSelectionMode
   )
-
-  const { data: notes = [], isLoading } = useQuery({
-    queryKey: [
-      'notes',
-      {
-        searchQuery: shouldSearch ? trimmedSearchQuery : undefined,
-      },
-    ],
-    queryFn: () => getNotes(shouldSearch ? trimmedSearchQuery : undefined),
+  const { data: trashedNotes = [], isLoading } = useQuery({
+    queryKey: ['trash-notes'],
+    queryFn: () => getTrashedNotes(),
   })
 
   // Handle back button/gesture to cancel selection
@@ -63,8 +56,8 @@ export default function HomeScreen() {
   }, [isSelectionMode, exitSelectionMode])
 
   useEffect(() => {
-    if (notes.length > 0) {
-      const notesToPrefetch = notes.slice(0, 10)
+    if (trashedNotes.length > 0) {
+      const notesToPrefetch = trashedNotes.slice(0, 10)
       notesToPrefetch.forEach((note) => {
         queryClient.setQueryData(['note', note.id], note)
         queryClient.prefetchQuery({
@@ -73,12 +66,11 @@ export default function HomeScreen() {
         })
       })
     }
-  }, [notes, queryClient])
+  }, [trashedNotes, queryClient])
 
   const scrollOffset = useSharedValue(0)
   const selectionModeProgress = useSharedValue(isSelectionMode ? 1 : 0)
 
-  // Animate selection mode transition
   useEffect(() => {
     selectionModeProgress.value = withTiming(isSelectionMode ? 1 : 0, {
       duration: 200,
@@ -103,7 +95,6 @@ export default function HomeScreen() {
     }
   })
 
-  // Animation styles for header transitions
   const normalHeaderStyle = useAnimatedStyle(() => {
     return {
       opacity: 1 - selectionModeProgress.value,
@@ -144,12 +135,26 @@ export default function HomeScreen() {
         style={headerAnimatedStyle}
       >
         <Animated.View style={normalHeaderStyle}>
-          <HomeHeader isLoading={isLoading} />
+          <SafeAreaView edges={['top']}>
+            <View className='flex-row items-center gap-2 px-4 py-2'>
+              <Button
+                variant='ghost'
+                size='icon'
+                onPress={() => router.back()}
+                accessibilityLabel='Go back'
+              >
+                <Icon as={ArrowLeft} />
+              </Button>
+              <Text className='text-lg font-semibold text-foreground'>
+                <Trans>Trash</Trans>
+              </Text>
+            </View>
+          </SafeAreaView>
         </Animated.View>
         <Animated.View style={selectionHeaderStyle}>
-          <SelectionHeader
-            allNoteIds={notes.map((note) => note.id)}
-            totalNotesCount={notes.length}
+          <TrashSelectionHeader
+            allNoteIds={trashedNotes.map((note) => note.id)}
+            totalNotesCount={trashedNotes.length}
           />
         </Animated.View>
       </Animated.View>
@@ -162,24 +167,17 @@ export default function HomeScreen() {
         onScroll={scrollHandler}
       >
         <HeaderImage />
-        {isLoading && shouldSearch ? (
+        {isLoading ? (
           <View className='flex-1 items-center justify-center px-8 py-16'>
             <ActivityIndicator size='large' color={colors.primary} />
             <Text className='mt-4 text-center text-muted-foreground'>
-              Searching...
+              <Trans>Loading trash...</Trans>
             </Text>
           </View>
         ) : (
-          <Notes
-            entries={notes}
-            isSearchResult={shouldSearch}
-            searchQuery={trimmedSearchQuery}
-            isLoading={isLoading && !shouldSearch}
-          />
+          <Notes entries={trashedNotes} isLoading={false} isTrash={true} />
         )}
       </Animated.ScrollView>
-
-      <SideDrawer />
     </SafeAreaView>
   )
 }

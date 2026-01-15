@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
-import { useTheme } from '@/hooks/use-theme'
 
 interface HabitChallengeCardProps {
   show: boolean
@@ -16,8 +15,6 @@ export function HabitChallengeCard({
   show,
   onDismiss,
 }: HabitChallengeCardProps) {
-  const { colors } = useTheme()
-
   if (!show) return null
 
   return (
@@ -50,6 +47,7 @@ export function HabitChallengeCard({
               size='icon'
               onPress={onDismiss}
               className='absolute right-2 top-2 h-auto w-auto p-1'
+              accessibilityLabel='Dismiss habit challenge'
             >
               <Icon as={X} className='text-muted-foreground' />
             </Button>
