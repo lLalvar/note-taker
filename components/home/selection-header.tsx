@@ -118,7 +118,7 @@ export function SelectionHeader({
   return (
     <>
       <SafeAreaView edges={['top']}>
-        <View className='flex-row items-center justify-between gap-2 px-4 py-2'>
+        <View className='flex-row items-center justify-between gap-2 px-2 py-2'>
           <View className='flex-1 flex-row items-center gap-3'>
             <Button
               variant='ghost'
@@ -132,7 +132,7 @@ export function SelectionHeader({
               {selectedCount === 0 ? (
                 <Trans>Select notes</Trans>
               ) : isAllSelected ? (
-                <Trans>All selected</Trans>
+                <Trans>All selected ({selectedCount})</Trans>
               ) : (
                 <Trans>{selectedCount} selected</Trans>
               )}

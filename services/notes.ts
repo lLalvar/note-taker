@@ -66,7 +66,7 @@ export async function createNote(data: CreateNoteData): Promise<Note> {
   }
 }
 
-export async function getNotes(searchQuery?: string): Promise<Note[]> {
+export async function getNotes(): Promise<Note[]> {
   const auth = getAuth()
   const user = auth.currentUser
 
@@ -77,130 +77,36 @@ export async function getNotes(searchQuery?: string): Promise<Note[]> {
   const db = getFirestore()
   const notesRef = collection(db, 'users', user.uid, 'notes')
 
-  // If search query is provided and has at least 3 characters, perform search
-  const trimmedQuery = searchQuery?.trim()
-  const shouldSearch = trimmedQuery && trimmedQuery.length >= 3
-
-  if (shouldSearch) {
-    // Normalize query to lowercase for case-insensitive prefix matching
-    const normalizedQuery = trimmedQuery!.toLowerCase()
-    // Create prefix bounds for Firestore range query
-    const startAt = normalizedQuery
-    const endAt = normalizedQuery + '\uf8ff' // \uf8ff is a high Unicode character for range queries
-
-    // Query title field (prefix match)
-    const titleQuery = query(
-      notesRef,
-      where('title', '>=', startAt),
-      where('title', '<=', endAt)
-    )
-
-    // Query description field (prefix match)
-    const descriptionQuery = query(
-      notesRef,
-      where('description', '>=', startAt),
-      where('description', '<=', endAt)
-    )
-
-    try {
-      // Execute both queries in parallel
-      const [titleSnapshot, descriptionSnapshot] = await Promise.all([
-        getDocs(titleQuery).catch(() => ({ docs: [] })),
-        getDocs(descriptionQuery).catch(() => ({ docs: [] })),
-      ])
-
-      // Combine results and deduplicate by note ID
-      const noteMap = new Map<string, Note>()
-
-      // Process title matches
-      titleSnapshot.docs.forEach(
-        (docSnapshot: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
-          const data = docSnapshot.data()
-          // Exclude deleted notes
-          if (data?.deletedAt) return
-          // Only include if title actually contains the query (case-insensitive check)
-          const title = data?.title || ''
-          if (title.toLowerCase().startsWith(normalizedQuery)) {
-            noteMap.set(docSnapshot.id, {
-              id: docSnapshot.id,
-              title: data?.title || undefined,
-              description: data?.description || undefined,
-              mood: data?.mood || undefined,
-              createdAt: data?.createdAt,
-              updatedAt: data?.updatedAt,
-              userId: data?.userId || '',
-              deletedAt: data?.deletedAt,
-            })
-          }
-        }
-      )
-
-      // Process description matches
-      descriptionSnapshot.docs.forEach(
-        (docSnapshot: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
-          const data = docSnapshot.data()
-          // Exclude deleted notes
-          if (data?.deletedAt) return
-          // Only include if description actually contains the query (case-insensitive check)
-          const description = data?.description || ''
-          if (description.toLowerCase().startsWith(normalizedQuery)) {
-            // Only add if not already in map (deduplication)
-            if (!noteMap.has(docSnapshot.id)) {
-              noteMap.set(docSnapshot.id, {
-                id: docSnapshot.id,
-                title: data?.title || undefined,
-                description: data?.description || undefined,
-                mood: data?.mood || undefined,
-                createdAt: data?.createdAt,
-                updatedAt: data?.updatedAt,
-                userId: data?.userId || '',
-                deletedAt: data?.deletedAt,
-              })
-            }
-          }
-        }
-      )
-
-      // Convert map to array and sort by createdAt descending
-      const results = Array.from(noteMap.values())
-      results.sort((a, b) => {
-        const aTime = a.createdAt?.toMillis() || 0
-        const bTime = b.createdAt?.toMillis() || 0
-        return bTime - aTime
-      })
-
-      return results
-    } catch (error) {
-      console.error('Error searching notes:', error)
-      // If queries fail (e.g., missing indexes), return empty array
-      return []
-    }
-  }
-
-  // Default: return all notes sorted by createdAt descending, excluding deleted notes
+  // Always fetch all notes sorted by createdAt descending
   const notesQuery = query(notesRef, orderBy('createdAt', 'desc'))
-  const snapshot = await getDocs(notesQuery)
 
-  const notes: Note[] = []
-  snapshot.docs.forEach(
-    (docSnapshot: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
-      const data = docSnapshot.data()
-      // Exclude deleted notes
-      if (data?.deletedAt) return
-      notes.push({
-        id: docSnapshot.id,
-        title: data?.title || undefined,
-        description: data?.description || undefined,
-        mood: data?.mood || undefined,
-        createdAt: data?.createdAt,
-        updatedAt: data?.updatedAt,
-        userId: data?.userId || '',
-        deletedAt: data?.deletedAt,
-      })
-    }
-  )
+  try {
+    const snapshot = await getDocs(notesQuery)
 
-  return notes
+    const notes: Note[] = []
+    snapshot.docs.forEach(
+      (docSnapshot: FirebaseFirestoreTypes.QueryDocumentSnapshot) => {
+        const data = docSnapshot.data()
+        // Exclude deleted notes
+        if (data?.deletedAt) return
+        notes.push({
+          id: docSnapshot.id,
+          title: data?.title || undefined,
+          description: data?.description || undefined,
+          mood: data?.mood || undefined,
+          createdAt: data?.createdAt,
+          updatedAt: data?.updatedAt,
+          userId: data?.userId || '',
+          deletedAt: data?.deletedAt,
+        })
+      }
+    )
+
+    return notes
+  } catch (error) {
+    console.error('Error getting notes:', error)
+    return []
+  }
 }
 
 export async function getNote(noteId: string): Promise<Note | null> {

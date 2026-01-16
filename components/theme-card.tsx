@@ -10,7 +10,7 @@ import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { getThemeBackgroundImage, getThemeColors } from '@/lib/theme'
 import { type ThemeMetadata } from '@/lib/theme-registry'
-import { cn, toHsla } from '@/lib/utils'
+import { toHsla } from '@/lib/utils'
 
 interface ThemeCardProps {
   themeMetadata: ThemeMetadata

@@ -159,14 +159,7 @@ export default function TrashScreen() {
         </Animated.View>
       </Animated.View>
 
-      <Animated.ScrollView
-        className='flex-1'
-        contentContainerStyle={{ paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={scrollHandler}
-      >
-        <HeaderImage />
+      <View className='flex-1'>
         {isLoading ? (
           <View className='flex-1 items-center justify-center px-8 py-16'>
             <ActivityIndicator size='large' color={colors.primary} />
@@ -175,9 +168,15 @@ export default function TrashScreen() {
             </Text>
           </View>
         ) : (
-          <Notes entries={trashedNotes} isLoading={false} isTrash={true} />
+          <Notes
+            entries={trashedNotes}
+            isLoading={false}
+            isTrash={true}
+            onScroll={scrollHandler}
+            ListHeaderComponent={<HeaderImage />}
+          />
         )}
-      </Animated.ScrollView>
+      </View>
     </SafeAreaView>
   )
 }

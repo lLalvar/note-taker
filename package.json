@@ -26,6 +26,7 @@
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5.2.6",
     "@hookform/resolvers": "^5.1.1",
+    "@legendapp/list": "^2.0.19",
     "@lingui/babel-plugin-lingui-macro": "^5.6.0",
     "@lingui/cli": "^5.6.0",
     "@lingui/core": "^5.6.0",

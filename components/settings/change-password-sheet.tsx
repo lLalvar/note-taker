@@ -14,7 +14,12 @@ import { Button } from '@/components/ui/button'
 import { Form, FormField, FormInput } from '@/components/ui/form'
 import { Text } from '@/components/ui/text'
 import { getAuthErrorMessage } from '@/lib/utils'
-import { reauthenticateUser, updateUserPassword } from '@/services/auth'
+import {
+  canUserChangePassword,
+  reauthenticateUser,
+  updateUserPassword,
+} from '@/services/auth'
+import { useAuthStore } from '@/store/auth-store'
 
 const changePasswordSchema = z
   .object({
@@ -38,6 +43,7 @@ export const ChangePasswordSheet = forwardRef<ChangePasswordSheetHandle>(
   (_, ref) => {
     const { t } = useLingui()
     const bottomSheetRef = useRef<BottomSheetModal>(null)
+    const user = useAuthStore((state) => state.user)
 
     const form = useForm<ChangePasswordFormData>({
       resolver: zodResolver(changePasswordSchema),
@@ -50,6 +56,13 @@ export const ChangePasswordSheet = forwardRef<ChangePasswordSheetHandle>(
 
     useImperativeHandle(ref, () => ({
       open: () => {
+        // Check if user can change password (must have email/password provider)
+        if (!canUserChangePassword(user)) {
+          toast.error(
+            t`Password change is not available for accounts signed in with social providers`
+          )
+          return
+        }
         form.reset({
           currentPassword: '',
           newPassword: '',

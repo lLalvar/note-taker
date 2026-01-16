@@ -118,3 +118,13 @@ export async function updateUserPassword(password: string) {
 
   await updatePassword(user, password)
 }
+
+export function canUserChangePassword(user: AuthUser | null): boolean {
+  if (!user) {
+    return false
+  }
+
+  return user.providerData.some(
+    (provider) => provider.providerId === 'password'
+  )
+}

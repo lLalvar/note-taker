@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { ActivityIndicator, BackHandler, Platform, View } from 'react-native'
+import { BackHandler, Platform, StatusBar, View } from 'react-native'
 import Animated, {
   interpolateColor,
   useAnimatedScrollHandler,
@@ -16,34 +16,39 @@ import { HomeHeader } from '@/components/home/home-header'
 import { Notes } from '@/components/home/notes'
 import { SelectionHeader } from '@/components/home/selection-header'
 import { SideDrawer } from '@/components/side-drawer'
-import { Text } from '@/components/ui/text'
 import { useSearch } from '@/hooks/use-search'
 import { useTheme } from '@/hooks/use-theme'
 import { getNote, getNotes } from '@/services/notes'
 import { useSelectionStore } from '@/store/selection-store'
 
-const SCROLL_THRESHOLD = 40
+const SCROLL_THRESHOLD = 80
 
 export default function HomeScreen() {
   const { colors } = useTheme()
   const { trimmedSearchQuery, shouldSearch } = useSearch()
   const queryClient = useQueryClient()
-
-  // Selection state
   const isSelectionMode = useSelectionStore((state) => state.isSelectionMode)
   const exitSelectionMode = useSelectionStore(
     (state) => state.exitSelectionMode
   )
 
-  const { data: notes = [], isLoading } = useQuery({
-    queryKey: [
-      'notes',
-      {
-        searchQuery: shouldSearch ? trimmedSearchQuery : undefined,
-      },
-    ],
-    queryFn: () => getNotes(shouldSearch ? trimmedSearchQuery : undefined),
+  const { data: allNotes = [], isLoading } = useQuery({
+    queryKey: ['notes'],
+    queryFn: () => getNotes(),
   })
+
+  const notes = useMemo(() => {
+    if (!shouldSearch || !trimmedSearchQuery) return allNotes
+
+    const normalizedQuery = trimmedSearchQuery.toLowerCase()
+    return allNotes.filter((note) => {
+      const title = (note.title || '').toLowerCase()
+      const description = (note.description || '').toLowerCase()
+      return (
+        title.includes(normalizedQuery) || description.includes(normalizedQuery)
+      )
+    })
+  }, [allNotes, shouldSearch, trimmedSearchQuery])
 
   // Handle back button/gesture to cancel selection
   useEffect(() => {
@@ -91,7 +96,7 @@ export default function HomeScreen() {
     },
   })
 
-  const headerAnimatedStyle = useAnimatedStyle(() => {
+  const normalHeaderStyle = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       scrollOffset.value,
       [0, SCROLL_THRESHOLD],
@@ -99,14 +104,8 @@ export default function HomeScreen() {
     )
 
     return {
-      backgroundColor,
-    }
-  })
-
-  // Animation styles for header transitions
-  const normalHeaderStyle = useAnimatedStyle(() => {
-    return {
       opacity: 1 - selectionModeProgress.value,
+      backgroundColor,
       transform: [
         {
           translateY: selectionModeProgress.value * -50,
@@ -121,8 +120,15 @@ export default function HomeScreen() {
   })
 
   const selectionHeaderStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      scrollOffset.value,
+      [0, SCROLL_THRESHOLD],
+      ['transparent', colors.background]
+    )
+
     return {
       opacity: selectionModeProgress.value,
+      backgroundColor,
       transform: [
         {
           translateY: (1 - selectionModeProgress.value) * 50,
@@ -137,12 +143,14 @@ export default function HomeScreen() {
   })
 
   return (
-    <SafeAreaView className='flex-1 bg-background' edges={['top']}>
-      {/* Fixed Header */}
-      <Animated.View
-        className='absolute left-0 right-0 top-0 z-10'
-        style={headerAnimatedStyle}
-      >
+    <>
+      <StatusBar
+        translucent
+        backgroundColor='transparent'
+        barStyle='light-content'
+      />
+      <SafeAreaView className='flex-1 bg-background' edges={[]}>
+        {/* Fixed Header */}
         <Animated.View style={normalHeaderStyle}>
           <HomeHeader isLoading={isLoading} />
         </Animated.View>
@@ -152,34 +160,20 @@ export default function HomeScreen() {
             totalNotesCount={notes.length}
           />
         </Animated.View>
-      </Animated.View>
 
-      <Animated.ScrollView
-        className='flex-1'
-        contentContainerStyle={{ paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={scrollHandler}
-      >
-        <HeaderImage />
-        {isLoading && shouldSearch ? (
-          <View className='flex-1 items-center justify-center px-8 py-16'>
-            <ActivityIndicator size='large' color={colors.primary} />
-            <Text className='mt-4 text-center text-muted-foreground'>
-              Searching...
-            </Text>
-          </View>
-        ) : (
+        <View className='flex-1'>
           <Notes
             entries={notes}
             isSearchResult={shouldSearch}
             searchQuery={trimmedSearchQuery}
-            isLoading={isLoading && !shouldSearch}
+            isLoading={isLoading}
+            onScroll={scrollHandler}
+            ListHeaderComponent={<HeaderImage />}
           />
-        )}
-      </Animated.ScrollView>
+        </View>
 
-      <SideDrawer />
-    </SafeAreaView>
+        <SideDrawer />
+      </SafeAreaView>
+    </>
   )
 }

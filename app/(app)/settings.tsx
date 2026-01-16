@@ -26,7 +26,8 @@ import {
 } from '@/components/ui/language-picker'
 import { ScreenHeader } from '@/components/ui/screen-header'
 import { getThemeMetadata } from '@/lib/theme-registry'
-import { signOutUser } from '@/services/auth'
+import { canUserChangePassword, signOutUser } from '@/services/auth'
+import { useAuthStore } from '@/store/auth-store'
 import { useLanguageStore } from '@/store/language-store'
 import { useThemeStore } from '@/store/theme-store'
 
@@ -44,6 +45,8 @@ export default function Settings() {
   const languagePickerRef = useRef<LanguagePickerHandle>(null)
   const changePasswordSheetRef = useRef<ChangePasswordSheetHandle>(null)
   const queryClient = useQueryClient()
+  const user = useAuthStore((state) => state.user)
+  const canChangePassword = canUserChangePassword(user)
 
   const currentTheme = getThemeMetadata(selectedThemeId)
   const currentThemeName = currentTheme?.name || selectedThemeId
@@ -114,12 +117,14 @@ export default function Settings() {
             onPress={() => router.push('/(app)/profile')}
             rightIcon={ChevronRight}
           />
-          <SettingsItem
-            icon={Lock}
-            title={t`Change Password`}
-            onPress={handleOpenChangePassword}
-            rightIcon={ChevronRight}
-          />
+          {canChangePassword && (
+            <SettingsItem
+              icon={Lock}
+              title={t`Change Password`}
+              onPress={handleOpenChangePassword}
+              rightIcon={ChevronRight}
+            />
+          )}
           <SettingsItem
             icon={LogOut}
             title={t`Sign Out`}
