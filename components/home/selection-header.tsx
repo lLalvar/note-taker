@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -7,16 +7,7 @@ import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
@@ -47,7 +38,8 @@ export function SelectionHeader({
   const selectAll = useSelectionStore((state) => state.selectAll)
   const deselectAll = useSelectionStore((state) => state.deselectAll)
 
-  const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false)
+  const bulkDeleteSheetRef =
+    useRef<React.ComponentRef<typeof BottomSheet>>(null)
 
   // Bulk delete mutation
   const bulkDeleteMutation = useMutation({
@@ -105,14 +97,19 @@ export function SelectionHeader({
   // Handle bulk delete
   const handleBulkDelete = () => {
     if (selectedNoteIds.size === 0) return
-    setShowBulkDeleteDialog(true)
+    bulkDeleteSheetRef.current?.present()
   }
 
   // Confirm bulk delete
   const handleConfirmBulkDelete = () => {
     const noteIds = Array.from(selectedNoteIds)
     bulkDeleteMutation.mutate(noteIds)
-    setShowBulkDeleteDialog(false)
+    bulkDeleteSheetRef.current?.dismiss()
+  }
+
+  // Cancel bulk delete
+  const handleCancelBulkDelete = () => {
+    bulkDeleteSheetRef.current?.dismiss()
   }
 
   return (
@@ -166,47 +163,38 @@ export function SelectionHeader({
         </View>
       </SafeAreaView>
 
-      {/* Bulk Delete Confirmation Dialog */}
-      <AlertDialog
-        open={showBulkDeleteDialog}
-        onOpenChange={setShowBulkDeleteDialog}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
+      {/* Bulk Delete Confirmation Bottom Sheet */}
+      <BottomSheet ref={bulkDeleteSheetRef} snapPoints={['30%']}>
+        <View className='px-4 pb-4'>
+          <View className='mb-4 gap-2'>
+            <Text className='text-lg font-semibold text-foreground'>
               Move {selectedNoteIds.size}{' '}
               {selectedNoteIds.size === 1 ? t`note` : t`notes`} to trash?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
+            </Text>
+            <Text className='text-sm text-muted-foreground'>
               {selectedNoteIds.size === 1
                 ? 'This note will be moved to trash. You can restore it later if needed.'
                 : `These ${selectedNoteIds.size} notes will be moved to trash. You can restore them later if needed.`}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel asChild>
-              <Button
-                variant='outline'
-                onPress={() => setShowBulkDeleteDialog(false)}
-              >
-                <Text>
-                  <Trans>Cancel</Trans>
-                </Text>
-              </Button>
-            </AlertDialogCancel>
-            <AlertDialogAction asChild variant='destructive'>
-              <Button
-                onPress={handleConfirmBulkDelete}
-                loading={bulkDeleteMutation.isPending}
-              >
-                <Text>
-                  <Trans>Move to Trash</Trans>
-                </Text>
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Text>
+          </View>
+          <View className='flex-col gap-2'>
+            <Button
+              onPress={handleConfirmBulkDelete}
+              loading={bulkDeleteMutation.isPending}
+              variant='destructive'
+            >
+              <Text>
+                <Trans>Move to Trash</Trans>
+              </Text>
+            </Button>
+            <Button variant='outline' onPress={handleCancelBulkDelete}>
+              <Text>
+                <Trans>Cancel</Trans>
+              </Text>
+            </Button>
+          </View>
+        </View>
+      </BottomSheet>
     </>
   )
 }

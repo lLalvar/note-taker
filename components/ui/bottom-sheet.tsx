@@ -42,6 +42,9 @@ const BottomSheet = React.forwardRef<BottomSheetModal, BottomSheetProps>(
       <BottomSheetModal
         ref={ref}
         enablePanDownToClose
+        android_keyboardInputMode='adjustResize'
+        keyboardBehavior='interactive'
+        keyboardBlurBehavior='restore'
         backgroundStyle={{ backgroundColor: colors.background }}
         handleIndicatorStyle={{ backgroundColor: colors.mutedForeground }}
         backdropComponent={renderBackdrop}

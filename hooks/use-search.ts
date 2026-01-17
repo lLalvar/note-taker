@@ -24,7 +24,7 @@ export function useSearch() {
   )
 
   const shouldSearch = useMemo(
-    () => trimmedSearchQuery.length >= 3,
+    () => trimmedSearchQuery.length >= 2,
     [trimmedSearchQuery]
   )
 

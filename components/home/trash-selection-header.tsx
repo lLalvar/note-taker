@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -7,16 +7,7 @@ import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
@@ -47,9 +38,9 @@ export function TrashSelectionHeader({
   const selectAll = useSelectionStore((state) => state.selectAll)
   const deselectAll = useSelectionStore((state) => state.deselectAll)
 
-  const [showRestoreDialog, setShowRestoreDialog] = useState(false)
-  const [showPermanentDeleteDialog, setShowPermanentDeleteDialog] =
-    useState(false)
+  const restoreSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
+  const permanentDeleteSheetRef =
+    useRef<React.ComponentRef<typeof BottomSheet>>(null)
 
   // Restore mutation
   const restoreMutation = useMutation({
@@ -161,27 +152,37 @@ export function TrashSelectionHeader({
   // Handle restore
   const handleRestore = () => {
     if (selectedNoteIds.size === 0) return
-    setShowRestoreDialog(true)
+    restoreSheetRef.current?.present()
   }
 
   // Confirm restore
   const handleConfirmRestore = () => {
     const noteIds = Array.from(selectedNoteIds)
     restoreMutation.mutate(noteIds)
-    setShowRestoreDialog(false)
+    restoreSheetRef.current?.dismiss()
+  }
+
+  // Cancel restore
+  const handleCancelRestore = () => {
+    restoreSheetRef.current?.dismiss()
   }
 
   // Handle permanent delete
   const handlePermanentDelete = () => {
     if (selectedNoteIds.size === 0) return
-    setShowPermanentDeleteDialog(true)
+    permanentDeleteSheetRef.current?.present()
   }
 
   // Confirm permanent delete
   const handleConfirmPermanentDelete = () => {
     const noteIds = Array.from(selectedNoteIds)
     permanentDeleteMutation.mutate(noteIds)
-    setShowPermanentDeleteDialog(false)
+    permanentDeleteSheetRef.current?.dismiss()
+  }
+
+  // Cancel permanent delete
+  const handleCancelPermanentDelete = () => {
+    permanentDeleteSheetRef.current?.dismiss()
   }
 
   return (
@@ -253,86 +254,70 @@ export function TrashSelectionHeader({
         </View>
       </SafeAreaView>
 
-      {/* Restore Confirmation Dialog */}
-      <AlertDialog open={showRestoreDialog} onOpenChange={setShowRestoreDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
+      {/* Restore Confirmation Bottom Sheet */}
+      <BottomSheet ref={restoreSheetRef} snapPoints={['30%']}>
+        <View className='px-4 pb-4'>
+          <View className='mb-4 gap-2'>
+            <Text className='text-lg font-semibold text-foreground'>
               Restore {selectedNoteIds.size}{' '}
               {selectedNoteIds.size === 1 ? t`note` : t`notes`}?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
+            </Text>
+            <Text className='text-sm text-muted-foreground'>
               {selectedNoteIds.size === 1
                 ? 'This note will be restored and moved back to your notes.'
                 : `These ${selectedNoteIds.size} notes will be restored and moved back to your notes.`}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel asChild>
-              <Button
-                variant='outline'
-                onPress={() => setShowRestoreDialog(false)}
-              >
-                <Text>
-                  <Trans>Cancel</Trans>
-                </Text>
-              </Button>
-            </AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button
-                onPress={handleConfirmRestore}
-                loading={restoreMutation.isPending}
-              >
-                <Text>
-                  <Trans>Restore</Trans>
-                </Text>
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Text>
+          </View>
+          <View className='flex-col gap-2'>
+            <Button
+              onPress={handleConfirmRestore}
+              loading={restoreMutation.isPending}
+            >
+              <Text>
+                <Trans>Restore</Trans>
+              </Text>
+            </Button>
+            <Button variant='outline' onPress={handleCancelRestore}>
+              <Text>
+                <Trans>Cancel</Trans>
+              </Text>
+            </Button>
+          </View>
+        </View>
+      </BottomSheet>
 
-      {/* Permanent Delete Confirmation Dialog */}
-      <AlertDialog
-        open={showPermanentDeleteDialog}
-        onOpenChange={setShowPermanentDeleteDialog}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
+      {/* Permanent Delete Confirmation Bottom Sheet */}
+      <BottomSheet ref={permanentDeleteSheetRef} snapPoints={['30%']}>
+        <View className='px-4 pb-4'>
+          <View className='mb-4 gap-2'>
+            <Text className='text-lg font-semibold text-foreground'>
               Permanently delete {selectedNoteIds.size}{' '}
               {selectedNoteIds.size === 1 ? t`note` : t`notes`}?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
+            </Text>
+            <Text className='text-sm text-muted-foreground'>
               Are you sure you want to permanently delete {selectedNoteIds.size}{' '}
               selected {selectedNoteIds.size === 1 ? t`note` : t`notes`}? This
               action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel asChild>
-              <Button
-                variant='outline'
-                onPress={() => setShowPermanentDeleteDialog(false)}
-              >
-                <Text>
-                  <Trans>Cancel</Trans>
-                </Text>
-              </Button>
-            </AlertDialogCancel>
-            <AlertDialogAction asChild variant='destructive'>
-              <Button
-                onPress={handleConfirmPermanentDelete}
-                loading={permanentDeleteMutation.isPending}
-              >
-                <Text>
-                  <Trans>Delete Permanently</Trans>
-                </Text>
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Text>
+          </View>
+          <View className='flex-col gap-2'>
+            <Button
+              onPress={handleConfirmPermanentDelete}
+              loading={permanentDeleteMutation.isPending}
+              variant='destructive'
+            >
+              <Text>
+                <Trans>Delete Permanently</Trans>
+              </Text>
+            </Button>
+            <Button variant='outline' onPress={handleCancelPermanentDelete}>
+              <Text>
+                <Trans>Cancel</Trans>
+              </Text>
+            </Button>
+          </View>
+        </View>
+      </BottomSheet>
     </>
   )
 }

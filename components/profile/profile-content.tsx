@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -12,10 +13,10 @@ import {
   ScrollView,
   View,
 } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
 import { z } from 'zod'
 
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -67,8 +68,7 @@ export function ProfileContent({
   const { colors } = useTheme()
   const { user } = useAuth()
   const queryClient = useQueryClient()
-  const insets = useSafeAreaInsets()
-  const [isEditMode, setIsEditMode] = useState(false)
+  const editSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
 
   const {
     data: profile,
@@ -88,15 +88,6 @@ export function ProfileContent({
     },
   })
 
-  useEffect(() => {
-    if (profile && !isEditMode) {
-      form.reset({
-        displayName: profile.displayName || '',
-        bio: profile.bio || '',
-      })
-    }
-  }, [profile, isEditMode, form])
-
   const updateMutation = useMutation({
     mutationFn: async (data: ProfileFormData) => {
       const updateData: ProfileUpdateData = {
@@ -107,7 +98,7 @@ export function ProfileContent({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-      setIsEditMode(false)
+      editSheetRef.current?.dismiss()
       toast.success(t`Profile updated successfully`)
     },
     onError: (error: unknown) => {
@@ -123,17 +114,25 @@ export function ProfileContent({
   })
 
   const handleEdit = () => {
-    setIsEditMode(true)
-  }
-
-  const handleCancel = () => {
+    // Reset form to current profile values before opening
     if (profile) {
       form.reset({
         displayName: profile.displayName || '',
         bio: profile.bio || '',
       })
     }
-    setIsEditMode(false)
+    editSheetRef.current?.present()
+  }
+
+  const handleCancel = () => {
+    // Reset form to current profile values
+    if (profile) {
+      form.reset({
+        displayName: profile.displayName || '',
+        bio: profile.bio || '',
+      })
+    }
+    editSheetRef.current?.dismiss()
   }
 
   const handleSubmit = (values: ProfileFormData) => {
@@ -143,7 +142,7 @@ export function ProfileContent({
   useEffect(() => {
     if (onEditControls && profile) {
       onEditControls({
-        isEditMode,
+        isEditMode: false,
         onEdit: handleEdit,
         onCancel: handleCancel,
         onSave: () => form.handleSubmit(handleSubmit)(),
@@ -151,7 +150,7 @@ export function ProfileContent({
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEditMode, onEditControls, profile, updateMutation.isPending])
+  }, [onEditControls, profile, updateMutation.isPending])
 
   if (!user) {
     return (
@@ -204,14 +203,13 @@ export function ProfileContent({
           title={<Trans>Profile</Trans>}
           showBackButton={false}
           rightAction={
-            headerActions ||
-            (!isEditMode && (
+            headerActions || (
               <Button variant='ghost' onPress={handleEdit}>
                 <Text>
                   <Trans>Edit</Trans>
                 </Text>
               </Button>
-            ))
+            )
           }
         />
       )}
@@ -234,128 +232,128 @@ export function ProfileContent({
           <Card>
             <CardHeader>
               <CardTitle>
-                {isEditMode ? (
-                  <Trans>Edit Profile</Trans>
-                ) : (
-                  <Trans>Profile Information</Trans>
-                )}
+                <Trans>Profile Information</Trans>
               </CardTitle>
               <CardDescription>
-                {isEditMode ? (
-                  <Trans>Update your profile information</Trans>
-                ) : (
-                  <Trans>Your account details</Trans>
-                )}
+                <Trans>Your account details</Trans>
               </CardDescription>
             </CardHeader>
             <CardContent className='gap-6'>
-              {isEditMode ? (
-                <Form {...form}>
-                  <FormField
-                    control={form.control}
-                    name='displayName'
-                    render={({ field }) => (
-                      <FormInput
-                        {...field}
-                        label={t`Display Name`}
-                        placeholder={t`Enter your display name`}
-                      />
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name='bio'
-                    render={({ field }) => (
-                      <FormTextarea
-                        {...field}
-                        value={field.value || ''}
-                        label={t`Bio`}
-                        placeholder={t`Tell us about yourself...`}
-                        numberOfLines={4}
-                        description={t`Maximum 500 characters`}
-                      />
-                    )}
-                  />
-                </Form>
-              ) : (
-                <View className='gap-4'>
-                  <View className='gap-2'>
-                    <Text className='text-sm font-medium text-muted-foreground'>
-                      <Trans>Display Name</Trans>
-                    </Text>
-                    <Text className='text-base'>
-                      {profile.displayName || '—'}
-                    </Text>
-                  </View>
-
-                  {profile.email && (
-                    <View className='gap-2'>
-                      <Text className='text-sm font-medium text-muted-foreground'>
-                        <Trans>Email</Trans>
-                      </Text>
-                      <View className='flex-row items-center gap-2'>
-                        <Icon
-                          as={Mail}
-                          className='size-4 text-muted-foreground'
-                        />
-                        <Text className='text-base'>{profile.email}</Text>
-                      </View>
-                    </View>
-                  )}
-
-                  <View className='gap-2'>
-                    <Text className='text-sm font-medium text-muted-foreground'>
-                      <Trans>Bio</Trans>
-                    </Text>
-                    <Text className='text-base'>
-                      {profile.bio || (
-                        <Text className='text-muted-foreground'>
-                          <Trans>No bio added yet</Trans>
-                        </Text>
-                      )}
-                    </Text>
-                  </View>
+              <View className='gap-4'>
+                <View className='gap-2'>
+                  <Text className='text-sm font-medium text-muted-foreground'>
+                    <Trans>Display Name</Trans>
+                  </Text>
+                  <Text className='text-base'>
+                    {profile.displayName || '—'}
+                  </Text>
                 </View>
-              )}
+
+                {profile.email && (
+                  <View className='gap-2'>
+                    <Text className='text-sm font-medium text-muted-foreground'>
+                      <Trans>Email</Trans>
+                    </Text>
+                    <View className='flex-row items-center gap-2'>
+                      <Icon
+                        as={Mail}
+                        className='size-4 text-muted-foreground'
+                      />
+                      <Text className='text-base'>{profile.email}</Text>
+                    </View>
+                  </View>
+                )}
+
+                <View className='gap-2'>
+                  <Text className='text-sm font-medium text-muted-foreground'>
+                    <Trans>Bio</Trans>
+                  </Text>
+                  <Text className='text-base'>
+                    {profile.bio || (
+                      <Text className='text-muted-foreground'>
+                        <Trans>No bio added yet</Trans>
+                      </Text>
+                    )}
+                  </Text>
+                </View>
+              </View>
             </CardContent>
           </Card>
         </ScrollView>
       </KeyboardAvoidingView>
-      {isEditMode && (
-        <View
-          className='border-t border-border bg-card px-4 py-3'
-          style={{
-            paddingBottom: Math.max(insets.bottom, 12),
-          }}
+
+      {/* Edit Profile Bottom Sheet */}
+      <BottomSheet ref={editSheetRef} snapPoints={['90%']}>
+        <BottomSheetScrollView
+          className='flex-1'
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
+          keyboardShouldPersistTaps='handled'
         >
-          <View className='flex-row gap-3'>
-            <Button
-              variant='outline'
-              className='flex-1'
-              onPress={handleCancel}
-              disabled={updateMutation.isPending}
-            >
-              <Text>
-                <Trans>Cancel</Trans>
-              </Text>
-            </Button>
-            <Button
-              className='flex-1'
-              onPress={() => form.handleSubmit(handleSubmit)()}
-              loading={updateMutation.isPending}
-            >
-              <Text>
-                {updateMutation.isPending ? (
-                  <Trans>Saving...</Trans>
-                ) : (
-                  <Trans>Save</Trans>
-                )}
-              </Text>
-            </Button>
+          <View className='mb-4 gap-2'>
+            <Text className='text-lg font-semibold text-foreground'>
+              <Trans>Edit Profile</Trans>
+            </Text>
+            <Text className='text-sm text-muted-foreground'>
+              <Trans>Update your profile information</Trans>
+            </Text>
           </View>
-        </View>
-      )}
+
+          <Form {...form}>
+            <View className='mb-4 gap-4'>
+              <FormField
+                control={form.control}
+                name='displayName'
+                render={({ field }) => (
+                  <FormInput
+                    {...field}
+                    label={t`Display Name`}
+                    placeholder={t`Enter your display name`}
+                  />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='bio'
+                render={({ field }) => (
+                  <FormTextarea
+                    {...field}
+                    value={field.value || ''}
+                    label={t`Bio`}
+                    placeholder={t`Tell us about yourself...`}
+                    numberOfLines={4}
+                    description={t`Maximum 500 characters`}
+                  />
+                )}
+              />
+            </View>
+
+            <View className='flex-col gap-2'>
+              <Button
+                onPress={() => form.handleSubmit(handleSubmit)()}
+                loading={updateMutation.isPending}
+              >
+                <Text>
+                  {updateMutation.isPending ? (
+                    <Trans>Saving...</Trans>
+                  ) : (
+                    <Trans>Save</Trans>
+                  )}
+                </Text>
+              </Button>
+              <Button
+                variant='outline'
+                onPress={handleCancel}
+                disabled={updateMutation.isPending}
+              >
+                <Text>
+                  <Trans>Cancel</Trans>
+                </Text>
+              </Button>
+            </View>
+          </Form>
+        </BottomSheetScrollView>
+      </BottomSheet>
     </>
   )
 }

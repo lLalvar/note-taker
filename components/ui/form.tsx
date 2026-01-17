@@ -272,7 +272,6 @@ function FormTextarea({
   ref,
   label,
   description,
-  onChange,
   ...props
 }: FormItemProps<typeof Textarea, string>) {
   const textareaRef = React.useRef<TextInput>(null)

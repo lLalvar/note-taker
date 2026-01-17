@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 
 import type { LegendListRenderItemProps } from '@legendapp/list'
 import { AnimatedLegendList } from '@legendapp/list/reanimated'
@@ -10,16 +10,7 @@ import { ActivityIndicator, Pressable, View } from 'react-native'
 import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { toast } from 'sonner-native'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Icon } from '@/components/ui/icon'
@@ -62,8 +53,8 @@ export function Notes({
   const { colors } = useTheme()
   const { t } = useLingui()
   const queryClient = useQueryClient()
-  const [showRestoreDialog, setShowRestoreDialog] = useState(false)
   const [noteToRestore, setNoteToRestore] = useState<Note | null>(null)
+  const restoreSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
   const isSelectionMode = useSelectionStore((state) => state.isSelectionMode)
   const selectedNoteIds = useSelectionStore((state) => state.selectedNoteIds)
   const selectionExtraData = useSelectionStore((state) => {
@@ -122,9 +113,9 @@ export function Notes({
     if (isSelectionMode) {
       toggleNoteSelection(entry.id)
     } else if (isTrash) {
-      // Show restore dialog for trashed notes
+      // Show restore bottom sheet for trashed notes
       setNoteToRestore(entry)
-      setShowRestoreDialog(true)
+      restoreSheetRef.current?.present()
     } else {
       router.push({
         pathname: '/(app)/(tabs)/[id]/edit',
@@ -136,9 +127,14 @@ export function Notes({
   const handleConfirmRestore = () => {
     if (noteToRestore) {
       restoreMutation.mutate(noteToRestore.id)
-      setShowRestoreDialog(false)
+      restoreSheetRef.current?.dismiss()
       setNoteToRestore(null)
     }
+  }
+
+  const handleCancelRestore = () => {
+    restoreSheetRef.current?.dismiss()
+    setNoteToRestore(null)
   }
 
   // Single pass transformation - group and flatten in one step
@@ -294,50 +290,37 @@ export function Notes({
         showsVerticalScrollIndicator={false}
       />
 
-      {/* Restore Dialog for Trash */}
+      {/* Restore Bottom Sheet for Trash */}
       {isTrash && (
-        <AlertDialog
-          open={showRestoreDialog}
-          onOpenChange={setShowRestoreDialog}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
+        <BottomSheet ref={restoreSheetRef} snapPoints={['30%']}>
+          <View className='px-4 pb-4'>
+            <View className='mb-4 gap-2'>
+              <Text className='text-lg font-semibold text-foreground'>
                 <Trans>Restore note?</Trans>
-              </AlertDialogTitle>
-              <AlertDialogDescription>
+              </Text>
+              <Text className='text-sm text-muted-foreground'>
                 <Trans>
                   This note will be restored and moved back to your notes.
                 </Trans>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel asChild>
-                <Button
-                  variant='outline'
-                  onPress={() => {
-                    setShowRestoreDialog(false)
-                    setNoteToRestore(null)
-                  }}
-                >
-                  <Text>
-                    <Trans>Cancel</Trans>
-                  </Text>
-                </Button>
-              </AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <Button
-                  onPress={handleConfirmRestore}
-                  loading={restoreMutation.isPending}
-                >
-                  <Text>
-                    <Trans>Restore</Trans>
-                  </Text>
-                </Button>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+              </Text>
+            </View>
+            <View className='flex-col gap-2'>
+              <Button
+                onPress={handleConfirmRestore}
+                loading={restoreMutation.isPending}
+              >
+                <Text>
+                  <Trans>Restore</Trans>
+                </Text>
+              </Button>
+              <Button variant='outline' onPress={handleCancelRestore}>
+                <Text>
+                  <Trans>Cancel</Trans>
+                </Text>
+              </Button>
+            </View>
+          </View>
+        </BottomSheet>
       )}
     </>
   )

@@ -28,15 +28,6 @@ import {
 import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
   Form,
   FormField,
   FormItem,
@@ -92,6 +83,8 @@ export function NoteForm({ noteId }: NoteFormProps) {
 
   const moodPickerRef = useRef<MoodPickerModalHandle>(null)
   const optionsSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
+  const discardSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
+  const lastNoteIdRef = useRef<string | undefined>(undefined)
 
   const defaultValues: NoteFormData = useMemo(
     () => ({
@@ -125,14 +118,36 @@ export function NoteForm({ noteId }: NoteFormProps) {
         refetch()
       } else if (!isEditMode) {
         form.reset(defaultValues)
+        lastNoteIdRef.current = undefined
         const timer = setTimeout(() => {
           moodPickerRef.current?.open()
         }, 300)
         return () => clearTimeout(timer)
       }
+      setShouldNavigate(false)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEditMode])
+    }, [isEditMode, noteId])
   )
+
+  const updatedAtMillis = noteData?.updatedAt?.toMillis?.() ?? null
+
+  useEffect(() => {
+    if (isEditMode && noteData && serverValues) {
+      if (noteId !== lastNoteIdRef.current) {
+        form.reset(serverValues)
+        lastNoteIdRef.current = noteId
+      } else if (!form.formState.isDirty) {
+        form.reset(serverValues)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    noteData?.id,
+    updatedAtMillis,
+    serverValues?.title,
+    serverValues?.description,
+    serverValues?.mood,
+  ])
 
   const mutation = useMutation({
     mutationFn: async (data: NoteFormData) => {
@@ -347,20 +362,30 @@ export function NoteForm({ noteId }: NoteFormProps) {
 
   const isDirty = form.formState.isDirty
   const [shouldNavigate, setShouldNavigate] = useState(false)
-  const [showDiscardDialog, setShowDiscardDialog] = useState(false)
 
   const handleShowDiscardDialog = useCallback(() => {
-    setShowDiscardDialog(true)
+    discardSheetRef.current?.present()
   }, [])
 
   const handleDiscard = () => {
+    if (isEditMode && serverValues) {
+      form.reset(serverValues)
+    } else {
+      form.reset(defaultValues)
+    }
     setShouldNavigate(true)
-    setShowDiscardDialog(false)
+    discardSheetRef.current?.dismiss()
     router.back()
   }
 
+  const handleSaveAndExit = () => {
+    setShouldNavigate(true)
+    discardSheetRef.current?.dismiss()
+    form.handleSubmit(handleSubmit)()
+  }
+
   const handleCancelDiscard = () => {
-    setShowDiscardDialog(false)
+    discardSheetRef.current?.dismiss()
   }
 
   useEffect(() => {
@@ -369,7 +394,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
         'hardwareBackPress',
         () => {
           if (isDirty && !shouldNavigate && !mutation.isPending) {
-            setShowDiscardDialog(true)
+            handleShowDiscardDialog()
             return true
           }
           return false
@@ -388,7 +413,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
 
   const handleBackPress = () => {
     if (isDirty && !shouldNavigate && !mutation.isPending) {
-      setShowDiscardDialog(true)
+      handleShowDiscardDialog()
     } else {
       router.back()
     }
@@ -557,31 +582,42 @@ export function NoteForm({ noteId }: NoteFormProps) {
         </BottomSheet>
       )}
 
-      {/* Discard Changes Dialog */}
-      <Dialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
+      {/* Discard Changes Bottom Sheet */}
+      <BottomSheet ref={discardSheetRef} snapPoints={['35%']}>
+        <View className='px-4 pb-4'>
+          <View className='mb-4 gap-2'>
+            <Text className='text-lg font-semibold text-foreground'>
               {isEditMode ? 'Discard changes?' : 'Discard note?'}
-            </DialogTitle>
-            <DialogDescription>
+            </Text>
+            <Text className='text-sm text-muted-foreground'>
               {isEditMode
                 ? 'You have unsaved changes. Are you sure you want to discard them?'
                 : 'You have an unsaved note. Are you sure you want to discard it?'}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant='outline' onPress={handleCancelDiscard}>
-                <Text>Cancel</Text>
-              </Button>
-            </DialogClose>
-            <Button onPress={handleDiscard}>
+            </Text>
+          </View>
+          <View className='flex-col gap-2'>
+            <Button
+              onPress={handleSaveAndExit}
+              disabled={mutation.isPending}
+              loading={mutation.isPending}
+            >
+              <Text>
+                {isEditMode ? (
+                  <Trans>Save and Exit</Trans>
+                ) : (
+                  <Trans>Create and Exit</Trans>
+                )}
+              </Text>
+            </Button>
+            <Button onPress={handleDiscard} variant='secondary'>
               <Text>Discard</Text>
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <Button variant='outline' onPress={handleCancelDiscard}>
+              <Text>Cancel</Text>
+            </Button>
+          </View>
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   )
 }
