@@ -62,11 +62,7 @@ export const MoodPickerModal = forwardRef<
   }
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      snapPoints={['50%']}
-      onDismiss={handleClose}
-    >
+    <BottomSheet ref={bottomSheetRef} onDismiss={handleClose}>
       <View className='px-4 pb-4'>
         <Text className='mb-6 text-lg font-semibold text-foreground'>
           {t`Select Mood`}

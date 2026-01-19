@@ -18,6 +18,7 @@ import { SelectionHeader } from '@/components/home/selection-header'
 import { SideDrawer } from '@/components/side-drawer'
 import { useSearch } from '@/hooks/use-search'
 import { useTheme } from '@/hooks/use-theme'
+import { stripHtml } from '@/lib/utils'
 import { getNote, getNotes } from '@/services/notes'
 import { useSelectionStore } from '@/store/selection-store'
 
@@ -43,7 +44,7 @@ export default function HomeScreen() {
     const normalizedQuery = trimmedSearchQuery.toLowerCase()
     return allNotes.filter((note) => {
       const title = (note.title || '').toLowerCase()
-      const description = (note.description || '').toLowerCase()
+      const description = stripHtml(note.description).toLowerCase()
       return (
         title.includes(normalizedQuery) || description.includes(normalizedQuery)
       )

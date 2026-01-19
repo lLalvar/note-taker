@@ -16,7 +16,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { useTheme } from '@/hooks/use-theme'
-import { cn } from '@/lib/utils'
+import { cn, stripHtml } from '@/lib/utils'
 import { getNote, restoreNote } from '@/services/notes'
 import { useLanguageStore } from '@/store/language-store'
 import { useSelectionStore } from '@/store/selection-store'
@@ -239,7 +239,7 @@ export function Notes({
                     numberOfLines={2}
                     ellipsizeMode='tail'
                   >
-                    {entry.description}
+                    {stripHtml(entry.description)}
                   </Text>
                 ) : null}
                 {!entry.title && !entry.description && (
@@ -292,7 +292,7 @@ export function Notes({
 
       {/* Restore Bottom Sheet for Trash */}
       {isTrash && (
-        <BottomSheet ref={restoreSheetRef} snapPoints={['30%']}>
+        <BottomSheet ref={restoreSheetRef}>
           <View className='px-4 pb-4'>
             <View className='mb-4 gap-2'>
               <Text className='text-lg font-semibold text-foreground'>

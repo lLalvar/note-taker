@@ -146,21 +146,18 @@ export default function SignUp() {
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        style={{ flex: 1 }}
       >
         <ScrollView
           ref={scrollViewRef}
-          className='flex-1 gap-8 px-4'
           contentContainerStyle={{
             flexGrow: 1,
-            paddingVertical: 32,
+            padding: 16,
             justifyContent: 'center',
           }}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           bounces={false}
-          nestedScrollEnabled={true}
         >
           <Card className='border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5'>
             <CardHeader>
@@ -175,6 +172,23 @@ export default function SignUp() {
               <Form {...form}>
                 <View className='gap-6'>
                   {/* Name Field */}
+                  <FormField
+                    control={form.control}
+                    name='name'
+                    render={({ field }) => (
+                      <FormInput
+                        {...field}
+                        name='name'
+                        label={t`Full Name`}
+                        placeholder={t`Enter your full name`}
+                        autoCapitalize='words'
+                        autoComplete='name'
+                        onSubmitEditing={onNameSubmitEditing}
+                        returnKeyType='next'
+                        submitBehavior='submit'
+                      />
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name='name'

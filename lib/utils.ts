@@ -70,6 +70,11 @@ export function toHsla(hsl: string, alpha: number = 1): string {
   return hsl.replace(/hsl\(/, `hsla(`).replace(/\)$/, ` / ${alpha})`)
 }
 
+export function stripHtml(html: string | undefined): string {
+  if (!html) return ''
+  return html.replace(/<[^>]*>/g, '').trim()
+}
+
 export function getAuthErrorMessage(error: unknown): string {
   if (error instanceof Error && error.name === 'EmailNotVerifiedError') {
     return error.message

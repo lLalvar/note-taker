@@ -6,13 +6,7 @@ import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Mail } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  View,
-} from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { toast } from 'sonner-native'
 import { z } from 'zod'
 
@@ -214,78 +208,69 @@ export function ProfileContent({
         />
       )}
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
+      <ScrollView
+        contentContainerStyle={{
+          padding: 16,
+          gap: 24,
+        }}
+        keyboardShouldPersistTaps='handled'
+        showsVerticalScrollIndicator={false}
       >
-        <ScrollView
-          className='flex-1'
-          contentContainerStyle={{
-            paddingVertical: 24,
-            paddingHorizontal: 16,
-            gap: 24,
-          }}
-          keyboardShouldPersistTaps='handled'
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Profile Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Trans>Profile Information</Trans>
-              </CardTitle>
-              <CardDescription>
-                <Trans>Your account details</Trans>
-              </CardDescription>
-            </CardHeader>
-            <CardContent className='gap-6'>
-              <View className='gap-4'>
-                <View className='gap-2'>
-                  <Text className='text-sm font-medium text-muted-foreground'>
-                    <Trans>Display Name</Trans>
-                  </Text>
-                  <Text className='text-base'>
-                    {profile.displayName || '—'}
-                  </Text>
-                </View>
-
-                {profile.email && (
-                  <View className='gap-2'>
-                    <Text className='text-sm font-medium text-muted-foreground'>
-                      <Trans>Email</Trans>
-                    </Text>
-                    <View className='flex-row items-center gap-2'>
-                      <Icon
-                        as={Mail}
-                        className='size-4 text-muted-foreground'
-                      />
-                      <Text className='text-base'>{profile.email}</Text>
-                    </View>
-                  </View>
-                )}
-
-                <View className='gap-2'>
-                  <Text className='text-sm font-medium text-muted-foreground'>
-                    <Trans>Bio</Trans>
-                  </Text>
-                  <Text className='text-base'>
-                    {profile.bio || (
-                      <Text className='text-muted-foreground'>
-                        <Trans>No bio added yet</Trans>
-                      </Text>
-                    )}
-                  </Text>
-                </View>
+        {/* Profile Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Trans>Profile Information</Trans>
+            </CardTitle>
+            <CardDescription>
+              <Trans>Your account details</Trans>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='gap-6'>
+            <View className='gap-4'>
+              <View className='gap-2'>
+                <Text className='text-sm font-medium text-muted-foreground'>
+                  <Trans>Display Name</Trans>
+                </Text>
+                <Text className='text-base'>{profile.displayName || '—'}</Text>
               </View>
-            </CardContent>
-          </Card>
-        </ScrollView>
-      </KeyboardAvoidingView>
+
+              {profile.email && (
+                <View className='gap-2'>
+                  <Text className='text-sm font-medium text-muted-foreground'>
+                    <Trans>Email</Trans>
+                  </Text>
+                  <View className='flex-row items-center gap-2'>
+                    <Icon as={Mail} className='size-4 text-muted-foreground' />
+                    <Text className='text-base'>{profile.email}</Text>
+                  </View>
+                </View>
+              )}
+
+              <View className='gap-2'>
+                <Text className='text-sm font-medium text-muted-foreground'>
+                  <Trans>Bio</Trans>
+                </Text>
+                <Text className='text-base'>
+                  {profile.bio || (
+                    <Text className='text-muted-foreground'>
+                      <Trans>No bio added yet</Trans>
+                    </Text>
+                  )}
+                </Text>
+              </View>
+            </View>
+          </CardContent>
+        </Card>
+      </ScrollView>
 
       {/* Edit Profile Bottom Sheet */}
-      <BottomSheet ref={editSheetRef} snapPoints={['90%']}>
+      <BottomSheet
+        ref={editSheetRef}
+        snapPoints={['90%']}
+        keyboardBehavior='extend'
+      >
         <BottomSheetScrollView
-          className='flex-1'
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
           keyboardShouldPersistTaps='handled'
         >

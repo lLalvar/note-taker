@@ -255,7 +255,7 @@ export function TrashSelectionHeader({
       </SafeAreaView>
 
       {/* Restore Confirmation Bottom Sheet */}
-      <BottomSheet ref={restoreSheetRef} snapPoints={['30%']}>
+      <BottomSheet ref={restoreSheetRef}>
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>
@@ -287,7 +287,7 @@ export function TrashSelectionHeader({
       </BottomSheet>
 
       {/* Permanent Delete Confirmation Bottom Sheet */}
-      <BottomSheet ref={permanentDeleteSheetRef} snapPoints={['30%']}>
+      <BottomSheet ref={permanentDeleteSheetRef}>
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>

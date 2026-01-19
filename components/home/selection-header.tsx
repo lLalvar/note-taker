@@ -164,7 +164,7 @@ export function SelectionHeader({
       </SafeAreaView>
 
       {/* Bulk Delete Confirmation Bottom Sheet */}
-      <BottomSheet ref={bulkDeleteSheetRef} snapPoints={['30%']}>
+      <BottomSheet ref={bulkDeleteSheetRef}>
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>

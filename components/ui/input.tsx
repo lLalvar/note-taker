@@ -1,26 +1,33 @@
+import React from 'react'
+
+import {
+  BottomSheetTextInput,
+  useBottomSheetInternal,
+} from '@gorhom/bottom-sheet'
 import { Platform, TextInput, type TextInputProps } from 'react-native'
 
 import { cn } from '@/lib/utils'
 
 type InputProps = Omit<TextInputProps, 'onChange'> & {
   onChange?: (text: string) => void
-} & React.RefAttributes<TextInput>
+}
 
-function Input({
-  className,
-  placeholderClassName,
-  onChange,
-  onChangeText,
-  ...props
-}: InputProps) {
-  function handleChangeText(text: string) {
-    onChange?.(text)
-    onChangeText?.(text)
-  }
+const Input = React.forwardRef<any, InputProps>(
+  (
+    { className, placeholderClassName, onChange, onChangeText, ...props },
+    ref
+  ) => {
+    const bottomSheetInternal = useBottomSheetInternal(true)
+    const isInBottomSheet = bottomSheetInternal !== null
 
-  return (
-    <TextInput
-      className={cn(
+    function handleChangeText(text: string) {
+      onChange?.(text)
+      onChangeText?.(text)
+    }
+
+    const textInputProps = {
+      ref,
+      className: cn(
         'flex h-10 w-full min-w-0 flex-row items-center rounded-md border border-input bg-background px-3 py-1 text-base leading-5 text-foreground shadow-sm shadow-black/5 dark:bg-input/30 sm:h-9',
         props.editable === false &&
           cn(
@@ -38,11 +45,19 @@ function Input({
           native: 'placeholder:text-muted-foreground/50',
         }),
         className
-      )}
-      onChangeText={handleChangeText}
-      {...props}
-    />
-  )
-}
+      ),
+      onChangeText: handleChangeText,
+      ...props,
+    }
+
+    if (isInBottomSheet) {
+      return <BottomSheetTextInput {...textInputProps} />
+    }
+
+    return <TextInput {...textInputProps} />
+  }
+)
+
+Input.displayName = 'Input'
 
 export { Input }

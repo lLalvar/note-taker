@@ -76,21 +76,18 @@ export default function ForgotPassword() {
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        style={{ flex: 1 }}
       >
         <ScrollView
           ref={scrollViewRef}
-          className='flex-1 gap-8 px-4'
           contentContainerStyle={{
             flexGrow: 1,
-            paddingVertical: 32,
+            padding: 16,
             justifyContent: 'center',
           }}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           bounces={false}
-          nestedScrollEnabled={true}
         >
           <Card className='border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5'>
             <CardHeader>

@@ -36,9 +36,9 @@ import {
 } from '@/components/ui/form'
 import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { ScreenHeader } from '@/components/ui/screen-header'
 import { Text } from '@/components/ui/text'
-import { Textarea } from '@/components/ui/textarea'
 import { DEFAULT_MOOD } from '@/constants/moods'
 import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
@@ -465,18 +465,18 @@ export function NoteForm({ noteId }: NoteFormProps) {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        style={{
+          flex: 1,
+        }}
       >
         <ScrollView
-          className='flex-1'
           contentContainerStyle={{
             flexGrow: 1,
           }}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           bounces={false}
-          nestedScrollEnabled
+          // nestedScrollEnabled
         >
           {isLoadingNote && isEditMode ? (
             <View className='flex-1 items-center justify-center'>
@@ -487,7 +487,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
             </View>
           ) : (
             <Form {...form}>
-              <View className='flex-1 gap-4 px-4 pb-8 pt-4'>
+              <View className='flex-1 gap-4 px-4 pb-0 pt-4'>
                 <View className='flex-row gap-2'>
                   <FormField
                     control={form.control}
@@ -536,13 +536,12 @@ export function NoteForm({ noteId }: NoteFormProps) {
                       <FormLabel>
                         <Trans>Description</Trans>
                       </FormLabel>
-                      <Textarea
-                        {...field}
-                        placeholder={t`Write your note description here...`}
-                        className='flex-1'
-                        editable={!isLoadingNote}
-                        multiline
-                        textAlignVertical='top'
+                      <RichTextEditor
+                      // value={field.value}
+                      // onChange={field.onChange}
+                      // placeholder={t`Write your note description here...`}
+                      // className='flex-1'
+                      // editable={!isLoadingNote}
                       />
                       <FormMessage />
                     </FormItem>
@@ -583,7 +582,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
       )}
 
       {/* Discard Changes Bottom Sheet */}
-      <BottomSheet ref={discardSheetRef} snapPoints={['35%']}>
+      <BottomSheet ref={discardSheetRef}>
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>
