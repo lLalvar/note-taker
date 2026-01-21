@@ -14,17 +14,8 @@ export interface MoodPickerModalHandle {
 }
 
 interface MoodPickerModalProps {
-  /**
-   * Current selected mood emoji
-   */
   currentMood?: string
-  /**
-   * Called when mood is selected
-   */
   onMoodSelect: (emoji: string) => void
-  /**
-   * Called when modal is closed (dismissed without selection)
-   */
   onClose?: () => void
 }
 
@@ -40,7 +31,6 @@ export const MoodPickerModal = forwardRef<
 
   useImperativeHandle(ref, () => ({
     open: () => {
-      // Reset to current mood or default when opening
       setSelectedMood(currentMood || DEFAULT_MOOD.emoji)
       bottomSheetRef.current?.present()
     },
@@ -56,8 +46,6 @@ export const MoodPickerModal = forwardRef<
   }
 
   const handleClose = () => {
-    // If closed without selection, keep the default/current mood
-    // The onClose callback can be used to handle this if needed
     onClose?.()
   }
 

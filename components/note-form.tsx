@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import {
   ActivityIndicator,
   BackHandler,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -21,6 +22,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { toast } from 'sonner-native'
 import { z } from 'zod'
 
+import {
+  RichTextEditor,
+  type RichTextEditorHandle,
+} from '@/components/editor/rich-text-editor'
 import {
   MoodPickerModal,
   type MoodPickerModalHandle,
@@ -36,7 +41,6 @@ import {
 } from '@/components/ui/form'
 import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
-import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { ScreenHeader } from '@/components/ui/screen-header'
 import { Text } from '@/components/ui/text'
 import { DEFAULT_MOOD } from '@/constants/moods'
@@ -85,6 +89,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
   const optionsSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
   const discardSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
   const lastNoteIdRef = useRef<string | undefined>(undefined)
+  const editorRef = useRef<RichTextEditorHandle>(null)
 
   const defaultValues: NoteFormData = useMemo(
     () => ({
@@ -352,6 +357,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
   })
 
   const handleOpenOptions = () => {
+    Keyboard.dismiss()
     optionsSheetRef.current?.present()
   }
 
@@ -393,6 +399,8 @@ export function NoteForm({ noteId }: NoteFormProps) {
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
         () => {
+          Keyboard.dismiss()
+          editorRef.current?.blur()
           if (isDirty && !shouldNavigate && !mutation.isPending) {
             handleShowDiscardDialog()
             return true
@@ -412,6 +420,8 @@ export function NoteForm({ noteId }: NoteFormProps) {
   }, [isDirty])
 
   const handleBackPress = () => {
+    Keyboard.dismiss()
+    editorRef.current?.blur()
     if (isDirty && !shouldNavigate && !mutation.isPending) {
       handleShowDiscardDialog()
     } else {
@@ -537,11 +547,12 @@ export function NoteForm({ noteId }: NoteFormProps) {
                         <Trans>Description</Trans>
                       </FormLabel>
                       <RichTextEditor
-                      // value={field.value}
-                      // onChange={field.onChange}
-                      // placeholder={t`Write your note description here...`}
-                      // className='flex-1'
-                      // editable={!isLoadingNote}
+                        ref={editorRef}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder={t`Write your note description here...`}
+                        className='flex-1'
+                        editable={!isLoadingNote}
                       />
                       <FormMessage />
                     </FormItem>
