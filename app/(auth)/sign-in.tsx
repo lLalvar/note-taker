@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { i18n } from '@lingui/core'
+import { defineMessage } from '@lingui/core/macro'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation } from '@tanstack/react-query'
 import { Link, router } from 'expo-router'
@@ -38,18 +40,25 @@ import {
   signInWithEmail,
 } from '@/services/auth'
 
-const signInSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
-  password: z
-    .string()
-    .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters'),
-})
+const getSignInSchema = (
+  t: (template: TemplateStringsArray, ...args: any[]) => string
+) =>
+  z.object({
+    email: z
+      .string()
+      .min(1, i18n._(defineMessage`Email is required`))
+      .email(i18n._(defineMessage`Invalid email address`)),
+    password: z
+      .string()
+      .min(1, i18n._(defineMessage`Password is required`))
+      .min(6, i18n._(defineMessage`Password must be at least 6 characters`)),
+  })
 
-type SignInFormData = z.infer<typeof signInSchema>
+type SignInFormData = z.infer<ReturnType<typeof getSignInSchema>>
 
 export default function SignIn() {
   const { t } = useLingui()
+  const signInSchema = getSignInSchema(t)
   const [showPassword, setShowPassword] = useState(false)
   const [emailNotVerified, setEmailNotVerified] = useState(false)
   const [pendingEmail, setPendingEmail] = useState<string | null>(null)
@@ -209,7 +218,7 @@ export default function SignIn() {
                               variant='ghost'
                               size='icon'
                               onPress={() => setShowPassword(!showPassword)}
-                              accessibilityLabel='Toggle password visibility'
+                              accessibilityLabel={t`Toggle password visibility`}
                             >
                               {showPassword ? (
                                 <Icon

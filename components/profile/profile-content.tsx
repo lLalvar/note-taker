@@ -31,15 +31,21 @@ import {
   updateUserProfile,
 } from '@/services/profile'
 
-const profileSchema = z.object({
-  displayName: z
-    .string()
-    .min(1, 'Display name is required')
-    .max(50, 'Display name must be less than 50 characters'),
-  bio: z.string().max(500, 'Bio must be less than 500 characters').optional(),
-})
+const getProfileSchema = (
+  t: (template: TemplateStringsArray, ...args: any[]) => string
+) =>
+  z.object({
+    displayName: z
+      .string()
+      .min(1, t`Display name is required`)
+      .max(50, t`Display name must be less than 50 characters`),
+    bio: z
+      .string()
+      .max(500, t`Bio must be less than 500 characters`)
+      .optional(),
+  })
 
-type ProfileFormData = z.infer<typeof profileSchema>
+type ProfileFormData = z.infer<ReturnType<typeof getProfileSchema>>
 
 interface ProfileContentProps {
   showHeader?: boolean
@@ -59,6 +65,7 @@ export function ProfileContent({
   onEditControls,
 }: ProfileContentProps) {
   const { t } = useLingui()
+  const profileSchema = getProfileSchema(t)
   const { colors } = useTheme()
   const { user } = useAuth()
   const queryClient = useQueryClient()

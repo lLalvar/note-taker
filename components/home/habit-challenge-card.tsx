@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import { Gift, X } from 'lucide-react-native'
 import { View } from 'react-native'
 
@@ -15,6 +16,7 @@ export function HabitChallengeCard({
   show,
   onDismiss,
 }: HabitChallengeCardProps) {
+  const { t } = useLingui()
   if (!show) return null
 
   return (
@@ -47,7 +49,7 @@ export function HabitChallengeCard({
               size='icon'
               onPress={onDismiss}
               className='absolute right-2 top-2 h-auto w-auto p-1'
-              accessibilityLabel='Dismiss habit challenge'
+              accessibilityLabel={t`Dismiss habit challenge`}
             >
               <Icon as={X} className='text-muted-foreground' />
             </Button>

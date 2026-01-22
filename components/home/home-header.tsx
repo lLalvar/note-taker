@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useLingui } from '@lingui/react/macro'
 import { Menu } from 'lucide-react-native'
 import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -14,6 +15,7 @@ interface HomeHeaderProps {
 }
 
 export function HomeHeader({ isLoading = false }: HomeHeaderProps) {
+  const { t } = useLingui()
   const openDrawer = useDrawerStore((state) => state.openDrawer)
 
   return (
@@ -23,7 +25,7 @@ export function HomeHeader({ isLoading = false }: HomeHeaderProps) {
           variant='ghost'
           size='icon'
           onPress={openDrawer}
-          accessibilityLabel='Open drawer'
+          accessibilityLabel={t`Open drawer`}
         >
           <Icon as={Menu} />
         </Button>

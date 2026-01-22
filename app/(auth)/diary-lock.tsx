@@ -30,8 +30,8 @@ import { Text } from '@/components/ui/text'
 import {
   type UnlockPasswordFormData,
   type UnlockPinFormData,
-  unlockPasswordSchema,
-  unlockPinSchema,
+  getUnlockPasswordSchema,
+  getUnlockPinSchema,
 } from '@/lib/validation-schemas'
 import {
   authenticateWithBiometric,
@@ -63,6 +63,9 @@ export default function DiaryLock() {
   const lockTypeLabel = currentLockType === 'password' ? 'password' : 'PIN'
 
   // Setup form based on lock type
+  const unlockPasswordSchema = getUnlockPasswordSchema(t)
+  const unlockPinSchema = getUnlockPinSchema(t)
+
   const passwordForm = useForm<UnlockPasswordFormData>({
     resolver: zodResolver(unlockPasswordSchema),
     defaultValues: {
@@ -250,7 +253,7 @@ export default function DiaryLock() {
                                   variant='ghost'
                                   size='icon'
                                   onPress={() => setShowPassword(!showPassword)}
-                                  accessibilityLabel='Toggle password visibility'
+                                  accessibilityLabel={t`Toggle password visibility`}
                                 >
                                   {showPassword ? (
                                     <Icon

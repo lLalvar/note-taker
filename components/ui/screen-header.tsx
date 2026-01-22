@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useLingui } from '@lingui/react/macro'
 import { useRouter } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import { View } from 'react-native'
@@ -24,6 +25,7 @@ export function ScreenHeader({
   showBackButton = true,
   className,
 }: ScreenHeaderProps) {
+  const { t } = useLingui()
   const router = useRouter()
 
   const handleBack = () => {
@@ -47,7 +49,7 @@ export function ScreenHeader({
           variant='ghost'
           size='icon'
           onPress={handleBack}
-          accessibilityLabel='Go back'
+          accessibilityLabel={t`Go back`}
         >
           <Icon as={ArrowLeft} />
         </Button>

@@ -76,7 +76,7 @@ export function SelectionHeader({
       }
 
       const errorMessage =
-        error instanceof Error ? error.message : 'Failed to delete notes'
+        error instanceof Error ? error.message : t`Failed to delete notes`
       toast.error(t`Error`, {
         description: errorMessage,
       })
@@ -121,7 +121,7 @@ export function SelectionHeader({
               variant='ghost'
               size='icon'
               onPress={exitSelectionMode}
-              accessibilityLabel='Cancel selection'
+              accessibilityLabel={t`Cancel selection`}
             >
               <Icon as={ArrowLeft} />
             </Button>
@@ -155,7 +155,7 @@ export function SelectionHeader({
               onPress={handleBulkDelete}
               disabled={selectedCount === 0 || bulkDeleteMutation.isPending}
               loading={bulkDeleteMutation.isPending}
-              accessibilityLabel='Delete selected notes'
+              accessibilityLabel={t`Delete selected notes`}
             >
               <Icon as={Trash2} />
             </Button>
@@ -168,13 +168,22 @@ export function SelectionHeader({
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>
-              Move {selectedNoteIds.size}{' '}
-              {selectedNoteIds.size === 1 ? t`note` : t`notes`} to trash?
+              {selectedNoteIds.size === 1
+                ? t`Move ${selectedNoteIds.size} note to trash?`
+                : t`Move ${selectedNoteIds.size} notes to trash?`}
             </Text>
             <Text className='text-sm text-muted-foreground'>
-              {selectedNoteIds.size === 1
-                ? 'This note will be moved to trash. You can restore it later if needed.'
-                : `These ${selectedNoteIds.size} notes will be moved to trash. You can restore them later if needed.`}
+              {selectedNoteIds.size === 1 ? (
+                <Trans>
+                  This note will be moved to trash. You can restore it later if
+                  needed.
+                </Trans>
+              ) : (
+                <Trans>
+                  These {selectedNoteIds.size} notes will be moved to trash. You
+                  can restore them later if needed.
+                </Trans>
+              )}
             </Text>
           </View>
           <View className='flex-col gap-2'>

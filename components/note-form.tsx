@@ -49,13 +49,22 @@ import { useTheme } from '@/hooks/use-theme'
 import { createNote, deleteNote, getNote, updateNote } from '@/services/notes'
 import type { Note } from '@/types'
 
-const noteSchema = z.object({
-  title: z.string().max(200, 'Title is too long').optional(),
-  description: z.string().max(5000, 'Description is too long').optional(),
-  mood: z.string().optional(),
-})
+const getNoteSchema = (
+  t: (template: TemplateStringsArray, ...args: any[]) => string
+) =>
+  z.object({
+    title: z
+      .string()
+      .max(200, t`Title is too long`)
+      .optional(),
+    description: z
+      .string()
+      .max(5000, t`Description is too long`)
+      .optional(),
+    mood: z.string().optional(),
+  })
 
-type NoteFormData = z.infer<typeof noteSchema>
+type NoteFormData = z.infer<ReturnType<typeof getNoteSchema>>
 
 interface NoteFormProps {
   noteId?: string
@@ -63,6 +72,7 @@ interface NoteFormProps {
 
 export function NoteForm({ noteId }: NoteFormProps) {
   const { t } = useLingui()
+  const noteSchema = getNoteSchema(t)
   const { colors } = useTheme()
   const { user } = useAuth()
   const queryClient = useQueryClient()
@@ -444,7 +454,7 @@ export function NoteForm({ noteId }: NoteFormProps) {
                 variant='ghost'
                 size='icon'
                 onPress={handleOpenOptions}
-                accessibilityLabel='Options'
+                accessibilityLabel={t`Options`}
               >
                 <Icon as={MoreVertical} />
               </Button>

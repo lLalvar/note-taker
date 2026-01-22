@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
+import { useLingui } from '@lingui/react/macro'
 import { Search, X } from 'lucide-react-native'
 import { ActivityIndicator, Keyboard, TextInput, View } from 'react-native'
 import Animated, {
@@ -19,6 +20,7 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ isLoading = false }: SearchBarProps) {
+  const { t } = useLingui()
   const {
     searchQuery,
     isSearchActive,
@@ -85,7 +87,7 @@ export function SearchBar({ isLoading = false }: SearchBarProps) {
             value={searchQuery}
             onChangeText={setSearchQuery}
             onBlur={handleBlur}
-            placeholder='Search notes...'
+            placeholder={t`Search notes...`}
             className='flex-1 pl-9 pr-9'
             autoCapitalize='none'
             autoCorrect={false}
@@ -97,7 +99,7 @@ export function SearchBar({ isLoading = false }: SearchBarProps) {
               size='icon'
               className='absolute right-1 h-8 w-8'
               onPress={handleClear}
-              accessibilityLabel='Clear search'
+              accessibilityLabel={t`Clear search`}
             >
               <Icon as={X} className='size-4' />
             </Button>
@@ -109,7 +111,7 @@ export function SearchBar({ isLoading = false }: SearchBarProps) {
           variant='ghost'
           size='icon'
           onPress={toggleSearch}
-          accessibilityLabel='Toggle search'
+          accessibilityLabel={t`Toggle search`}
         >
           <Icon as={Search} />
         </Button>

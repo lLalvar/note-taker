@@ -62,7 +62,7 @@ export const LanguagePicker = forwardRef<
           size='icon'
           variant='ghost'
           className={cn('ios:size-9 rounded-full web:mx-4', className)}
-          accessibilityLabel='Select language'
+          accessibilityLabel={t`Select language`}
         >
           <Icon as={Languages} />
         </Button>

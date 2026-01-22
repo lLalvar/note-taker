@@ -39,23 +39,27 @@ import { Text } from '@/components/ui/text'
 import { getAuthErrorMessage } from '@/lib/utils'
 import { resetPassword, verifyResetCode } from '@/services/auth'
 
-const resetPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(1, 'Password is required')
-      .min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+const getResetPasswordSchema = (
+  t: (template: TemplateStringsArray, ...args: any[]) => string
+) =>
+  z
+    .object({
+      password: z
+        .string()
+        .min(1, t`Password is required`)
+        .min(6, t`Password must be at least 6 characters`),
+      confirmPassword: z.string().min(1, t`Please confirm your password`),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t`Passwords don't match`,
+      path: ['confirmPassword'],
+    })
 
-type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>
+type ResetPasswordFormData = z.infer<ReturnType<typeof getResetPasswordSchema>>
 
 export default function ResetPassword() {
   const { t } = useLingui()
+  const resetPasswordSchema = getResetPasswordSchema(t)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isValidCode, setIsValidCode] = useState(false)

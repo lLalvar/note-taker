@@ -48,31 +48,35 @@ import { signUpWithEmail } from '@/services/auth'
 
 // import { useGoogleAuth } from '@/services/authService'
 
-const signUpSchema = z
-  .object({
-    name: z
-      .string()
-      .min(1, 'Name is required')
-      .min(2, 'Name must be at least 2 characters'),
-    email: z
-      .string()
-      .min(1, 'Email is required')
-      .email('Invalid email address'),
-    password: z
-      .string()
-      .min(1, 'Password is required')
-      .min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+const getSignUpSchema = (
+  t: (template: TemplateStringsArray, ...args: any[]) => string
+) =>
+  z
+    .object({
+      name: z
+        .string()
+        .min(1, t`Name is required`)
+        .min(2, t`Name must be at least 2 characters`),
+      email: z
+        .string()
+        .min(1, t`Email is required`)
+        .email(t`Invalid email address`),
+      password: z
+        .string()
+        .min(1, t`Password is required`)
+        .min(6, t`Password must be at least 6 characters`),
+      confirmPassword: z.string().min(1, t`Please confirm your password`),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t`Passwords don't match`,
+      path: ['confirmPassword'],
+    })
 
-type SignUpFormData = z.infer<typeof signUpSchema>
+type SignUpFormData = z.infer<ReturnType<typeof getSignUpSchema>>
 
 export default function SignUp() {
   const { t } = useLingui()
+  const signUpSchema = getSignUpSchema(t)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const passwordInputRef = React.useRef<TextInput>(null)

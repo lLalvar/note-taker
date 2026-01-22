@@ -21,18 +21,23 @@ import {
 } from '@/services/auth'
 import { useAuthStore } from '@/store/auth-store'
 
-const changePasswordSchema = z
-  .object({
-    currentPassword: z.string().min(1, 'Current password is required'),
-    newPassword: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+const getChangePasswordSchema = (
+  t: (template: TemplateStringsArray, ...args: any[]) => string
+) =>
+  z
+    .object({
+      currentPassword: z.string().min(1, t`Current password is required`),
+      newPassword: z.string().min(6, t`Password must be at least 6 characters`),
+      confirmPassword: z.string().min(1, t`Please confirm your password`),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: t`Passwords don't match`,
+      path: ['confirmPassword'],
+    })
 
-type ChangePasswordFormData = z.infer<typeof changePasswordSchema>
+type ChangePasswordFormData = z.infer<
+  ReturnType<typeof getChangePasswordSchema>
+>
 
 export interface ChangePasswordSheetHandle {
   open: () => void
@@ -42,6 +47,7 @@ export interface ChangePasswordSheetHandle {
 export const ChangePasswordSheet = forwardRef<ChangePasswordSheetHandle>(
   (_, ref) => {
     const { t } = useLingui()
+    const changePasswordSchema = getChangePasswordSchema(t)
     const bottomSheetRef = useRef<BottomSheetModal>(null)
     const user = useAuthStore((state) => state.user)
 

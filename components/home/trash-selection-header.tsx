@@ -75,7 +75,7 @@ export function TrashSelectionHeader({
       }
 
       const errorMessage =
-        error instanceof Error ? error.message : 'Failed to restore notes'
+        error instanceof Error ? error.message : t`Failed to restore notes`
       toast.error(t`Error`, {
         description: errorMessage,
       })
@@ -132,7 +132,7 @@ export function TrashSelectionHeader({
       const errorMessage =
         error instanceof Error
           ? error.message
-          : 'Failed to permanently delete notes'
+          : t`Failed to permanently delete notes`
       toast.error(t`Error`, {
         description: errorMessage,
       })
@@ -194,7 +194,7 @@ export function TrashSelectionHeader({
               variant='ghost'
               size='icon'
               onPress={exitSelectionMode}
-              accessibilityLabel='Cancel selection'
+              accessibilityLabel={t`Cancel selection`}
             >
               <Icon as={ArrowLeft} />
             </Button>
@@ -232,7 +232,7 @@ export function TrashSelectionHeader({
                 permanentDeleteMutation.isPending
               }
               loading={restoreMutation.isPending}
-              accessibilityLabel='Restore selected notes'
+              accessibilityLabel={t`Restore selected notes`}
             >
               <Icon as={RotateCcw} />
             </Button>
@@ -246,7 +246,7 @@ export function TrashSelectionHeader({
                 permanentDeleteMutation.isPending
               }
               loading={permanentDeleteMutation.isPending}
-              accessibilityLabel='Permanently delete selected notes'
+              accessibilityLabel={t`Permanently delete selected notes`}
             >
               <Icon as={Trash2} />
             </Button>
@@ -259,13 +259,21 @@ export function TrashSelectionHeader({
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>
-              Restore {selectedNoteIds.size}{' '}
-              {selectedNoteIds.size === 1 ? t`note` : t`notes`}?
+              {selectedNoteIds.size === 1
+                ? t`Restore ${selectedNoteIds.size} note?`
+                : t`Restore ${selectedNoteIds.size} notes?`}
             </Text>
             <Text className='text-sm text-muted-foreground'>
-              {selectedNoteIds.size === 1
-                ? 'This note will be restored and moved back to your notes.'
-                : `These ${selectedNoteIds.size} notes will be restored and moved back to your notes.`}
+              {selectedNoteIds.size === 1 ? (
+                <Trans>
+                  This note will be restored and moved back to your notes.
+                </Trans>
+              ) : (
+                <Trans>
+                  These {selectedNoteIds.size} notes will be restored and moved
+                  back to your notes.
+                </Trans>
+              )}
             </Text>
           </View>
           <View className='flex-col gap-2'>
@@ -291,13 +299,14 @@ export function TrashSelectionHeader({
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>
-              Permanently delete {selectedNoteIds.size}{' '}
-              {selectedNoteIds.size === 1 ? t`note` : t`notes`}?
+              {selectedNoteIds.size === 1
+                ? t`Permanently delete ${selectedNoteIds.size} note?`
+                : t`Permanently delete ${selectedNoteIds.size} notes?`}
             </Text>
             <Text className='text-sm text-muted-foreground'>
-              Are you sure you want to permanently delete {selectedNoteIds.size}{' '}
-              selected {selectedNoteIds.size === 1 ? t`note` : t`notes`}? This
-              action cannot be undone.
+              {selectedNoteIds.size === 1
+                ? t`Are you sure you want to permanently delete ${selectedNoteIds.size} selected note? This action cannot be undone.`
+                : t`Are you sure you want to permanently delete ${selectedNoteIds.size} selected notes? This action cannot be undone.`}
             </Text>
           </View>
           <View className='flex-col gap-2'>

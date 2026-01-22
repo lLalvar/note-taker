@@ -33,7 +33,7 @@ export function SignOutButton() {
       size='icon'
       variant='ghost'
       className='ios:size-9 rounded-full web:mx-4'
-      accessibilityLabel='Sign out'
+      accessibilityLabel={t`Sign out`}
       loading={signOutMutation.isPending}
     >
       <Icon as={LogOut} />

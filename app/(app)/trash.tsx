@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-import { Trans } from '@lingui/react/macro'
+import { Trans, useLingui } from '@lingui/react/macro'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
@@ -27,6 +27,7 @@ import { useSelectionStore } from '@/store/selection-store'
 const SCROLL_THRESHOLD = 40
 
 export default function TrashScreen() {
+  const { t } = useLingui()
   const { colors } = useTheme()
   const queryClient = useQueryClient()
   const isSelectionMode = useSelectionStore((state) => state.isSelectionMode)
@@ -141,7 +142,7 @@ export default function TrashScreen() {
                 variant='ghost'
                 size='icon'
                 onPress={() => router.back()}
-                accessibilityLabel='Go back'
+                accessibilityLabel={t`Go back`}
               >
                 <Icon as={ArrowLeft} />
               </Button>
