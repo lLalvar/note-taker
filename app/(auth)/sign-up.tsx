@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { msg } from '@lingui/core/macro'
 import { Trans, useLingui } from '@lingui/react/macro'
-import { Link } from 'expo-router'
+import { useMutation } from '@tanstack/react-query'
+import { Link, router } from 'expo-router'
 import { Eye, EyeOff } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
 import {
@@ -14,6 +16,7 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { toast } from 'sonner-native'
 // import {
 //   useGoogleSignInMutation,
 //   useSignUpMutation,
@@ -41,6 +44,10 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
+import { i18n } from '@/lib/i18n'
+import { getAuthErrorMessage } from '@/lib/utils'
+import { emailSchema, passwordSchema } from '@/schemas'
+import { signUpWithEmail } from '@/services/auth'
 
 // import { useGoogleAuth } from '@/services/authService'
 
@@ -48,20 +55,14 @@ const signUpSchema = z
   .object({
     name: z
       .string()
-      .min(1, 'Name is required')
-      .min(2, 'Name must be at least 2 characters'),
-    email: z
-      .string()
-      .min(1, 'Email is required')
-      .email('Invalid email address'),
-    password: z
-      .string()
-      .min(1, 'Password is required')
-      .min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
+      .min(1, { message: i18n._(msg`Name is required`) })
+      .min(2, { message: i18n._(msg`Name must be at least 2 characters`) }),
+    email: emailSchema,
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, msg`Please confirm your password`),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: i18n._(msg`Passwords don't match`),
     path: ['confirmPassword'],
   })
 
@@ -86,13 +87,30 @@ export default function SignUp() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onChange',
   })
 
   const {
     handleSubmit,
     formState: { isSubmitting },
   } = form
+
+  const signUpMutation = useMutation({
+    mutationFn: ({ name, email, password }: SignUpFormData) =>
+      signUpWithEmail(name, email, password),
+    onSuccess: (user) => {
+      toast.success(t`Account Created`, {
+        description: t`Your account has been created successfully! Please check your email to verify your account before signing in.`,
+        duration: 10000,
+      })
+      router.replace('/(auth)/sign-in')
+    },
+    onError: (error: unknown) => {
+      const errorMessage = getAuthErrorMessage(error)
+      toast.error(t`Sign up failed`, {
+        description: errorMessage,
+      })
+    },
+  })
 
   // useEffect(() => {
   //   if (response?.type === 'success') {
@@ -105,12 +123,7 @@ export default function SignUp() {
   // }, [response])
 
   const onSubmit = (data: SignUpFormData) => {
-    // signUpMutation.mutate({
-    //   name: data.name,
-    //   email: data.email,
-    //   password: data.password,
-    // })
-    console.log('Sign Up Data:', data)
+    signUpMutation.mutate(data)
   }
 
   function onNameSubmitEditing() {
@@ -126,57 +139,22 @@ export default function SignUp() {
     confirmPasswordInputRef.current?.focus()
   }
 
-  function onNameFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
-  function onEmailFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
-  function onPasswordFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
-  function onConfirmPasswordFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
-  }
-
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        style={{ flex: 1 }}
       >
         <ScrollView
           ref={scrollViewRef}
-          className='flex-1 gap-8 px-4'
           contentContainerStyle={{
             flexGrow: 1,
-            paddingVertical: 32,
+            padding: 16,
             justifyContent: 'center',
           }}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           bounces={false}
-          nestedScrollEnabled={true}
         >
           <Card className='border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5'>
             <CardHeader>
@@ -202,7 +180,23 @@ export default function SignUp() {
                         placeholder={t`Enter your full name`}
                         autoCapitalize='words'
                         autoComplete='name'
-                        onFocus={onNameFocus}
+                        onSubmitEditing={onNameSubmitEditing}
+                        returnKeyType='next'
+                        submitBehavior='submit'
+                      />
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='name'
+                    render={({ field }) => (
+                      <FormInput
+                        {...field}
+                        name='name'
+                        label={t`Full Name`}
+                        placeholder={t`Enter your full name`}
+                        autoCapitalize='words'
+                        autoComplete='name'
                         onSubmitEditing={onNameSubmitEditing}
                         returnKeyType='next'
                         submitBehavior='submit'
@@ -223,7 +217,6 @@ export default function SignUp() {
                         keyboardType='email-address'
                         autoComplete='email'
                         autoCapitalize='none'
-                        onFocus={onEmailFocus}
                         onSubmitEditing={onEmailSubmitEditing}
                         returnKeyType='next'
                         submitBehavior='submit'
@@ -246,7 +239,6 @@ export default function SignUp() {
                             ref={passwordInputRef}
                             placeholder={t`Create a password`}
                             secureTextEntry={!showPassword}
-                            onFocus={onPasswordFocus}
                             returnKeyType='next'
                             onSubmitEditing={onPasswordSubmitEditing}
                             className='pr-10'
@@ -263,13 +255,11 @@ export default function SignUp() {
                             {showPassword ? (
                               <Icon
                                 as={EyeOff}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             ) : (
                               <Icon
                                 as={Eye}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             )}
@@ -295,7 +285,6 @@ export default function SignUp() {
                             ref={confirmPasswordInputRef}
                             placeholder={t`Confirm your password`}
                             secureTextEntry={!showConfirmPassword}
-                            onFocus={onConfirmPasswordFocus}
                             returnKeyType='send'
                             onSubmitEditing={handleSubmit(onSubmit)}
                             className='pr-10'
@@ -314,13 +303,11 @@ export default function SignUp() {
                             {showConfirmPassword ? (
                               <Icon
                                 as={EyeOff}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             ) : (
                               <Icon
                                 as={Eye}
-                                size={20}
                                 className='text-muted-foreground'
                               />
                             )}
@@ -335,10 +322,14 @@ export default function SignUp() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting}
+                    loading={isSubmitting || signUpMutation.isPending}
                   >
                     <Text>
-                      <Trans>Create Account</Trans>
+                      {signUpMutation.isPending ? (
+                        <Trans>Creating account...</Trans>
+                      ) : (
+                        <Trans>Create Account</Trans>
+                      )}
                     </Text>
                   </Button>
                 </View>
