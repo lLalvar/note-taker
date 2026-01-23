@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { I18nProvider, type TransRenderProps } from '@lingui/react'
 import { ThemeProvider } from '@react-navigation/native'
@@ -5,64 +7,56 @@ import { PortalHost } from '@rn-primitives/portal'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useColorScheme } from 'nativewind'
-import { Text as RNText, View } from 'react-native'
+import { ActivityIndicator, Text as RNText, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { Toaster } from 'sonner-native'
 import '~/global.css'
 
-import { LanguageSelector } from '@/components/ui/LanguageSelector'
+import { SignOutButton } from '@/components/ui/SignOutButton'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { LanguagePicker } from '@/components/ui/language-picker'
+import { useAuth } from '@/hooks/use-auth'
+import { useTheme } from '@/hooks/use-theme'
 import { i18n, useI18n } from '@/lib/i18n'
-import { queryClient } from '@/lib/queryClient'
-import { NAV_THEME } from '@/lib/theme'
+import { queryClient } from '@/lib/query-client'
+import Sentry from '@/lib/sentry'
 
-// Wrapper component for Trans defaultComponent
+if (__DEV__) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('~/lib/reactotron')
+}
+
 const TransText = ({ translation }: TransRenderProps) => {
   return <RNText>{translation}</RNText>
 }
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router'
+export { ErrorBoundary } from 'expo-router'
 
-// const useIsomorphicLayoutEffect =
-//   Platform.OS === 'web' && typeof window === 'undefined'
-//     ? useEffect
-//     : useLayoutEffect
+export default Sentry.wrap(function RootLayout() {
+  const { navTheme, isDark, cssVariables } = useTheme()
+  const { initializing, isAuthenticated } = useAuth()
 
-export default function RootLayout() {
-  const { colorScheme } = useColorScheme()
   useI18n()
-  // const hasMounted = useRef(false)
-  // TODO: Replace with actual auth state
-  // const { isAuthenticated, isLoading } = useAuthStore()
-  const isAuthenticated = false // Temporary: set to true to test protected routes
-  // const isLoading = false // Temporary: set to false since we're not using real auth
 
-  // const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
-  // const [loaded] = useFonts({
-  //   SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  // })
-
-  // useIsomorphicLayoutEffect(() => {
-  //   if (hasMounted.current) {
-  //     return
-  //   }
-
-  //   if (Platform.OS === 'web') {
-  //     // Adds the background color to the html element to prevent white background on overscroll.
-  //     document.documentElement.classList.add('bg-background')
-  //   }
-  //   setIsColorSchemeLoaded(true)
-  //   hasMounted.current = true
-  // }, [])
-
-  // if (!isColorSchemeLoaded || !loaded || isLoading) {
-  //   return null
-  // }
+  if (initializing) {
+    return (
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <QueryClientProvider client={queryClient}>
+            <I18nProvider i18n={i18n} defaultComponent={TransText}>
+              <View
+                className='flex-1 items-center justify-center bg-background'
+                style={cssVariables}
+              >
+                <ActivityIndicator />
+              </View>
+            </I18nProvider>
+          </QueryClientProvider>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    )
+  }
 
   return (
     <SafeAreaProvider>
@@ -70,34 +64,39 @@ export default function RootLayout() {
         <BottomSheetModalProvider>
           <QueryClientProvider client={queryClient}>
             <I18nProvider i18n={i18n} defaultComponent={TransText}>
-              <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-                <Stack>
-                  <Stack.Protected guard={isAuthenticated}>
-                    <Stack.Screen
-                      name='(tabs)'
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name='+not-found' />
-                  </Stack.Protected>
+              {/* <View style={[{ flex: 1 }]}> */}
+              <View style={[{ flex: 1 }, cssVariables]}>
+                <ThemeProvider value={navTheme}>
+                  <Stack>
+                    <Stack.Protected guard={isAuthenticated}>
+                      <Stack.Screen
+                        name='(app)'
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen name='+not-found' />
+                    </Stack.Protected>
 
-                  <Stack.Protected guard={!isAuthenticated}>
-                    <Stack.Screen
-                      name='(auth)'
-                      options={{ headerShown: false }}
-                    />
-                  </Stack.Protected>
-                </Stack>
-                <View className='absolute bottom-4 end-4 flex-row gap-2'>
-                  <LanguageSelector />
-                  <ThemeToggle />
-                </View>
-                <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-                <PortalHost />
-              </ThemeProvider>
+                    <Stack.Protected guard={!isAuthenticated}>
+                      <Stack.Screen
+                        name='(auth)'
+                        options={{ headerShown: false }}
+                      />
+                    </Stack.Protected>
+                  </Stack>
+                  <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
+                    {isAuthenticated && <SignOutButton />}
+                    <ThemeToggle />
+                    <LanguagePicker asIcon />
+                  </View>
+                  <StatusBar style={isDark ? 'light' : 'dark'} />
+                  <PortalHost />
+                  <Toaster />
+                </ThemeProvider>
+              </View>
             </I18nProvider>
           </QueryClientProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   )
-}
+})

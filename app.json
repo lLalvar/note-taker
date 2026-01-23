@@ -1,18 +1,21 @@
 {
   "expo": {
-    "name": "note-taker",
-    "slug": "note-taker",
+    "name": "DailyMood Journal",
+    "slug": "dailymood-journal",
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "note-taker",
+    "scheme": "dailymood-journal",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lalvar.notetaker",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "10100"
+      "buildNumber": "10100",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +31,13 @@
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "googleClientIdWeb": "611802169319-3reqf7lhaaep2fcc35olk7c37imah0sp.apps.googleusercontent.com",
+      "router": {},
+      "eas": {
+        "projectId": "c1c758cf-c13c-4d77-883f-1d56c606f935"
+      }
     },
     "plugins": [
       "expo-router",
@@ -48,8 +58,16 @@
           }
         }
       ],
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "lalvar"
+        }
+      ],
+      "expo-apple-authentication",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

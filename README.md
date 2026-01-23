@@ -1,81 +1,104 @@
-# Note Taker App 📝
+# DailyMood Journal 📔
 
-A modern note-taking mobile app built with React Native (Expo) to learn mobile development.
+A comprehensive daily diary journal app built with React Native (Expo), focusing on privacy, customization, mood tracking, and rich content creation for personal journaling.
 
-## Tech Stack
+## 🎯 Project Overview
 
-- **Framework**: React Native with Expo Router
+This is a learning project to master React Native mobile development while building a full-featured diary application. The app provides a secure, customizable platform for users to record their daily thoughts, experiences, and emotions with rich media support, mood tracking, and beautiful themes.
+
+### Key Features
+
+- 🔒 **Security & Privacy**: Password/biometric lock, encrypted local storage
+- 📝 **Rich Content Editor**: Text formatting, fonts, colors, lists, media attachments
+- 😊 **Mood Tracking**: Emoji-based mood selection with statistics and calendar integration
+- 🎨 **Customization**: Multiple themes, backgrounds, stickers, and templates
+- 📅 **Calendar View**: Monthly calendar with mood indicators and "On This Day" feature
+- 🏷️ **Organization**: Tags, search, filters for easy entry management
+- 📊 **Statistics**: Entry and mood analytics with visual charts
+- 👤 **Profile & Settings**: Customizable user profile and app preferences
+
+> **Note**: This project excludes subscription features, ads, backup/restore, and export/import functionality.
+
+## 🛠️ Tech Stack
+
+- **Framework**: React Native with Expo Router (file-based routing)
 - **Styling**: NativeWind (Tailwind CSS)
-- **State Management**: Zustand
-- **Data Fetching**: TanStack Query (React Query)
+- **State Management**: Zustand (for global UI state only)
+- **Data Fetching**: TanStack Query (React Query) for all server state
 - **Backend**: Firebase (Auth, Firestore, Storage)
-- **Forms**: React Hook Form + Zod
+- **Forms**: React Hook Form + Zod validation
 - **UI Components**: React Native Reusables
-- **Performance**: FlashList, React Native Reanimated
-- **UI Libraries**: @gorhom/bottom-sheet
-- **Storage**: react-native-mmkv
-- **i18n**: Lingui (optional)
-- **Language**: TypeScript
+- **Performance**: FlashList (high-performance lists), React Native Reanimated (animations)
+- **UI Libraries**: @gorhom/bottom-sheet (bottom sheets)
+- **Storage**: react-native-mmkv (fast key-value storage)
+- **i18n**: Lingui (internationalization)
+- **Language**: TypeScript (strict mode)
 
-## Project Structure
+## 📁 Project Structure
 
-```
+```text
 /app              - Expo Router pages (file-based routing)
 /components       - Reusable UI components
-/lib              - Utilities and configurations
+  /editor         - Rich text editor components
+  /mood           - Mood tracking components
+  /themes         - Theme and customization components
+  /calendar       - Calendar view components
+  /tags           - Tag management components
+  /statistics     - Analytics and charts
+/lib              - Utilities, configs, validation schemas
 /services         - Firebase operations and API layer
 /store            - Zustand stores for global state
 /hooks            - Custom React hooks
-/constants        - App constants and theme configs
+/constants        - App constants, themes, moods, templates
 ```
 
-## Planning Documents
+## 📚 Planning Documents
 
-- **[FEATURES.md](./FEATURES.md)** - Feature checklist and implementation phases
-- **[CURSOR_PROMPT.md](./CURSOR_PROMPT.md)** - Optional: Manual prompt template reference (not needed if using rules)
-- **[.cursor/rules/](./.cursor/rules/)** - Cursor project rules (MDC format) - **Recommended: Auto-applies context**
+- **[FEATURES.md](./FEATURES.md)** - Complete feature list and specifications (16 feature categories)
+- **[ROADMAP.md](./ROADMAP.md)** - Detailed 11-phase implementation roadmap (24 weeks)
+- **[PROGRESS.md](./PROGRESS.md)** - Progress tracker with checkboxes for all tasks
+- **[.cursor/rules/](./.cursor/rules/)** - Cursor project rules (MDC format) - Auto-applies context
 
-## Cursor Rules
+## 🚀 Getting Started
 
-This project includes Cursor rules in `.cursor/rules/` directory following the [official Cursor documentation](https://cursor.com/docs/context/rules#project-rules). These rules provide persistent context for the AI assistant:
+### Prerequisites
 
-- **project-overview.mdc** - Project overview and tech stack (Always Apply)
-- **react-native-patterns.mdc** - React Native & Expo Router patterns (Always Apply)
-- **firebase-firestore.mdc** - Firebase operations patterns (Apply to services)
-- **authentication.mdc** - Auth patterns (Apply to auth files)
-- **notes-features.mdc** - Note features patterns (Apply to notes files)
-- **styling-ui.mdc** - Styling and UI patterns (Apply to components)
-- **performance-ui-libraries.mdc** - FlashList, Bottom Sheet, MMKV, Reanimated patterns (Apply to components)
-- **typescript-types.mdc** - TypeScript patterns (Always Apply)
+- Node.js (v18 or higher)
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- iOS Simulator (Mac) or Android Emulator
+- Firebase project (for backend services)
 
-**Note**: The `.cursor/rules/` approach is recommended as it automatically applies context. `CURSOR_PROMPT.md` is optional and only useful if you want manual prompt templates.
+### Installation
 
-## Get Started
-
-1. Install dependencies
+1. **Clone and install dependencies**
 
    ```bash
    npm install
    ```
 
-2. Install additional packages (if not already installed)
+2. **Install additional packages** (if not already installed)
 
    ```bash
-   # Performance & UI libraries
+   # Core dependencies
    npm install @shopify/flash-list @gorhom/bottom-sheet react-native-mmkv
 
-   # Internationalization (optional)
-   npm install @lingui/react @lingui/core
-
-   # Note: react-native-reanimated is already installed
+   # Phase-specific dependencies (install as needed)
+   npm install expo-image-picker expo-local-authentication
+   npm install react-native-chart-kit react-native-calendars
+   npm install react-native-image-viewing expo-media-library react-native-svg
    ```
 
-3. Configure Firebase
-   - Update `lib/firebase.ts` with your Firebase config
-   - Uncomment and configure auth services in `services/authService.ts`
-   - Uncomment and configure auth store in `store/authStore.ts`
+3. **Configure Firebase**
+   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+   - Enable Authentication (Email/Password, Google Sign-In)
+   - Create Firestore database
+   - Enable Storage
+   - Download `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
+   - Place config files in project root and `ios/` directory
+   - Update Firebase config in `lib/firebase.ts` (if exists)
 
-4. Start the app
+4. **Start the development server**
 
    ```bash
    npm start
@@ -83,40 +106,155 @@ This project includes Cursor rules in `.cursor/rules/` directory following the [
    npx expo start
    ```
 
-5. Open the app
+5. **Run on device/simulator**
    - Press `i` for iOS simulator
    - Press `a` for Android emulator
-   - Scan QR code with Expo Go app
+   - Scan QR code with Expo Go app (for physical devices)
 
-## Development Workflow
+## 🗺️ Development Roadmap
 
-1. Check [FEATURES.md](./FEATURES.md) for planned features
-2. Use [CURSOR_PROMPT.md](./CURSOR_PROMPT.md) as a template when asking Cursor to build features
-3. Build incrementally - start with MVP features
-4. Test frequently on both iOS and Android
+The project follows an 11-phase implementation plan:
 
-## Current Status
+### Phase 1: Foundation & Core Diary (Weeks 1-4)
 
-- ✅ Project setup complete
-- ✅ Firebase configuration ready (needs activation)
-- ✅ Auth screens created (sign-in, sign-up, forgot-password)
-- ✅ TanStack Query configured
-- ✅ Zustand store structure ready
+- Security system (password/biometric lock)
+- Diary entry CRUD operations
+- Basic list view
+- Entry detail view
+
+### Phase 2: Rich Editor & Media (Weeks 5-8)
+
+- Rich text editor with formatting
+- Media integration (images/videos)
+- Lists and formatting options
+
+### Phase 3: Mood Tracking (Weeks 9-10)
+
+- Mood selection and display
+- Mood analytics and statistics
+
+### Phase 4: Themes & Customization (Weeks 11-12)
+
+- Theme system
+- Background management
+- Eye protection mode
+
+### Phase 5: Calendar & Organization (Weeks 13-14)
+
+- Calendar view
+- "On This Day" feature
+- Tags system
+
+### Phase 6-11: Templates, Statistics, Profile, Search, Help, Polish
+
+See [ROADMAP.md](./ROADMAP.md) for complete details and [PROGRESS.md](./PROGRESS.md) to track your progress.
+
+## 💻 Development Workflow
+
+1. **Review Planning Documents**
+   - Check [FEATURES.md](./FEATURES.md) for feature specifications
+   - Follow [ROADMAP.md](./ROADMAP.md) for implementation steps
+   - Track progress in [PROGRESS.md](./PROGRESS.md)
+
+2. **Start with Phase 1**
+   - Begin with Foundation & Core Diary features
+   - Build incrementally, test frequently
+   - Complete each phase before moving to the next
+
+3. **Best Practices**
+   - Use TypeScript strictly (avoid `any`)
+   - Follow React Native best practices
+   - Test on both iOS and Android
+   - Use TanStack Query for all data fetching
+   - Use Zustand only for global UI state
+   - Keep code clean and well-organized
+
+4. **Cursor AI Integration**
+   - This project includes Cursor rules in `.cursor/rules/`
+   - Rules auto-apply context for better AI assistance
+   - See [.cursor/rules/](./.cursor/rules/) for available rules
+
+## ✅ Current Status
+
+### Completed
+
+- ✅ Project setup and configuration
+- ✅ Firebase configuration structure
+- ✅ Authentication screens (sign-in, sign-up, forgot-password)
+- ✅ TanStack Query client setup
+- ✅ Zustand store structure
 - ✅ NativeWind styling configured
 - ✅ React Native Reanimated installed
-- ⏳ Additional packages need installation (FlashList, Bottom Sheet, MMKV, Lingui)
-- ⏳ Note-taking features - To be implemented
+- ✅ Planning documents (Features, Roadmap, Progress tracker)
 
-## Learn more
+### In Progress
 
-To learn more about developing your project with Expo, look at the following resources:
+- ⏳ Phase 1: Foundation & Core Diary
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Upcoming
 
-## Join the community
+- 📋 Phase 2-11: See [ROADMAP.md](./ROADMAP.md) for details
 
-Join our community of developers creating universal apps.
+## 🏗️ Architecture Principles
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Expo Router**: File-based routing for navigation
+- **TanStack Query**: ALL data fetching (Firebase operations)
+- **Zustand**: ONLY for global UI state (not server state)
+- **React Hook Form + Zod**: All form validation
+- **React Native Reanimated**: All animations (prefer over Animated API)
+- **TypeScript**: Strict mode, proper types (avoid `any`)
+- **Component Composition**: Reusable, composable components
+- **Error Handling**: Proper error states and user feedback
+
+## 📖 Learning Focus
+
+This is a learning project. Focus areas:
+
+- React Native fundamentals and best practices
+- Expo Router navigation patterns
+- TanStack Query for data fetching
+- Firebase integration (Auth, Firestore, Storage)
+- Mobile-first UI/UX design
+- Smooth animations with React Native Reanimated
+- State management patterns
+- TypeScript in React Native
+
+## 🔗 Resources
+
+### Documentation
+
+- [Expo Documentation](https://docs.expo.dev/) - Learn Expo fundamentals and advanced topics
+- [React Native Documentation](https://reactnative.dev/) - Official React Native docs
+- [TanStack Query Docs](https://tanstack.com/query/latest) - React Query documentation
+- [Firebase Documentation](https://firebase.google.com/docs) - Firebase services guide
+
+### Tutorials
+
+- [Learn Expo Tutorial](https://docs.expo.dev/tutorial/introduction/) - Step-by-step Expo tutorial
+- [React Native Tutorial](https://reactnative.dev/docs/getting-started) - Getting started guide
+
+### Community
+
+- [Expo on GitHub](https://github.com/expo/expo) - Open source platform
+- [Expo Discord](https://chat.expo.dev) - Chat with Expo users
+- [React Native Community](https://github.com/react-native-community) - Community packages
+
+## 📝 Notes
+
+- Build incrementally, test frequently
+- Prioritize user experience and performance
+- Keep code clean and well-organized
+- Document as you go
+- Use TypeScript strictly for type safety
+- Follow the roadmap phases sequentially
+- Update PROGRESS.md as you complete tasks
+
+## 📄 License
+
+This is a learning project. See individual package licenses for dependencies.
+
+---
+
+**Happy Coding! 🚀**
+
+For questions or issues, refer to the planning documents or check the [Help Center](<./app/(tabs)/help.tsx>) (when implemented).
