@@ -8,10 +8,6 @@ Transform the Note Taker app into a comprehensive daily diary journal app called
 
 ### 1. Security & Privacy
 
-- **Diary Lock**: Password protection with PIN/pattern
-- **Biometric Authentication**: Fingerprint/Face ID unlock
-- **Security Question**: Password recovery mechanism
-- **Email Recovery**: Email address for password reset
 - **Data Encryption**: Encrypt diary entries locally
 
 ### 2. Diary Entry Management

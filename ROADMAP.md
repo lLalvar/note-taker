@@ -12,37 +12,7 @@ This roadmap outlines the detailed implementation plan for transforming the Note
 
 #### 1. Security System
 
-**Files to create/modify:**
-
-- `app/(auth)/diary-lock.tsx` - Lock screen component
-- `services/diary-lock-service.ts` - Lock service for password/biometric handling
-- `store/diary-lock-store.ts` - Zustand store for lock state
-
-**Implementation details:**
-
-- Implement password/PIN lock screen with secure input
-- Add biometric authentication using `expo-local-authentication`
-- Create security question flow for password recovery
-- Email recovery setup with validation
-- Store encrypted credentials using `react-native-mmkv`
-- Lock screen should appear on app launch if lock is enabled
-- Handle lock timeout and auto-lock functionality
-
-**Dependencies to add:**
-
-- `expo-local-authentication` - Biometric authentication
-- `react-native-mmkv` - Fast encrypted storage (already in package.json)
-
-**Firebase structure:**
-
-```
-users/{userId}/
-  security/
-    hasLock: boolean
-    securityQuestion: string
-    securityAnswerHash: string
-    recoveryEmail: string
-```
+**Note**: Diary lock functionality has been removed from the application.
 
 #### 2. Diary Entry CRUD
 
@@ -1135,7 +1105,7 @@ users/{userId}/
 
 ### State Management
 
-- **Zustand Stores**: Theme, settings, diary lock state, UI state
+- **Zustand Stores**: Theme, settings, UI state
 - **TanStack Query**: All Firebase data fetching (entries, tags, statistics, profile)
 - **React Hook Form**: All forms (entry creation, settings, profile, search filters)
 
@@ -1228,7 +1198,6 @@ services/
   tag-service.ts
   template-service.ts
   search-service.ts
-  diary-lock-service.ts
   statistics-service.ts
   profile-service.ts
   support-service.ts
@@ -1236,7 +1205,6 @@ services/
 store/
   theme-store.ts
   settings-store.ts
-  diary-lock-store.ts
   mood-store.ts
 
 constants/

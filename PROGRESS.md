@@ -27,19 +27,7 @@
 
 ### 1. Security System
 
-- [x] Create `app/(auth)/diary-lock.tsx` - Lock screen component
-- [x] Create `services/diary-lock.ts` - Lock service
-- [x] Create `store/diary-lock-store.ts` - Lock state store
-- [x] Implement password/PIN lock screen
-- [x] Add biometric authentication (expo-local-authentication)
-- [x] Create security question flow
-- [x] Email recovery setup
-- [x] Store encrypted credentials (react-native-mmkv)
-- [~] Lock screen on app launch (via `components/diary-lock-guard.tsx`) - **Code exists but commented out in `app/_layout.tsx`**
-- [~] Lock timeout and auto-lock functionality - **Code exists but not active**
-- [x] Install dependency: `expo-local-authentication`
-
-**Note**: Diary lock functionality is implemented but currently commented out. The `DiaryLockGuard` component is not active in the app layout. To enable it, uncomment lines 69 and 86 in `app/_layout.tsx`.
+- [ ] Diary lock functionality has been removed from the application
 
 ### 2. Diary Entry CRUD
 
@@ -522,7 +510,6 @@ _Use this section to track any blockers, issues, or important notes as you work 
 
 ### Partially Implemented
 
-- **Security System**: Diary lock code exists (password/PIN, biometric auth, security questions, email recovery) but is **commented out** in `app/_layout.tsx`. The `DiaryLockGuard` component is not active. To enable, uncomment lines 69 and 86 in `app/_layout.tsx`.
 - **Entry Detail View**: Basic functionality exists, but media/tags/mood display needs verification
 - **Background Management**: Integrated with themes, but "keep previous background" option needs verification
 - **Settings**: Basic structure exists, but date/time format pickers and notification preferences missing

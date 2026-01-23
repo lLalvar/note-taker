@@ -67,7 +67,6 @@ export default Sentry.wrap(function RootLayout() {
               {/* <View style={[{ flex: 1 }]}> */}
               <View style={[{ flex: 1 }, cssVariables]}>
                 <ThemeProvider value={navTheme}>
-                  {/* <DiaryLockGuard> */}
                   <Stack>
                     <Stack.Protected guard={isAuthenticated}>
                       <Stack.Screen
@@ -84,7 +83,6 @@ export default Sentry.wrap(function RootLayout() {
                       />
                     </Stack.Protected>
                   </Stack>
-                  {/* </DiaryLockGuard> */}
                   <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
                     {isAuthenticated && <SignOutButton />}
                     <ThemeToggle />

@@ -38,7 +38,7 @@ export async function handleEmail(request: Request, env: Env): Promise<Response>
 		const emailData = {
 			from: 'DailyMood Journal <onboarding@resend.dev>', // Update with your verified domain
 			to: email,
-			subject: isPasswordRecovery ? 'Reset Your Diary Lock Password' : 'Reset Your Security Question',
+			subject: isPasswordRecovery ? 'Reset Your Password' : 'Reset Your Security Question',
 			html: `
         <!DOCTYPE html>
         <html>
@@ -53,7 +53,7 @@ export async function handleEmail(request: Request, env: Env): Promise<Response>
             </div>
             <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
               <p>Hello${userName ? ` ${userName}` : ''},</p>
-              <p>You requested to reset your ${isPasswordRecovery ? 'diary lock password' : 'security question'}. Use the code below to reset:</p>
+              <p>You requested to reset your ${isPasswordRecovery ? 'password' : 'security question'}. Use the code below to reset:</p>
               <div style="background: white; border: 2px dashed #667eea; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
                 <code style="font-size: 24px; font-weight: bold; color: #667eea; letter-spacing: 4px;">${resetToken}</code>
               </div>
@@ -65,7 +65,7 @@ export async function handleEmail(request: Request, env: Env): Promise<Response>
           </body>
         </html>
       `,
-			text: `Hello${userName ? ` ${userName}` : ''},\n\nYou requested to reset your ${isPasswordRecovery ? 'diary lock password' : 'security question'}. Use this code to reset:\n\n${resetToken}\n\nThis code will expire in 1 hour.\n\n${isPasswordRecovery ? "If you didn't request this, please ignore this email.\n\n" : ''}---\nDailyMood Journal`,
+			text: `Hello${userName ? ` ${userName}` : ''},\n\nYou requested to reset your ${isPasswordRecovery ? 'password' : 'security question'}. Use this code to reset:\n\n${resetToken}\n\nThis code will expire in 1 hour.\n\n${isPasswordRecovery ? "If you didn't request this, please ignore this email.\n\n" : ''}---\nDailyMood Journal`,
 		};
 
 		// Use axios to call Resend API

@@ -220,15 +220,6 @@ export function SideDrawer() {
     //   },
     // },
     // {
-    //   id: 'diary-lock',
-    //   label: t`Diary Lock`,
-    //   icon: Lock,
-    //   onPress: () => {
-    //     // Navigate to diary lock settings
-    //     router.push('/(auth)/diary-lock')
-    //   },
-    // },
-    // {
     //   id: 'donate',
     //   label: t`Donate`,
     //   icon: Heart,
