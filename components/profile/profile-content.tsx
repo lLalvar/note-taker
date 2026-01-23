@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { msg } from '@lingui/core/macro'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Mail } from 'lucide-react-native'
@@ -25,27 +26,27 @@ import { ScreenHeader } from '@/components/ui/screen-header'
 import { Text } from '@/components/ui/text'
 import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
+import { i18n } from '@/lib/i18n'
 import {
   type ProfileUpdateData,
   getUserProfile,
   updateUserProfile,
 } from '@/services/profile'
 
-const getProfileSchema = (
-  t: (template: TemplateStringsArray, ...args: any[]) => string
-) =>
-  z.object({
-    displayName: z
-      .string()
-      .min(1, t`Display name is required`)
-      .max(50, t`Display name must be less than 50 characters`),
-    bio: z
-      .string()
-      .max(500, t`Bio must be less than 500 characters`)
-      .optional(),
-  })
+const profileSchema = z.object({
+  displayName: z
+    .string()
+    .min(1, { message: i18n._(msg`Display name is required`) })
+    .max(50, {
+      message: i18n._(msg`Display name must be less than 50 characters`),
+    }),
+  bio: z
+    .string()
+    .max(500, { message: i18n._(msg`Bio must be less than 500 characters`) })
+    .optional(),
+})
 
-type ProfileFormData = z.infer<ReturnType<typeof getProfileSchema>>
+type ProfileFormData = z.infer<typeof profileSchema>
 
 interface ProfileContentProps {
   showHeader?: boolean
@@ -65,7 +66,6 @@ export function ProfileContent({
   onEditControls,
 }: ProfileContentProps) {
   const { t } = useLingui()
-  const profileSchema = getProfileSchema(t)
   const { colors } = useTheme()
   const { user } = useAuth()
   const queryClient = useQueryClient()

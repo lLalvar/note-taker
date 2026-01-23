@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { i18n } from '@lingui/core'
-import { defineMessage } from '@lingui/core/macro'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation } from '@tanstack/react-query'
 import { Link, router } from 'expo-router'
@@ -34,31 +32,22 @@ import { Icon } from '@/components/ui/icon'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
 import { getAuthErrorMessage } from '@/lib/utils'
+import { emailSchema, passwordSchema } from '@/schemas'
 import {
   EmailNotVerifiedError,
   resendVerificationEmail,
   signInWithEmail,
 } from '@/services/auth'
 
-const getSignInSchema = (
-  t: (template: TemplateStringsArray, ...args: any[]) => string
-) =>
-  z.object({
-    email: z
-      .string()
-      .min(1, i18n._(defineMessage`Email is required`))
-      .email(i18n._(defineMessage`Invalid email address`)),
-    password: z
-      .string()
-      .min(1, i18n._(defineMessage`Password is required`))
-      .min(6, i18n._(defineMessage`Password must be at least 6 characters`)),
-  })
+const signInSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+})
 
-type SignInFormData = z.infer<ReturnType<typeof getSignInSchema>>
+type SignInFormData = z.infer<typeof signInSchema>
 
 export default function SignIn() {
   const { t } = useLingui()
-  const signInSchema = getSignInSchema(t)
   const [showPassword, setShowPassword] = useState(false)
   const [emailNotVerified, setEmailNotVerified] = useState(false)
   const [pendingEmail, setPendingEmail] = useState<string | null>(null)

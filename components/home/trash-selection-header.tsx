@@ -9,8 +9,10 @@ import { toast } from 'sonner-native'
 
 import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
+import { cn } from '@/lib/utils'
 import { permanentlyDeleteNotes, restoreNotes } from '@/services/notes'
 import { useSelectionStore } from '@/store/selection-store'
 import type { Note } from '@/types'
@@ -209,19 +211,23 @@ export function TrashSelectionHeader({
             </Text>
           </View>
           <View className='flex-row items-center gap-2'>
-            {isAllSelected ? (
-              <Button variant='ghost' onPress={deselectAll}>
-                <Text>
-                  <Trans>Deselect All</Trans>
-                </Text>
-              </Button>
-            ) : (
-              <Button variant='ghost' onPress={() => selectAll(allNoteIds)}>
-                <Text>
-                  <Trans>Select All</Trans>
-                </Text>
-              </Button>
-            )}
+            <Checkbox
+              checked={isAllSelected}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  selectAll(allNoteIds)
+                } else {
+                  deselectAll()
+                }
+              }}
+              className={cn(
+                'border-foreground',
+                isAllSelected && 'border-primary'
+              )}
+              accessibilityLabel={
+                isAllSelected ? t`Deselect all notes` : t`Select all notes`
+              }
+            />
             <Button
               variant='ghost'
               size='icon'
@@ -259,21 +265,27 @@ export function TrashSelectionHeader({
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>
-              {selectedNoteIds.size === 1
-                ? t`Restore ${selectedNoteIds.size} note?`
-                : t`Restore ${selectedNoteIds.size} notes?`}
+              {(() => {
+                const count = selectedNoteIds.size
+                return count === 1
+                  ? t`Restore ${count} note?`
+                  : t`Restore ${count} notes?`
+              })()}
             </Text>
             <Text className='text-sm text-muted-foreground'>
-              {selectedNoteIds.size === 1 ? (
-                <Trans>
-                  This note will be restored and moved back to your notes.
-                </Trans>
-              ) : (
-                <Trans>
-                  These {selectedNoteIds.size} notes will be restored and moved
-                  back to your notes.
-                </Trans>
-              )}
+              {(() => {
+                const count = selectedNoteIds.size
+                return count === 1 ? (
+                  <Trans>
+                    This note will be restored and moved back to your notes.
+                  </Trans>
+                ) : (
+                  <Trans>
+                    These {count} notes will be restored and moved back to your
+                    notes.
+                  </Trans>
+                )
+              })()}
             </Text>
           </View>
           <View className='flex-col gap-2'>
@@ -299,14 +311,20 @@ export function TrashSelectionHeader({
         <View className='px-4 pb-4'>
           <View className='mb-4 gap-2'>
             <Text className='text-lg font-semibold text-foreground'>
-              {selectedNoteIds.size === 1
-                ? t`Permanently delete ${selectedNoteIds.size} note?`
-                : t`Permanently delete ${selectedNoteIds.size} notes?`}
+              {(() => {
+                const count = selectedNoteIds.size
+                return count === 1
+                  ? t`Permanently delete ${count} note?`
+                  : t`Permanently delete ${count} notes?`
+              })()}
             </Text>
             <Text className='text-sm text-muted-foreground'>
-              {selectedNoteIds.size === 1
-                ? t`Are you sure you want to permanently delete ${selectedNoteIds.size} selected note? This action cannot be undone.`
-                : t`Are you sure you want to permanently delete ${selectedNoteIds.size} selected notes? This action cannot be undone.`}
+              {(() => {
+                const count = selectedNoteIds.size
+                return count === 1
+                  ? t`Are you sure you want to permanently delete ${count} selected note? This action cannot be undone.`
+                  : t`Are you sure you want to permanently delete ${count} selected notes? This action cannot be undone.`
+              })()}
             </Text>
           </View>
           <View className='flex-col gap-2'>

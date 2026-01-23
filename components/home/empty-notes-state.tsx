@@ -1,3 +1,4 @@
+import { useLingui } from '@lingui/react/macro'
 import { BookOpen, Search } from 'lucide-react-native'
 import { View } from 'react-native'
 
@@ -16,6 +17,7 @@ export function EmptyNotesState({
   searchQuery,
   isTrash = false,
 }: EmptyNotesStateProps) {
+  const { t } = useLingui()
   const { colors } = useTheme()
 
   return (
@@ -36,17 +38,17 @@ export function EmptyNotesState({
         <View className='items-center gap-2'>
           <Text className='text-center text-xl font-semibold text-foreground'>
             {isSearchResult
-              ? 'No results found'
+              ? t`No results found`
               : isTrash
-                ? 'Trash is empty'
-                : 'No notes yet'}
+                ? t`Trash is empty`
+                : t`No notes yet`}
           </Text>
           <Text className='text-center text-muted-foreground'>
             {isSearchResult
-              ? `No notes match "${searchQuery}". Try a different search term.`
+              ? t`No notes match "${searchQuery}". Try a different search term.`
               : isTrash
-                ? 'Notes you delete will appear here. You can restore them or delete them permanently.'
-                : 'Start your note-taking journey by creating your first note. Capture your thoughts, memories, and moments.'}
+                ? t`Notes you delete will appear here. You can restore them or delete them permanently.`
+                : t`Start your note-taking journey by creating your first note. Capture your thoughts, memories, and moments.`}
           </Text>
         </View>
       </View>

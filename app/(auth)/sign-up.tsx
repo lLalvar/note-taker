@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { msg } from '@lingui/core/macro'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation } from '@tanstack/react-query'
 import { Link, router } from 'expo-router'
@@ -43,40 +44,32 @@ import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Text } from '@/components/ui/text'
+import { i18n } from '@/lib/i18n'
 import { getAuthErrorMessage } from '@/lib/utils'
+import { emailSchema, passwordSchema } from '@/schemas'
 import { signUpWithEmail } from '@/services/auth'
 
 // import { useGoogleAuth } from '@/services/authService'
 
-const getSignUpSchema = (
-  t: (template: TemplateStringsArray, ...args: any[]) => string
-) =>
-  z
-    .object({
-      name: z
-        .string()
-        .min(1, t`Name is required`)
-        .min(2, t`Name must be at least 2 characters`),
-      email: z
-        .string()
-        .min(1, t`Email is required`)
-        .email(t`Invalid email address`),
-      password: z
-        .string()
-        .min(1, t`Password is required`)
-        .min(6, t`Password must be at least 6 characters`),
-      confirmPassword: z.string().min(1, t`Please confirm your password`),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: t`Passwords don't match`,
-      path: ['confirmPassword'],
-    })
+const signUpSchema = z
+  .object({
+    name: z
+      .string()
+      .min(1, { message: i18n._(msg`Name is required`) })
+      .min(2, { message: i18n._(msg`Name must be at least 2 characters`) }),
+    email: emailSchema,
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, msg`Please confirm your password`),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: i18n._(msg`Passwords don't match`),
+    path: ['confirmPassword'],
+  })
 
-type SignUpFormData = z.infer<ReturnType<typeof getSignUpSchema>>
+type SignUpFormData = z.infer<typeof signUpSchema>
 
 export default function SignUp() {
   const { t } = useLingui()
-  const signUpSchema = getSignUpSchema(t)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const passwordInputRef = React.useRef<TextInput>(null)

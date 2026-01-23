@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { msg } from '@lingui/core/macro'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { useMutation } from '@tanstack/react-query'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -36,30 +37,27 @@ import {
 import { Icon } from '@/components/ui/icon'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
+import { i18n } from '@/lib/i18n'
 import { getAuthErrorMessage } from '@/lib/utils'
+import { passwordSchema } from '@/schemas'
 import { resetPassword, verifyResetCode } from '@/services/auth'
 
-const getResetPasswordSchema = (
-  t: (template: TemplateStringsArray, ...args: any[]) => string
-) =>
-  z
-    .object({
-      password: z
-        .string()
-        .min(1, t`Password is required`)
-        .min(6, t`Password must be at least 6 characters`),
-      confirmPassword: z.string().min(1, t`Please confirm your password`),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: t`Passwords don't match`,
-      path: ['confirmPassword'],
-    })
+const resetPasswordSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: z
+      .string()
+      .min(1, { message: i18n._(msg`Please confirm your password`) }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: i18n._(msg`Passwords don't match`),
+    path: ['confirmPassword'],
+  })
 
-type ResetPasswordFormData = z.infer<ReturnType<typeof getResetPasswordSchema>>
+type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>
 
 export default function ResetPassword() {
   const { t } = useLingui()
-  const resetPasswordSchema = getResetPasswordSchema(t)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isValidCode, setIsValidCode] = useState(false)

@@ -29,25 +29,17 @@ import { Form, FormField, FormInput } from '@/components/ui/form'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
 import { getAuthErrorMessage } from '@/lib/utils'
+import { emailSchema } from '@/schemas'
 import { sendPasswordReset } from '@/services/auth'
 
-const getForgotPasswordSchema = (
-  t: (template: TemplateStringsArray, ...args: any[]) => string
-) =>
-  z.object({
-    email: z
-      .string()
-      .min(1, t`Email is required`)
-      .email(t`Invalid email address`),
-  })
+const forgotPasswordSchema = z.object({
+  email: emailSchema,
+})
 
-type ForgotPasswordFormData = z.infer<
-  ReturnType<typeof getForgotPasswordSchema>
->
+type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>
 
 export default function ForgotPassword() {
   const { t } = useLingui()
-  const forgotPasswordSchema = getForgotPasswordSchema(t)
   const scrollViewRef = useRef<ScrollView>(null)
   // const forgotPasswordMutation = useForgotPasswordMutation()
 

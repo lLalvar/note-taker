@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { msg } from '@lingui/core/macro'
 import { Trans, useLingui } from '@lingui/react/macro'
 import { Timestamp } from '@react-native-firebase/firestore'
 import { useFocusEffect } from '@react-navigation/native'
@@ -46,25 +47,23 @@ import { Text } from '@/components/ui/text'
 import { DEFAULT_MOOD } from '@/constants/moods'
 import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
+import { i18n } from '@/lib/i18n'
 import { createNote, deleteNote, getNote, updateNote } from '@/services/notes'
 import type { Note } from '@/types'
 
-const getNoteSchema = (
-  t: (template: TemplateStringsArray, ...args: any[]) => string
-) =>
-  z.object({
-    title: z
-      .string()
-      .max(200, t`Title is too long`)
-      .optional(),
-    description: z
-      .string()
-      .max(5000, t`Description is too long`)
-      .optional(),
-    mood: z.string().optional(),
-  })
+const noteSchema = z.object({
+  title: z
+    .string()
+    .max(200, { message: i18n._(msg`Title is too long`) })
+    .optional(),
+  description: z
+    .string()
+    .max(5000, { message: i18n._(msg`Content is too long`) })
+    .optional(),
+  mood: z.string().optional(),
+})
 
-type NoteFormData = z.infer<ReturnType<typeof getNoteSchema>>
+type NoteFormData = z.infer<typeof noteSchema>
 
 interface NoteFormProps {
   noteId?: string
@@ -72,7 +71,6 @@ interface NoteFormProps {
 
 export function NoteForm({ noteId }: NoteFormProps) {
   const { t } = useLingui()
-  const noteSchema = getNoteSchema(t)
   const { colors } = useTheme()
   const { user } = useAuth()
   const queryClient = useQueryClient()
@@ -554,13 +552,13 @@ export function NoteForm({ noteId }: NoteFormProps) {
                   render={({ field }) => (
                     <FormItem className='flex-1'>
                       <FormLabel>
-                        <Trans>Description</Trans>
+                        <Trans>Content</Trans>
                       </FormLabel>
                       <RichTextEditor
                         ref={editorRef}
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder={t`Write your note description here...`}
+                        placeholder={t`Write your note content here...`}
                         className='flex-1'
                         editable={!isLoadingNote}
                       />

@@ -1,8 +1,8 @@
-import { defineMessage } from '@lingui/core/macro'
+import { msg } from '@lingui/core/macro'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-import { i18n } from './i18n'
+import { i18n } from '@/lib/i18n'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -100,72 +100,70 @@ export function getAuthErrorMessage(error: unknown): string {
     switch (errorCode) {
       case 'auth/email-already-in-use':
         return i18n._(
-          defineMessage`This email is already registered. Please sign in instead or use a different email.`
+          msg`This email is already registered. Please sign in instead or use a different email.`
         )
       case 'auth/invalid-email':
         return i18n._(
-          defineMessage`The email address is invalid. Please check and try again.`
+          msg`The email address is invalid. Please check and try again.`
         )
       case 'auth/operation-not-allowed':
         return i18n._(
-          defineMessage`Email/password accounts are not enabled. Please contact support.`
+          msg`Email/password accounts are not enabled. Please contact support.`
         )
       case 'auth/weak-password':
         return i18n._(
-          defineMessage`The password is too weak. Please choose a stronger password.`
+          msg`The password is too weak. Please choose a stronger password.`
         )
       case 'auth/network-request-failed':
         return i18n._(
-          defineMessage`Network error. Please check your connection and try again.`
+          msg`Network error. Please check your connection and try again.`
         )
       case 'auth/too-many-requests':
-        return i18n._(defineMessage`Too many attempts. Please try again later.`)
+        return i18n._(msg`Too many attempts. Please try again later.`)
       case 'auth/user-disabled':
         return i18n._(
-          defineMessage`This account has been disabled. Please contact support.`
+          msg`This account has been disabled. Please contact support.`
         )
       case 'auth/user-not-found':
         return i18n._(
-          defineMessage`No account found with this email. Please sign up first.`
+          msg`No account found with this email. Please sign up first.`
         )
       case 'auth/wrong-password':
-        return i18n._(defineMessage`Incorrect password. Please try again.`)
+        return i18n._(msg`Incorrect password. Please try again.`)
       case 'auth/invalid-credential':
         return i18n._(
-          defineMessage`Invalid email or password. Please check your credentials.`
+          msg`Invalid email or password. Please check your credentials.`
         )
       case 'auth/email-not-verified':
         return i18n._(
-          defineMessage`Please verify your email address before signing in. Check your inbox for the verification email.`
+          msg`Please verify your email address before signing in. Check your inbox for the verification email.`
         )
       case 'auth/expired-action-code':
         return i18n._(
-          defineMessage`This reset link has expired. Please request a new one.`
+          msg`This reset link has expired. Please request a new one.`
         )
       case 'auth/invalid-action-code':
         return i18n._(
-          defineMessage`This reset link is invalid. Please request a new one.`
+          msg`This reset link is invalid. Please request a new one.`
         )
       case 'auth/invalid-verification-code':
         return i18n._(
-          defineMessage`Invalid verification code. Please check and try again.`
+          msg`Invalid verification code. Please check and try again.`
         )
       case 'auth/code-expired':
         return i18n._(
-          defineMessage`The verification code has expired. Please request a new one.`
+          msg`The verification code has expired. Please request a new one.`
         )
       case 'auth/quota-exceeded':
-        return i18n._(defineMessage`Quota exceeded. Please try again later.`)
+        return i18n._(msg`Quota exceeded. Please try again later.`)
       case 'auth/missing-email':
-        return i18n._(
-          defineMessage`Email is required. Please check and try again.`
-        )
+        return i18n._(msg`Email is required. Please check and try again.`)
       case 'auth/no-current-user':
-        return i18n._(defineMessage`Session invalid. Please sign in again.`)
+        return i18n._(msg`Session invalid. Please sign in again.`)
       default:
-        return i18n._(defineMessage`Authentication failed. Please try again.`)
+        return i18n._(msg`Authentication failed. Please try again.`)
     }
   }
 
-  return i18n._(defineMessage`An unexpected error occurred. Please try again.`)
+  return i18n._(msg`An unexpected error occurred. Please try again.`)
 }
