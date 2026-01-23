@@ -5,11 +5,13 @@ import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Link, RelativePathString } from 'expo-router'
 import {
+  FileText,
   HelpCircle,
   type LucideIcon,
   Palette,
   Settings,
   Share2,
+  Shield,
   Trash2,
 } from 'lucide-react-native'
 import {
@@ -245,6 +247,18 @@ export function SideDrawer() {
       label: t`Help Center`,
       icon: HelpCircle,
       href: '/(app)/help',
+    },
+    {
+      id: 'terms',
+      label: t`Terms of Service`,
+      icon: FileText,
+      href: '/(app)/terms',
+    },
+    {
+      id: 'privacy',
+      label: t`Privacy Policy`,
+      icon: Shield,
+      href: '/(app)/privacy',
     },
     {
       id: 'settings',
