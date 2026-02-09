@@ -1,148 +1,147 @@
-# Note Taker App - Feature Planning
+# DailyMood Journal Features
+
+## Overview
+
+Transform the Note Taker app into a comprehensive daily diary journal app called "DailyMood Journal", focusing on privacy, customization, mood tracking, and rich content creation.
 
 ## Core Features
 
-### Authentication & User Management
+### 1. Security & Privacy
 
-- [ ] Email/Password Authentication
-- [ ] Google Sign-In
-- [ ] Password Reset Flow
-- [ ] User Profile Management
-- [ ] Account Deletion
-- [ ] Session Persistence
-- [ ] Auto-logout on token expiry
+- **Data Encryption**: Encrypt diary entries locally
 
-### Notes Management
+### 2. Diary Entry Management
 
-- [ ] Create New Note
-- [ ] Edit Note
-- [ ] Delete Note
-- [ ] View Note Details
-- [ ] List All Notes
-- [ ] Search Notes
-- [ ] Filter Notes (by date, tags, etc.)
-- [ ] Sort Notes (newest, oldest, alphabetical)
-- [ ] Pin/Unpin Notes
-- [ ] Archive Notes
-- [ ] Restore Archived Notes
-- [ ] Permanent Delete (from archive)
+- **Create Entry**: Rich text editor with title and body
+- **Edit Entry**: Modify existing entries
+- **Delete Entry**: Remove entries with confirmation
+- **Draft System**: Save entries as drafts
+- **Date Selection**: Custom date picker for entries
+- **Time Selection**: Custom time for entries
+- **Entry Preview**: Preview before saving
 
-### Note Content
+### 3. Mood Tracking
 
-- [ ] Rich Text Editor
-- [ ] Markdown Support
-- [ ] Plain Text Mode
-- [ ] Image Attachments
-- [ ] Voice Notes
-- [ ] Drawing/Sketch Support
-- [ ] Code Blocks with Syntax Highlighting
-- [ ] Checklists/Todo Lists
-- [ ] Links/URLs
-- [ ] Character/Word Count
+- **Mood Selection**: Grid of emoji moods (happy, sad, angry, etc.)
+- **Default Mood**: Set preferred default mood
+- **Mood Display**: Show mood on calendar view
+- **Mood Statistics**: Charts showing mood trends over time
+- **Mood Percentage**: Statistics on mood distribution
+- **Mood Stability**: Track mood consistency
 
-### Organization
+### 4. Rich Content Editor
 
-- [ ] Tags System
-- [ ] Categories/Folders
-- [ ] Color Coding
-- [ ] Favorites/Starred Notes
-- [ ] Custom Note Templates
-- [ ] Note Duplication
+- **Text Formatting**: Bold, italic, headings (H1-H4)
+- **Text Alignment**: Left, center, right alignment
+- **Text Colors**: Color palette for text styling
+- **Font Selection**: Multiple font options (Default, Bold, Merriweather, etc.)
+- **Character/Word Count**: Real-time counting
+- **Lists**: Bullet points and numbered lists
+- **Undo/Redo**: Text editing history
 
-### UI/UX Features
+### 5. Media Support
 
-- [ ] Dark Mode Support
-- [ ] Light Mode Support
-- [ ] Custom Themes
-- [ ] Responsive Design
-- [ ] Pull to Refresh
-- [ ] Swipe Actions (delete, archive, pin)
-- [ ] Gesture Navigation
-- [ ] Haptic Feedback
-- [ ] Smooth Animations
-- [ ] Loading States
-- [ ] Error Handling & Display
-- [ ] Empty States
-- [ ] Onboarding Flow
+- **Photo Attachments**: Add images to entries
+- **Video Attachments**: Add videos to entries
+- **Image Time Extraction**: Read EXIF data for creation time
+- **Media Gallery**: View all photos/videos in entries
+- **Media Management**: Delete/replace media
 
-### Data & Sync
+### 6. Customization & Themes
 
-- [ ] Real-time Sync with Firebase
-- [ ] Offline Support
-- [ ] Conflict Resolution
-- [ ] Export Notes (PDF, Markdown, Text)
-- [ ] Import Notes
-- [ ] Backup & Restore
-- [ ] Data Encryption
-- [ ] Cloud Storage Integration
+- **Theme Selection**: Multiple themes (HOT, DARK, LIGHT categories)
+- **Background Images**: Custom backgrounds for entries
+- **Keep Previous Background**: Option to persist background
+- **Theme Preview**: Preview themes before applying
+- **Dark Mode**: Night theme support
+- **Eye Protection Mode**: Reduce blue light for long writing sessions
 
-### Advanced Features
+### 7. Stickers & Emojis
 
-- [ ] AI-Powered Note Summarization
-- [ ] AI Note Generation
-- [ ] Smart Search (full-text search)
-- [ ] Related Notes Suggestions
-- [ ] Note Sharing
-- [ ] Collaboration (multiple users)
-- [ ] Version History
-- [ ] Note Locking (password/biometric)
-- [ ] Reminders/Notifications
-- [ ] Calendar Integration
-- [ ] Location Tagging
-- [ ] Note Statistics/Analytics
+- **Sticker Library**: Collection of stickers
+- **Emoji Support**: Emoji picker integration
+- **Custom Stickers**: User-uploaded stickers (future)
+- **Sticker Categories**: Organize stickers by type
 
-### Performance & Optimization
+### 8. Templates
 
-- [ ] Lazy Loading
-- [ ] Pagination
-- [ ] Image Optimization
-- [ ] Caching Strategy
-- [ ] Performance Monitoring
-- [ ] Error Logging
+- **Diary Templates**: Pre-built entry templates
+- **Template Library**: Browse available templates
+- **Keep Previous Template**: Option to persist template
+- **Custom Templates**: Create user templates (future)
+- **Template Prompts**: Writing prompts and ideas
 
-### Testing & Quality
+### 9. Tags & Organization
 
-- [ ] Unit Tests
-- [ ] Integration Tests
-- [ ] E2E Tests
-- [ ] Accessibility (a11y) Support
-- [ ] Internationalization (i18n)
+- **Tag System**: Add tags to entries
+- **Tag Management**: Create, edit, delete tags
+- **Tag Colors**: Color-code tags
+- **Tag Filtering**: Filter entries by tags
+- **Tag Search**: Search entries by tags
 
-## Implementation Priority
+### 10. Calendar View
 
-### Phase 1: MVP (Minimum Viable Product)
+- **Monthly Calendar**: View entries by month
+- **Date Highlighting**: Highlight dates with entries
+- **Mood Indicators**: Show moods on calendar
+- **Entry Count**: Display number of entries per day
+- **Date Navigation**: Navigate between months/years
+- **"On This Day" Feature**: Show past entries from same date
 
-1. Email/Password Authentication
-2. Create, Read, Update, Delete Notes
-3. Basic Note List View
-4. Simple Text Editor
-5. Dark/Light Mode
-6. Firebase Integration
+### 11. Statistics & Analytics
 
-### Phase 2: Core Features
+- **Diary Statistics**: Entry count per day/week/month
+- **Mood Statistics**: Mood distribution charts
+- **Weekly View**: 7-day entry statistics
+- **Time Range Selection**: Filter statistics by period
+- **Visual Charts**: Bar charts, line graphs for trends
 
-1. Search Functionality
-2. Tags System
-3. Rich Text Editor
-4. Image Support
-5. Archive/Delete
-6. Pin Notes
+### 12. Profile & Settings
 
-### Phase 3: Enhanced Features
+- **User Profile**: Username, bio, profile photo
+- **Profile Editing**: Update profile information
+- **Settings Screen**: Comprehensive settings menu
+- **Language Selection**: Multi-language support
+- **Date Format**: Customize diary date format
+- **Time Format**: 12/24 hour format selection
+- **First Day of Week**: Sunday/Monday selection
+- **Notifications**: Configure notification settings
 
-1. Offline Support
-2. Export/Import
-3. Advanced Search
-4. Categories/Folders
-5. Note Templates
+### 13. Search & Discovery
 
-### Phase 4: Advanced Features
+- **Text Search**: Full-text search across entries
+- **Date Search**: Search by date range
+- **Tag Search**: Search by tags
+- **Mood Search**: Filter by mood
+- **Advanced Filters**: Combine multiple filters
 
-1. AI Features
-2. Collaboration
-3. Sharing
-4. Version History
-5. Advanced Analytics
+### 14. Widget Support
+
+- **Home Screen Widget**: Quick access widget
+- **Widget Customization**: Configure widget appearance
+- **Widget Themes**: Match app theme
+
+### 15. Help & Support
+
+- **Help Center**: FAQ and guides
+- **Feature Requests**: Submit feature ideas
+- **Issue Reporting**: Report bugs
+- **Tutorials**: Getting started guides
+- **Onboarding**: First-time user experience
+
+### 16. Gamification (Optional)
+
+- **Achievements**: Unlock achievements for milestones
+- **Habit Challenges**: Multi-day challenges
+- **Progress Tracking**: Track writing streaks
+- **Rewards**: Visual rewards for consistency
+
+## Excluded Features
+
+- Subscription/Premium features
+- Ads/Advertising
+- Backup and Restore
+- Export and Import
 
 ## Technical Stack
 
@@ -164,3 +163,4 @@
 - Keep code clean and well-organized
 - Document as you go
 - Use TypeScript strictly for type safety
+- See [ROADMAP.md](./ROADMAP.md) for detailed implementation plan

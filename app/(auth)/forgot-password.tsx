@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trans, useLingui } from '@lingui/react/macro'
+import { useMutation } from '@tanstack/react-query'
 import { Link, router } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import { useForm } from 'react-hook-form'
@@ -13,7 +14,7 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-// import { useForgotPasswordMutation } from '@/hooks/useAuthMutations'
+import { toast } from 'sonner-native'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -27,9 +28,12 @@ import {
 import { Form, FormField, FormInput } from '@/components/ui/form'
 import { Icon } from '@/components/ui/icon'
 import { Text } from '@/components/ui/text'
+import { getAuthErrorMessage } from '@/lib/utils'
+import { emailSchema } from '@/schemas'
+import { sendPasswordReset } from '@/services/auth'
 
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  email: emailSchema,
 })
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>
@@ -44,46 +48,47 @@ export default function ForgotPassword() {
     defaultValues: {
       email: '',
     },
-    mode: 'onChange',
   })
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form
+  const { handleSubmit } = form
+
+  const forgotPasswordMutation = useMutation({
+    mutationFn: (email: string) => sendPasswordReset(email),
+    onSuccess: () => {
+      toast.success(t`Reset Email Sent`, {
+        description: t`We've sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.`,
+        duration: 10000,
+      })
+      router.replace('/(auth)/sign-in')
+    },
+    onError: (error: unknown) => {
+      const errorMessage = getAuthErrorMessage(error)
+      toast.error(t`Failed to send reset email`, {
+        description: errorMessage,
+      })
+    },
+  })
 
   const onSubmit = (data: ForgotPasswordFormData) => {
-    // forgotPasswordMutation.mutate(data.email)
-    console.log('Forgot Password Data:', data)
-  }
-
-  function onEmailFocus() {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
-      }, 300)
-    }
+    forgotPasswordMutation.mutate(data.email)
   }
 
   return (
     <SafeAreaView className='flex-1 bg-background' edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        style={{ flex: 1 }}
       >
         <ScrollView
           ref={scrollViewRef}
-          className='flex-1 gap-8 px-4'
           contentContainerStyle={{
             flexGrow: 1,
-            paddingVertical: 32,
+            padding: 16,
             justifyContent: 'center',
           }}
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
           bounces={false}
-          nestedScrollEnabled={true}
         >
           <Card className='border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5'>
             <CardHeader>
@@ -92,11 +97,7 @@ export default function ForgotPassword() {
                   onPress={() => router.back()}
                   className='-ml-2 mr-4 p-2'
                 >
-                  <Icon
-                    as={ArrowLeft}
-                    size={24}
-                    className='text-muted-foreground'
-                  />
+                  <Icon as={ArrowLeft} className='text-muted-foreground' />
                 </Pressable>
                 <CardTitle className='flex-1 text-xl'>
                   <Trans>Reset Password</Trans>
@@ -125,7 +126,6 @@ export default function ForgotPassword() {
                         keyboardType='email-address'
                         autoComplete='email'
                         autoCapitalize='none'
-                        onFocus={onEmailFocus}
                         returnKeyType='send'
                         onSubmitEditing={handleSubmit(onSubmit)}
                         submitBehavior='submit'
@@ -137,10 +137,14 @@ export default function ForgotPassword() {
                   <Button
                     className='w-full'
                     onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting}
+                    loading={forgotPasswordMutation.isPending}
                   >
                     <Text>
-                      <Trans>Send Reset Email</Trans>
+                      {forgotPasswordMutation.isPending ? (
+                        <Trans>Sending...</Trans>
+                      ) : (
+                        <Trans>Send Reset Email</Trans>
+                      )}
                     </Text>
                   </Button>
                 </View>
