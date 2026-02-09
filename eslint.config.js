@@ -7,6 +7,12 @@ module.exports = defineConfig([
   expoConfig,
   linguiPlugin.configs['flat/recommended'],
   {
-    ignores: ['dist/*'],
+    ignores: [
+      'node_modules/**',
+      '.expo/**',
+      'dist/**',
+      'web-build/**',
+      'expo-env.d.ts',
+    ],
   },
 ])
