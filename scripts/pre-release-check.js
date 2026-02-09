@@ -55,20 +55,28 @@ check('Linting passes', () => {
   execSync('npm run lint -- --max-warnings=0', { stdio: 'pipe' })
 })
 
-// Check 4: Git tag doesn't already exist
-check('Git tag does not already exist', () => {
+// Check 4: Current commit is not already released
+// It's normal for the previous release tag (e.g. v1.1.0) to exist.
+// We only want to block if HEAD is already at the current version tag.
+check('HEAD is not already tagged as current version', () => {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
   const version = packageJson.version
   const tag = `v${version}`
 
+  let tagCommit = ''
   try {
-    execSync(`git rev-parse -q --verify "refs/tags/${tag}"`, { stdio: 'pipe' })
-    throw new Error(`Tag ${tag} already exists. Please bump the version first.`)
+    tagCommit = execSync(`git rev-list -n 1 "${tag}"`, {
+      encoding: 'utf8',
+    }).trim()
   } catch (error) {
-    // Tag doesn't exist, which is what we want
-    if (error.status !== 1) {
-      throw error
-    }
+    // Tag doesn't exist yet (fine for a first release of this version)
+    if (error.status === 128) return
+    throw error
+  }
+
+  const headCommit = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim()
+  if (tagCommit && tagCommit === headCommit) {
+    throw new Error(`HEAD is already at ${tag}. Nothing to release.`)
   }
 })
 
