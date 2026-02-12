@@ -6,27 +6,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DailyMood Journal – Legal</title>
   <meta name="robots" content="index,follow" />
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
   <div class="wrap">
     <header>
       <div class="app">
-        <strong>DailyMood Journal</strong>
-        <span>Legal pages</span>
+        <img src="icon.png" alt="" class="app-icon" width="40" height="40" />
+        <div class="app-text">
+          <strong>DailyMood Journal</strong>
+          <span>Private notes and mood journaling</span>
+        </div>
       </div>
       <nav>
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms of Service</a>
+        <a href="./">Home</a>
+        <a href="./privacy/">Privacy Policy</a>
+        <a href="./terms/">Terms of Service</a>
       </nav>
     </header>
 
-    <main>
-      <h1>Legal</h1>
-      <p class="meta">
-        Use the links above to view the Privacy Policy and Terms of Service.
-      </p>
+    <main class="landing">
+      <section class="hero">
+        <div class="hero-accent" aria-hidden="true"></div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>DailyMood Journal</h1>
+            <p class="meta">
+              Notes and a bit of mood tracking, without the clutter. You write;
+              the app keeps it in one place and lets you search when you need it.
+            </p>
+            <aside class="hero-note">
+              <p>Your data stays in your account. No ads. Privacy and terms are linked below so you can read them anytime.</p>
+            </aside>
+          </div>
+          <div class="hero-image">
+            <img src="icon.png" alt="" class="hero-icon" width="160" height="160" />
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-section">
+        <h2>In the app</h2>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Notes</h3>
+            <p>Add and edit notes on your phone. Title, body, and an optional mood per entry.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Search</h3>
+            <p>Find entries by what you wrote, not just the date.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Mood</h3>
+            <p>Tag entries with a mood so you can look back at how things felt.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Trash</h3>
+            <p>Deleted notes go to trash. Restore or permanently remove them when you want.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="feature-section">
+        <h2>Settings and sign-in</h2>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Themes</h3>
+            <p>Pick a theme that fits your screen. Light and dark are both supported.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Language</h3>
+            <p>English and Russian. You can switch in settings.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Email sign-in</h3>
+            <p>Sign up with email and password. Verification and password reset are available.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Google</h3>
+            <p>You can also sign in with a Google account.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="feature-section legal-section">
+        <h2>Privacy and terms</h2>
+        <p class="legal-intro">
+          How we handle data and what you agree to when using the app are spelled out in the policy and terms. No fine-print surprises.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="./privacy/">Privacy Policy</a>
+          <a class="btn btn-secondary" href="./terms/">Terms of Service</a>
+        </div>
+      </section>
     </main>
 
     <footer>© DailyMood Journal</footer>

@@ -34,6 +34,10 @@ try {
   console.log('\n🔄 Syncing version to app.json...')
   execSync('node scripts/version-sync.js', { stdio: 'inherit' })
 
+  // Sync legal static pages from app legal source files
+  console.log('\n⚖️ Generating legal-site pages...')
+  execSync('node scripts/generate-legal-site.js', { stdio: 'inherit' })
+
   // Read new version
   const newPackageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
   const newVersion = newPackageJson.version
