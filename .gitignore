@@ -48,7 +48,7 @@ GoogleService-Info.plist
 google-services.json
 
 # legal-site (sitemap generated when LEGAL_SITE_URL is set)
-legal-site/sitemap.xml
+# legal-site/sitemap.xml
 
 # cursor
 .cursor/mcp.json
