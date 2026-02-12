@@ -19,6 +19,13 @@ const PRIVACY_OUTPUT_PATH = path.join(
   'privacy',
   'index.html'
 )
+const ROBOTS_PATH = path.join(ROOT_DIR, 'legal-site', 'robots.txt')
+const SITEMAP_PATH = path.join(ROOT_DIR, 'legal-site', 'sitemap.xml')
+
+// Base URL for canonical, og:url, sitemap. Override with LEGAL_SITE_URL if needed.
+const SITE_URL = (
+  process.env.LEGAL_SITE_URL || 'https://dailymood-journal.vercel.app'
+).replace(/\/$/, '')
 
 function escapeHtml(value) {
   return value
@@ -184,6 +191,8 @@ function renderLegalPage({
   pageTitle,
   subtitle,
   lastUpdated,
+  description,
+  canonicalPath,
   sections,
   assetPrefix,
   homeHref,
@@ -202,14 +211,41 @@ function renderLegalPage({
     })
     .join('\n\n')
 
+  const canonicalUrl = SITE_URL ? `${SITE_URL}${canonicalPath}` : ''
+  const ogImageUrl = SITE_URL ? `${SITE_URL}/icon.png` : ''
+  const metaDescription = escapeHtml(description)
+  const metaTitle = `DailyMood Journal - ${pageTitle}`
+
+  const seoMeta = [
+    `<meta name="description" content="${metaDescription}" />`,
+    canonicalUrl
+      ? `<link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`
+      : '',
+    canonicalUrl
+      ? `<meta property="og:url" content="${escapeHtml(canonicalUrl)}" />`
+      : '',
+    `<meta property="og:title" content="${escapeHtml(metaTitle)}" />`,
+    `<meta property="og:description" content="${metaDescription}" />`,
+    `<meta property="og:type" content="website" />`,
+    ogImageUrl
+      ? `<meta property="og:image" content="${escapeHtml(ogImageUrl)}" />`
+      : '',
+    `<meta name="twitter:card" content="summary" />`,
+    `<meta name="twitter:title" content="${escapeHtml(metaTitle)}" />`,
+    `<meta name="twitter:description" content="${metaDescription}" />`,
+  ]
+    .filter(Boolean)
+    .join('\n  ')
+
   return `<!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DailyMood Journal - ${escapeHtml(pageTitle)}</title>
+  <title>${escapeHtml(metaTitle)}</title>
   <meta name="robots" content="index,follow" />
+  ${seoMeta}
   <link rel="icon" href="${escapeHtml(assetPrefix)}favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="${escapeHtml(assetPrefix)}styles.css" />
 </head>
@@ -279,6 +315,9 @@ function generateLegalSite() {
     pageTitle: 'Terms of Service',
     subtitle: 'Terms of Service',
     lastUpdated: termsLastUpdated,
+    description:
+      'Terms of Service for DailyMood Journal. Read the terms governing your use of the app and related services.',
+    canonicalPath: '/terms/',
     sections: termsSections,
     assetPrefix: '../',
     homeHref: '../',
@@ -290,6 +329,9 @@ function generateLegalSite() {
     pageTitle: 'Privacy Policy',
     subtitle: 'Privacy Policy',
     lastUpdated: privacyLastUpdated,
+    description:
+      'Privacy Policy for DailyMood Journal. How we collect, use, and protect your data when you use the app.',
+    canonicalPath: '/privacy/',
     sections: privacySections,
     assetPrefix: '../',
     homeHref: '../',
@@ -299,6 +341,40 @@ function generateLegalSite() {
 
   writeFile(TERMS_OUTPUT_PATH, termsHtml)
   writeFile(PRIVACY_OUTPUT_PATH, privacyHtml)
+
+  // Sitemap (absolute URLs only when SITE_URL is set)
+  if (SITE_URL) {
+    const today = new Date().toISOString().slice(0, 10)
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${SITE_URL}/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/privacy/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/terms/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
+`
+    writeFile(SITEMAP_PATH, sitemap)
+    const robotsContent = `User-agent: *
+Allow: /
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`
+    writeFile(ROBOTS_PATH, robotsContent)
+  }
 }
 
 try {
