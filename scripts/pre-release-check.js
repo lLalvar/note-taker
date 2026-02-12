@@ -80,16 +80,17 @@ check('HEAD is not already tagged as current version', () => {
   }
 })
 
-// Check 5: On correct branch (releases only from main)
-check('On release branch (main)', () => {
+// Check 5: On correct branch (main or release/* for protected-main workflow)
+check('On release branch (main or release/*)', () => {
   const branch = execSync('git rev-parse --abbrev-ref HEAD', {
     encoding: 'utf8',
   }).trim()
-  const allowedBranches = ['main', 'master']
-  if (!allowedBranches.includes(branch)) {
+  const isAllowed =
+    branch === 'main' || branch === 'master' || branch.startsWith('release/')
+  if (!isAllowed) {
     throw new Error(
-      `Releases must be created from main branch. Current branch: ${branch}\n` +
-        `   Workflow: dev → stage → main (then release)`
+      `Releases must be created from main or release/* branch. Current branch: ${branch}\n` +
+        `   Workflow: dev -> stage -> main -> release/* PR`
     )
   }
 })

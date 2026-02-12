@@ -4,303 +4,180 @@
 
 This project uses a three-branch workflow:
 
-- **`dev`** - Development branch (where all new work happens)
-- **`stage`** - Staging/testing branch (pre-production testing)
-- **`main`** - Production branch (released code)
+- **`dev`** - Development branch (daily feature and fix work)
+- **`stage`** - Staging branch (QA and pre-production validation)
+- **`main`** - Production branch (protected and PR-only)
 
 ## 📊 Branch Flow
 
-```
-dev → stage → main
- ↑      ↑      ↑
- │      │      │
- │      │      └─ Production releases
- │      └─ Pre-production testing
- └─ Active development
+```text
+feature/* -> dev -> stage -> main -> release/*
 ```
 
-## 🔄 Workflow
+Notes:
 
-### 1. Development (`dev` branch)
+- `main` is protected and should only be updated via pull requests.
+- Promotion between long-lived branches is also done via pull requests.
 
-**Purpose**: Active development, feature work, bug fixes
+## 🔄 Standard Workflow
 
-**Workflow**:
+### 1) Development (`dev`)
 
 ```bash
-# Start working on dev branch
 git checkout dev
 git pull origin dev
-
-# Create feature branch from dev
 git checkout -b feature/my-feature
-
-# Make changes and commit
+# ... make changes ...
 git add .
-npm run commit  # or git commit -m "feat: ..."
-
-# Push feature branch
-git push origin feature/my-feature
-
-# Create PR: feature/my-feature → dev
-# After PR approval, merge to dev
+npm run commit
+git push -u origin feature/my-feature
+# Open PR: feature/my-feature -> dev
 ```
 
-**Rules**:
+Rules:
 
-- ✅ All new features start here
-- ✅ All bug fixes start here
-- ✅ Commit often with conventional commits
-- ✅ Create feature branches from `dev`
-- ❌ Don't run releases here
+- ✅ Start all features/fixes from `dev`
+- ✅ Keep commits small and conventional
+- ✅ Use PRs into `dev`
+- ❌ Do not run releases from `dev`
 
-### 2. Staging (`stage` branch)
-
-**Purpose**: Pre-production testing, QA, final validation
-
-**Workflow**:
+### 2) Staging Promotion (`dev` -> `stage`)
 
 ```bash
-# When dev is stable, merge to stage
-git checkout stage
-git pull origin stage
-git merge dev
-git push origin stage
-
-# Test on stage environment
-# Fix any issues found during testing
-# Merge fixes back to dev first, then to stage
-```
-
-**Rules**:
-
-- ✅ Merge from `dev` when features are ready for testing
-- ✅ Use for QA and pre-production validation
-- ✅ Fix critical bugs found during testing
-- ❌ Don't develop new features here
-- ❌ Don't run releases here
-
-### 3. Production (`main` branch)
-
-**Purpose**: Production-ready, released code
-
-**Workflow**:
-
-```bash
-# When stage is tested and approved, release to main
-git checkout main
-git pull origin main
-git merge stage
-
-# Create release
-npm run release
-
-# Push release
-git push --follow-tags origin main
-```
-
-**Rules**:
-
-- ✅ Only merge from `stage` after testing
-- ✅ Always run `npm run release` before merging to main
-- ✅ Releases happen here
-- ✅ Tags are created here
-- ❌ Never commit directly to main
-- ❌ Never merge dev directly to main
-
-## 🚀 Release Process
-
-### Standard Release Flow
-
-```bash
-# 1. Ensure dev is stable
 git checkout dev
 git pull origin dev
-
-# 2. Merge dev → stage
-git checkout stage
-git pull origin stage
-git merge dev
-git push origin stage
-
-# 3. Test on stage (QA, manual testing, etc.)
-
-# 4. If tests pass, merge stage → main
-git checkout main
-git pull origin main
-git merge stage
-
-# 5. Create release (bumps version, creates tag, updates CHANGELOG)
-npm run release
-
-# 6. Push release
-git push --follow-tags origin main
-
-# 7. Create GitHub release (optional)
-# Go to GitHub → Releases → Create new release → Use tag v1.x.x
+git checkout -b promote/dev-to-stage
+git push -u origin promote/dev-to-stage
+# Open PR: promote/dev-to-stage -> stage
 ```
 
-### Hotfix Flow (Critical Production Fix)
+Rules:
+
+- ✅ Promote tested `dev` content into `stage` by PR
+- ✅ Validate QA/UAT on `stage`
+- ❌ Do not add unrelated feature work directly on `stage`
+
+### 3) Production Promotion (`stage` -> `main`)
 
 ```bash
-# 1. Create hotfix branch from main
+git checkout stage
+git pull origin stage
+git checkout -b promote/stage-to-main
+git push -u origin promote/stage-to-main
+# Open PR: promote/stage-to-main -> main
+```
+
+Rules:
+
+- ✅ Only promote to `main` from `stage`
+- ✅ Require review + status checks
+- ❌ Never push directly to `main`
+
+## 🚀 Release Process (Protected `main`)
+
+Because `main` is protected, release commits are prepared on a release branch and merged by PR.
+
+```bash
+# 1) Start from latest main
+git checkout main
+git pull origin main
+
+# 2) Create release branch
+git checkout -b release/vX.Y.Z
+
+# 3) Create release commit (version + changelog)
+npm run release
+
+# 4) Push release branch and open PR to main
+git push -u origin release/vX.Y.Z
+# Open PR: release/vX.Y.Z -> main
+
+# 5) After PR merge, create/push tag from updated main
+git checkout main
+git pull origin main
+git tag -a vX.Y.Z -m "chore(release): vX.Y.Z"
+git push origin vX.Y.Z
+```
+
+Important:
+
+- `npm run release` now prepares the release commit but does **not** create the tag.
+- Tag only after the release PR is merged to keep tag and `main` aligned.
+
+## 🔥 Hotfix Flow
+
+```bash
+# 1) Branch from main
 git checkout main
 git pull origin main
 git checkout -b hotfix/critical-bug
 
-# 2. Fix the bug
+# 2) Fix and commit
 git add .
-npm run commit  # Use "fix:" type
+npm run commit
+git push -u origin hotfix/critical-bug
 
-# 3. Merge hotfix → main
-git checkout main
-git merge hotfix/critical-bug
+# 3) Open PR to main and merge after review
+# Open PR: hotfix/critical-bug -> main
 
-# 4. Create release
-npm run release
-git push --follow-tags origin main
-
-# 5. Merge hotfix back to dev and stage
-git checkout dev
-git merge hotfix/critical-bug
-git push origin dev
-
-git checkout stage
-git merge hotfix/critical-bug
-git push origin stage
-
-# 6. Delete hotfix branch
-git branch -d hotfix/critical-bug
+# 4) Back-merge hotfix to dev and stage via PRs
+# Open PR: hotfix/critical-bug -> dev
+# Open PR: hotfix/critical-bug -> stage
 ```
 
-## 📋 Branch Protection Rules (Recommended)
+## 📋 Branch Protection Recommendations
 
-Set up on GitHub:
+### `main` (strict)
 
-### `main` branch:
-
-- ✅ Require pull request reviews
-- ✅ Require status checks to pass
+- ✅ Require pull request before merging
+- ✅ Require at least 1 approval
+- ✅ Require status checks
 - ✅ Require branches to be up to date
-- ✅ Prevent force pushes
-- ✅ Require linear history
+- ✅ Include administrators
+- ✅ Block force pushes
+- ✅ Do not allow bypassing rules
 
-### `stage` branch:
+### `stage` (moderate)
 
-- ✅ Require pull request reviews
-- ✅ Require status checks to pass
-- ⚠️ Allow force pushes (for emergency fixes)
+- ✅ Require pull request before merging
+- ✅ Require status checks
+- ✅ Require branches to be up to date
+- ❌ Do not force push (recommended)
 
-### `dev` branch:
+### `dev` (flexible but safe)
 
-- ⚠️ Require status checks to pass
-- ❌ Allow direct pushes (for rapid development)
+- ✅ Prefer PRs
+- ✅ Require status checks if possible
+- ⚠️ Direct pushes can be allowed for fast iteration if needed
 
-## 🔀 Common Scenarios
+## 📝 Branch Naming
 
-### Scenario 1: Adding a New Feature
-
-```bash
-# 1. Start from dev
-git checkout dev
-git pull origin dev
-
-# 2. Create feature branch
-git checkout -b feature/user-profile
-
-# 3. Develop and commit
-git add .
-npm run commit  # feat(user): add profile page
-
-# 4. Push and create PR: feature/user-profile → dev
-git push origin feature/user-profile
-
-# 5. After PR approval, merge to dev
-# 6. Later, merge dev → stage → main (via release process)
-```
-
-### Scenario 2: Fixing a Bug Found in Stage
-
-```bash
-# 1. Fix in dev first
-git checkout dev
-git checkout -b fix/stage-bug
-# ... fix the bug ...
-git add .
-npm run commit  # fix(ui): resolve button issue
-
-# 2. Merge fix to dev
-git checkout dev
-git merge fix/stage-bug
-git push origin dev
-
-# 3. Merge fix to stage
-git checkout stage
-git merge dev
-git push origin stage
-
-# 4. Test fix on stage
-# 5. If good, proceed with normal release flow
-```
-
-### Scenario 3: Emergency Production Fix
-
-```bash
-# Use hotfix flow (see above)
-# Create hotfix branch from main
-# Fix → main → release
-# Then merge back to dev and stage
-```
-
-## 📝 Branch Naming Conventions
-
-- **`dev`** - Development branch
-- **`stage`** - Staging branch
-- **`main`** - Production branch
-- **`feature/name`** - New features
-- **`fix/name`** - Bug fixes
-- **`hotfix/name`** - Critical production fixes
-- **`chore/name`** - Maintenance tasks
+- `feature/name` - New features
+- `fix/name` - Bug fixes
+- `hotfix/name` - Critical production fixes
+- `release/vX.Y.Z` - Release preparation branch
+- `promote/dev-to-stage` - Promotion PR branch
+- `promote/stage-to-main` - Promotion PR branch
 
 ## ✅ Best Practices
 
-1. **Always merge forward**: dev → stage → main
-2. **Never skip branches**: Don't merge dev directly to main
-3. **Test on stage**: Always test before releasing to main
-4. **Release from main**: Only run `npm run release` on main branch
-5. **Merge hotfixes back**: Always merge hotfixes back to dev and stage
-6. **Keep branches in sync**: Regularly merge main back to dev/stage
-7. **Use PRs**: Always use pull requests for merging between branches
-8. **Conventional commits**: Always use conventional commit format
+1. Use pull requests for all promotions.
+2. Keep flow forward-only: `dev` -> `stage` -> `main`.
+3. Run QA on `stage` before promoting to `main`.
+4. Never push directly to `main`.
+5. Create tags only from merged `main` release commits.
+6. Keep commit messages conventional and descriptive.
 
-## 🚨 Common Mistakes to Avoid
+## 🚨 Common Mistakes
 
-1. ❌ Committing directly to main
-2. ❌ Merging dev directly to main (skip stage)
-3. ❌ Running releases on dev or stage
-4. ❌ Forgetting to merge hotfixes back to dev/stage
-5. ❌ Creating tags on wrong branch
-6. ❌ Force pushing to main
-7. ❌ Merging without testing on stage first
-
-## 🔄 Syncing Branches
-
-Periodically sync branches to keep them up to date:
-
-```bash
-# Sync main → dev (to get hotfixes)
-git checkout dev
-git merge main
-git push origin dev
-
-# Sync main → stage (to get hotfixes)
-git checkout stage
-git merge main
-git push origin stage
-```
+1. Direct push to `main`
+2. Skipping `stage` promotion
+3. Running releases from `dev` or `stage`
+4. Creating tags before release PR merge
+5. Mixing feature work into promotion/release branches
 
 ## 📚 Additional Resources
 
-- See `RELEASE_GUIDE.md` for release process details
-- See `CONTRIBUTING.md` for commit conventions
-- See `VERSIONING.md` for version management
+- See `RELEASE_GUIDE.md` for release details
+- See `CONTRIBUTING.md` for commit rules
+- See `VERSIONING.md` for SemVer behavior

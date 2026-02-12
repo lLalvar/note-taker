@@ -6,7 +6,7 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 
 ### Commit Message Format
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -43,13 +43,13 @@ Examples:
 - Use imperative, present tense: "change" not "changed" nor "changes"
 - Don't capitalize the first letter
 - No period (.) at the end
-- Maximum 72 characters
+- Maximum 150 characters
 
 ### Body (Optional)
 
 - Use imperative, present tense
 - Include motivation for the change and contrasts with previous behavior
-- Wrap at 72 characters
+- Maximum 200 characters per line
 
 ### Footer (Optional)
 
@@ -58,7 +58,7 @@ Examples:
 
 ### Examples
 
-```
+```text
 feat(auth): add email verification flow
 
 Implement email verification after user registration.
@@ -67,7 +67,7 @@ Includes resend verification email functionality.
 Closes #42
 ```
 
-```
+```text
 fix(ui): resolve button text overflow on small screens
 
 The button component was not handling long text properly
@@ -76,7 +76,7 @@ on devices with small screen widths.
 Fixes #38
 ```
 
-```
+```text
 chore: update dependencies
 
 Update React Native to latest patch version and
@@ -130,8 +130,8 @@ These commands will sync the version in both `package.json` and `app.json`.
 
 ### Creating a Release
 
-1. Ensure all changes are committed
-2. Run the release script:
+1. Ensure all changes are committed.
+1. Run the release script:
 
 ```bash
 npm run release
@@ -142,23 +142,33 @@ This will:
 - Analyze commits since last release
 - Bump version according to conventional commits
 - Generate/update CHANGELOG.md
-- Create a git tag
 - Create a commit with the version bump
+- Sync app.json version/build numbers
 
-3. Review the changes:
+1. Review the changes:
 
 ```bash
 git log --oneline -5
 git show
 ```
 
-4. Push to remote:
+1. Push release branch and open PR:
 
 ```bash
-git push --follow-tags origin main
+git push -u origin release/vX.Y.Z
 ```
 
-5. Create a GitHub release using the generated CHANGELOG notes
+1. Open PR: `release/vX.Y.Z` -> `main`.
+1. After PR merge, create and push tag from latest `main`:
+
+```bash
+git checkout main
+git pull origin main
+git tag -a vX.Y.Z -m "chore(release): vX.Y.Z"
+git push origin vX.Y.Z
+```
+
+1. Create a GitHub release using the generated CHANGELOG notes.
 
 ### Pre-release Checklist
 
@@ -175,14 +185,14 @@ Checks include:
 - [ ] No uncommitted changes
 - [ ] Versions are in sync between package.json and app.json
 - [ ] Git tag doesn't already exist
-- [ ] On correct branch (main/master/develop)
+- [ ] On correct branch (`main` for release start, then `release/*`)
 - [ ] CHANGELOG reviewed
 - [ ] Build numbers are correct (iOS buildNumber, Android versionCode)
 
 ## Branch Naming Conventions
 
 - **main**: Production-ready code
-- **develop**: Integration branch for features
+- **dev**: Integration branch for features
 - **feature/**: New features (e.g., `feature/user-profile`)
 - **fix/**: Bug fixes (e.g., `fix/login-error`)
 - **hotfix/**: Critical production fixes (e.g., `hotfix/security-patch`)
@@ -216,7 +226,7 @@ Checks include:
 
 - Always tag releases: `git tag v1.0.0`
 - Use semantic versioning: `vMAJOR.MINOR.PATCH`
-- Push tags: `git push --follow-tags`
+- Push tags explicitly: `git push origin vX.Y.Z`
 
 ### CHANGELOG Maintenance
 
@@ -232,7 +242,7 @@ Checks include:
 
 Example:
 
-```
+```text
 feat(api): change authentication method
 
 BREAKING CHANGE: Authentication now requires OAuth2 instead of
@@ -293,7 +303,7 @@ Automatically validates commit message format:
 - Ensures proper type, scope, and subject format
 - Prevents commits with invalid messages
 
-## Additional Best Practices
+## Workflow and Troubleshooting Tips
 
 ### Git Workflow
 
@@ -307,17 +317,18 @@ Automatically validates commit message format:
 
 - **Be specific**: `fix(auth): resolve login crash` not `fix: bug`
 - **Use scopes**: Helps organize changes (`feat(auth)`, `fix(ui)`, `refactor(store)`)
-- **Keep it short**: Subject line should be under 72 characters
+- **Keep it clear**: Subject line should be under 150 characters
 - **Explain why**: Use body for complex changes
 - **Reference issues**: Use footer for `Closes #123` or `Fixes #456`
 
 ### Release Workflow
 
 1. **Ensure clean state**: All changes committed, no uncommitted files
-2. **Run release**: `npm run release`
-3. **Review changes**: Check CHANGELOG.md and version updates
-4. **Push**: `git push --follow-tags origin main`
-5. **Create GitHub release**: Use CHANGELOG notes
+2. **Create release branch**: `git checkout -b release/vX.Y.Z` from latest `main`
+3. **Run release**: `npm run release` (creates release commit, no tag yet)
+4. **Push branch + open PR**: `release/vX.Y.Z` -> `main`
+5. **After merge, tag main**: `git tag -a vX.Y.Z -m "chore(release): vX.Y.Z" && git push origin vX.Y.Z`
+6. **Create GitHub release**: Use CHANGELOG notes
 
 ### Branch Protection (Recommended)
 
@@ -331,8 +342,8 @@ Set up branch protection rules on GitHub:
 ### Tag Management
 
 - **Format**: Always use `v` prefix: `v1.2.3`
-- **Annotated tags**: Standard-version creates annotated tags automatically
-- **Push tags**: Use `--follow-tags` to push tags with commits
+- **Annotated tags**: Create annotated tags after release PR merge
+- **Push tags**: Push explicit tag names (for example `git push origin v1.2.3`)
 - **Don't delete tags**: Tags are immutable, create new version instead
 
 ### CHANGELOG Best Practices
