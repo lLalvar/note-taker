@@ -2,7 +2,6 @@
 
 This folder is a tiny static site intended for App Store / Google Play “Privacy Policy URL” and “Terms URL”.
 The Privacy and Terms pages are generated from the app's legal source files in `lib/legal/`.
-The Privacy and Terms pages are generated from the app's legal source files in `lib/legal/`.
 
 ## Pages
 
@@ -37,16 +36,3 @@ When `LEGAL_SITE_URL` is set, the script generates `sitemap.xml` and updates `ro
 - **sitemap.xml** – Generated when `LEGAL_SITE_URL` is set. Lists `/`, `/privacy/`, `/terms/`.
 - **Meta** – Each page has `description`, `canonical` (when URL set), Open Graph and Twitter Card tags.
 - **Landing (index.html)** – Replace `YOUR_DOMAIN` in the canonical and og meta tags with your live domain (e.g. `legal.yourdomain.com`), or run the generator with `LEGAL_SITE_URL` and consider generating the landing from the script if you want it automated.
-
-## Source of truth
-
-- `lib/legal/privacy.ts`
-- `lib/legal/terms.ts`
-
-## Generate pages
-
-From the project root:
-
-```bash
-npm run legal:build
-```
