@@ -4,11 +4,11 @@
 
 - **`dev`** - Development (active work)
 - **`stage`** - Staging/testing (pre-production)
-- **`main`** - Production (released code)
+- **`main`** - Production (protected, PR-only)
 
-## 🔄 Daily Workflow
+## 🔄 Daily Workflow (PR-Only)
 
-### Working on Features
+### 1) Work on Features
 
 ```bash
 git checkout dev
@@ -16,58 +16,59 @@ git pull origin dev
 git checkout -b feature/my-feature
 # ... make changes ...
 npm run commit
-git push origin feature/my-feature
-# Create PR: feature/my-feature → dev
+git push -u origin feature/my-feature
+# Open PR: feature/my-feature -> dev
 ```
 
-### Moving to Staging
+### 2) Promote to Stage
 
 ```bash
-git checkout stage
-git pull origin stage
-git merge dev
-git push origin stage
-# Test on stage environment
-```
-
-### Releasing to Production
-
-```bash
-git checkout main
-git pull origin main
-git merge stage
-npm run release
-git push --follow-tags origin main
-```
-
-## ⚡ Quick Commands
-
-```bash
-# Switch branches
 git checkout dev
-git checkout stage
-git checkout main
-
-# See current branch
-git branch
-
-# See all branches
-git branch -a
-
-# Update branch from remote
 git pull origin dev
+git checkout -b promote/dev-to-stage
+git push -u origin promote/dev-to-stage
+# Open PR: promote/dev-to-stage -> stage
+```
+
+### 3) Promote to Main
+
+```bash
+git checkout stage
 git pull origin stage
+git checkout -b promote/stage-to-main
+git push -u origin promote/stage-to-main
+# Open PR: promote/stage-to-main -> main
+```
+
+## 🚀 Release (Protected Main)
+
+```bash
+# Start from latest main after promotion PR is merged
+git checkout main
 git pull origin main
+git checkout -b release/vX.Y.Z
+
+# Bump version + changelog + release commit (no tag yet)
+npm run release
+
+git push -u origin release/vX.Y.Z
+# Open PR: release/vX.Y.Z -> main
+
+# After PR merge:
+git checkout main
+git pull origin main
+git tag -a vX.Y.Z -m "chore(release): vX.Y.Z"
+git push origin vX.Y.Z
 ```
 
 ## 🚨 Important Rules
 
-- ✅ Develop on `dev`
-- ✅ Test on `stage`
-- ✅ Release from `main` only
+- ✅ Use PRs for all protected branches (`stage`, `main`)
+- ✅ Develop from `dev`, test on `stage`, release from `main`
+- ✅ Run `npm run release` only on `release/*` branches
 - ❌ Never commit directly to `main`
-- ❌ Never run `npm run release` on dev/stage
-- ❌ Never skip branches (dev → main)
+- ❌ Never push directly to `main`
+- ❌ Never skip promotion (`dev` -> `stage` -> `main`)
 
 ## 📚 Full Guide
 

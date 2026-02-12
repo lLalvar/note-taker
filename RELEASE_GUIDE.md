@@ -4,7 +4,7 @@
 
 ### Commit Message Format
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -12,167 +12,130 @@
 <footer>
 ```
 
-**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
-### Version Bumping Rules
+### Version Bump Rules
 
-- `feat:` → MINOR (1.0.0 → 1.1.0)
-- `fix:` → PATCH (1.0.0 → 1.0.1)
-- `BREAKING CHANGE:` → MAJOR (1.0.0 → 2.0.0)
+- `BREAKING CHANGE:` -> MAJOR (`1.0.0` -> `2.0.0`)
+- `feat:` -> MINOR (`1.0.0` -> `1.1.0`)
+- `fix:` -> PATCH (`1.0.0` -> `1.0.1`)
 
-## Workflow Examples
+If a commit includes `BREAKING CHANGE:`, it triggers a MAJOR bump even when the type is `feat` or `fix`.
 
-### Making a Feature Commit
+## Correct Release Flow (Protected `main`)
 
-```bash
-# Option 1: Use Commitizen (recommended)
-npm run commit
+This repository protects `main`, so releases are created with a PR workflow.
 
-# Option 2: Manual commit
-git commit -m "feat(auth): add password reset functionality"
-```
-
-### Creating a Release
+### Step-by-step
 
 ```bash
-# 1. Ensure all changes are committed
-git status
+# 1) Ensure main is up to date
+git checkout main
+git pull origin main
 
-# 2. Run release script
+# 2) Create release branch
+git checkout -b release/vX.Y.Z
+
+# 3) Run release automation
+# - runs pre-release checks
+# - bumps package.json version
+# - updates CHANGELOG.md
+# - syncs app.json version/build numbers
+# - creates a release commit
+# - does NOT create/push tag yet
 npm run release
 
-# 3. Review changes
+# 4) Review release commit
 git log --oneline -5
 git show
 
-# 4. Push to remote
-git push --follow-tags origin main
+# 5) Push release branch and open PR to main
+git push -u origin release/vX.Y.Z
+# PR: release/vX.Y.Z -> main
+
+# 6) After PR merge, tag from latest main
+git checkout main
+git pull origin main
+git tag -a vX.Y.Z -m "chore(release): vX.Y.Z"
+git push origin vX.Y.Z
 ```
 
-### Manual Version Bump
+### Why this is correct
+
+- `main` stays protected (no direct pushes).
+- Release changes still go through review and checks.
+- Tag points to the final commit on `main`.
+
+## Manual Version Bumps (No Full Release)
 
 ```bash
-# Patch version (bug fixes)
 npm run version:patch
-
-# Minor version (new features)
 npm run version:minor
-
-# Major version (breaking changes)
 npm run version:major
 ```
 
-## Common Scenarios
-
-### Scenario 1: Adding a New Feature
-
-```bash
-# Make your changes
-git add .
-npm run commit  # Select "feat" type
-# Push
-git push
-```
-
-### Scenario 2: Fixing a Bug
-
-```bash
-# Make your changes
-git add .
-npm run commit  # Select "fix" type
-# Push
-git push
-```
-
-### Scenario 3: Preparing a Release
-
-```bash
-# Ensure all commits follow conventional format
-git log --oneline
-
-# Run release
-npm run release
-
-# Review CHANGELOG.md
-cat CHANGELOG.md
-
-# Push release
-git push --follow-tags origin main
-```
-
-### Scenario 4: Breaking Change
-
-```bash
-# Make breaking changes
-git add .
-git commit -m "feat(api): change authentication method
-
-BREAKING CHANGE: Authentication now requires OAuth2 instead of basic auth.
-Update your API calls to use the new OAuth2 flow."
-```
+These sync `package.json` and `app.json`, but do not update `CHANGELOG.md` like full release flow.
 
 ## Best Practices Checklist
 
-### Before Committing
+### Before release
 
-- [ ] Code follows project conventions
-- [ ] Tests pass (if applicable)
-- [ ] Linting passes
-- [ ] Commit message follows conventional format
+- [ ] `stage` has already been promoted to `main`
+- [ ] Working tree is clean (`git status`)
+- [ ] Commits follow Conventional Commits
+- [ ] Lint/checks pass
+- [ ] You are releasing from a `release/*` branch
 
-### Before Releasing
+### After release PR merge
 
-- [ ] All commits follow conventional format
-- [ ] Version numbers are correct
-- [ ] CHANGELOG is accurate
-- [ ] All tests pass
-- [ ] No uncommitted changes
-
-### After Releasing
-
-- [ ] Git tag created correctly
-- [ ] CHANGELOG updated
-- [ ] Version synced in package.json and app.json
-- [ ] GitHub release created (if applicable)
+- [ ] Tag created from latest `main`
+- [ ] Tag pushed (`git push origin vX.Y.Z`)
+- [ ] Optional GitHub Release created from tag
 
 ## Troubleshooting
 
-### Commit Message Rejected
+### Commit message rejected
 
-If your commit message is rejected by commitlint:
+- Use `npm run commit` for guided Conventional Commit format.
+- Ensure header and body lengths follow project limits.
 
-```bash
-# Check the error message
-git commit -m "your message"
-
-# Use Commitizen for guided commit
-npm run commit
-
-# Or fix manually following the format:
-# <type>(<scope>): <subject>
-```
-
-### Version Sync Issues
-
-If versions are out of sync:
+### Version sync issue
 
 ```bash
-# Manually sync versions
 node scripts/version-sync.js
 ```
 
-### Release Script Fails
+### Release script fails
 
-If release script fails:
-
-1. Check for uncommitted changes: `git status`
-2. Ensure you're on the correct branch
-3. Check git log for non-conventional commits
-4. Review error message for specific issues
+1. Check `git status` for uncommitted changes.
+2. Confirm you are on `main` or `release/*`.
+3. Run `npm run pre-release` for detailed failures.
+4. Verify recent commits are conventional.
 
 ## Additional Resources
 
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Semantic Versioning](https://semver.org/)
-- [Keep a Changelog](https://keepachangelog.com/)
-- See `CONTRIBUTING.md` for detailed guidelines
+- See `CONTRIBUTING.md` for team workflow
+
+## Optional: Create GitHub Release From Tag
+
+A Git tag (`vX.Y.Z`) is the version marker in Git history. A GitHub Release is a published release page that points to that tag and includes release notes.
+
+### Option A: GitHub UI
+
+1. Go to your repository on GitHub.
+2. Open **Releases**.
+3. Click **Draft a new release**.
+4. Select existing tag `vX.Y.Z`.
+5. Set title to `vX.Y.Z`.
+6. Paste release notes (usually from `CHANGELOG.md`).
+7. Click **Publish release**.
+
+### Option B: GitHub CLI (optional)
+
+```bash
+gh release create vX.Y.Z --title "vX.Y.Z" --notes-file CHANGELOG.md
+```
+
+Use this only after the tag is already pushed (`git push origin vX.Y.Z`).

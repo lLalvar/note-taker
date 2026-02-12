@@ -53,13 +53,13 @@ npm run pre-release
 
 ### ✅ Release Automation
 
-- **Standard-version**: Bumps version, generates CHANGELOG, creates tags
+- **Standard-version**: Bumps version and generates CHANGELOG
 - **Pre-release checks**: Validates before release
 - **CHANGELOG generation**: Auto-generated from commits
 
 ## Commit Message Format
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -114,11 +114,13 @@ Build numbers are automatically calculated from semantic version:
 ## Release Process
 
 1. **Ensure clean state**: All changes committed
-2. **Run release**: `npm run release`
-3. **Review**: Check CHANGELOG.md and version updates
-4. **Commit sync** (if needed): `git add app.json && git commit --amend --no-edit`
-5. **Push**: `git push --follow-tags origin main`
-6. **Create GitHub release**: Use CHANGELOG notes
+2. **Create release branch**: `git checkout -b release/vX.Y.Z` from latest `main`
+3. **Run release**: `npm run release` (creates release commit, no tag yet)
+4. **Review**: Check CHANGELOG.md and version updates
+5. **Push branch**: `git push -u origin release/vX.Y.Z`
+6. **Open PR**: `release/vX.Y.Z` -> `main`
+7. **After merge, tag from main**: `git tag -a vX.Y.Z -m "chore(release): vX.Y.Z" && git push origin vX.Y.Z`
+8. **Create GitHub release**: Use CHANGELOG notes
 
 ## Best Practices
 
@@ -128,7 +130,7 @@ Build numbers are automatically calculated from semantic version:
 4. ✅ Use scopes to organize commits
 5. ✅ Never skip git hooks (`--no-verify`)
 6. ✅ Review CHANGELOG before release
-7. ✅ Always push tags with `--follow-tags`
+7. ✅ Push tags explicitly (for example `git push origin v1.2.3`)
 8. ✅ Never delete or modify existing tags
 
 ## Common Issues
@@ -164,5 +166,5 @@ Build numbers are automatically calculated from semantic version:
 
 - **Detailed Guide**: See `CONTRIBUTING.md`
 - **Versioning Guide**: See `VERSIONING.md`
-- **Conventional Commits**: https://www.conventionalcommits.org/
-- **Semantic Versioning**: https://semver.org/
+- **Conventional Commits**: [https://www.conventionalcommits.org/](https://www.conventionalcommits.org/)
+- **Semantic Versioning**: [https://semver.org/](https://semver.org/)
