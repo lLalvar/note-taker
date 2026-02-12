@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dailymood-journal.vercel.app/sitemap.xml
