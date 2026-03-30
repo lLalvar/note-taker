@@ -8,24 +8,34 @@ import React, {
 } from 'react'
 
 import {
-  ColorBridge,
   type EditorTheme,
   PlaceholderBridge,
   RichText,
   TenTapStartKit,
   Toolbar,
-  useBridgeState,
   useEditorBridge,
 } from '@10play/tentap-editor'
-import { Palette } from 'lucide-react-native'
-import { KeyboardAvoidingView, Platform, Pressable, View } from 'react-native'
+// import { Palette } from 'lucide-react-native'
+import { KeyboardAvoidingView, Platform, View } from 'react-native'
 import { useDebouncedCallback } from 'use-debounce'
 
-import { TextColorPicker } from '@/components/editor/text-color-picker'
-import { BottomSheet } from '@/components/ui/bottom-sheet'
-import { Icon } from '@/components/ui/icon'
+// import { TextColorPicker } from '@/components/editor/text-color-picker'
+// import { BottomSheet } from '@/components/ui/bottom-sheet'
+// import { Icon } from '@/components/ui/icon'
 import { useTheme } from '@/hooks/use-theme'
 import { cn, toHsla } from '@/lib/utils'
+
+/** Strip inline color from HTML so text uses theme foreground (light/dark). */
+function stripColorFromHtml(html: string): string {
+  return html
+    .replace(/style="([^"]*)"/gi, (_, styleContent) => {
+      const newStyle = styleContent
+        .replace(/\bcolor\s*:\s*[^;]+;?\s*/gi, '')
+        .trim()
+      return newStyle ? `style="${newStyle}"` : ''
+    })
+    .replace(/\s*style=""\s*/g, ' ')
+}
 
 interface RichTextEditorProps {
   value?: string
@@ -150,12 +160,13 @@ export const RichTextEditor = forwardRef<
       onChangeRef.current = onChange
     }, [onChange])
 
-    // Debounced callback to get HTML from editor
+    // Debounced callback to get HTML from editor (strip color so text uses theme)
     const handleEditorChange = useDebouncedCallback(() => {
       if (onChangeRef.current) {
         editor.getHTML().then((html) => {
-          lastEmittedHtml.current = html
-          onChangeRef.current?.(html)
+          const stripped = stripColorFromHtml(html)
+          lastEmittedHtml.current = stripped
+          onChangeRef.current?.(stripped)
         })
       }
     }, 300)
@@ -163,7 +174,6 @@ export const RichTextEditor = forwardRef<
     const bridgeExtensions = useMemo(
       () => [
         ...TenTapStartKit,
-        ColorBridge,
         PlaceholderBridge.configureExtension({
           placeholder,
         }),
@@ -180,68 +190,59 @@ export const RichTextEditor = forwardRef<
       onChange: handleEditorChange,
     })
 
-    const editorState = useBridgeState(editor)
-    const colorSheetRef = useRef<React.ComponentRef<typeof BottomSheet>>(null)
-
-    const setDefaultColor = useCallback(() => {
-      if (editable && editor && editorState.activeColor === undefined) {
-        editor.setColor(colors.foreground)
-      }
-    }, [editable, editor, editorState.activeColor, colors.foreground])
-
-    useEffect(() => {
-      if (editable && editor) {
-        const timer = setTimeout(() => {
-          setDefaultColor()
-        }, 100)
-
-        return () => clearTimeout(timer)
-      }
-    }, [editor, editable, setDefaultColor])
-
     useImperativeHandle(ref, () => ({
       blur: () => {
         editor.blur()
       },
     }))
 
+    // Inject theme text color into WebView so content uses foreground (white in dark, black in light)
+    const injectThemeColor = useCallback(() => {
+      if (!editor?.injectCSS) return
+      const css = `
+        .ProseMirror, .ProseMirror * {
+          color: ${colors.foreground} !important;
+        }
+      `
+      editor.injectCSS(css, 'theme-foreground')
+    }, [editor, colors.foreground])
+
+    useEffect(() => {
+      if (!editor?.injectCSS) return
+      const id = setTimeout(injectThemeColor, 300)
+      return () => clearTimeout(id)
+    }, [editor, injectThemeColor])
+
     // Update editor when value prop changes externally (e.g., form reset, loading note)
     useEffect(() => {
       const updateContent = async () => {
-        // Normalize both values for comparison
+        // Normalize and strip color so text always uses theme foreground
         const normalizedValue = value
           ? value.startsWith('<')
             ? value
             : `<p>${value}</p>`
           : ''
+        const valueWithoutColor = stripColorFromHtml(normalizedValue)
 
         // If the value matches what we just emitted, don't update
-        // This prevents the loop where the parent updates the value prop
-        // with the same content we just sent, causing a re-render/reset
-        if (normalizedValue === lastEmittedHtml.current) {
+        if (valueWithoutColor === lastEmittedHtml.current) {
           return
         }
 
-        // Get current editor content
         const currentContent = await editor.getHTML()
-
-        // Only update if actually different
-        if (currentContent !== normalizedValue) {
-          await editor.setContent(normalizedValue)
-
-          setTimeout(() => {
-            setDefaultColor()
-          }, 50)
+        if (currentContent !== valueWithoutColor) {
+          await editor.setContent(valueWithoutColor)
         }
       }
 
       updateContent()
-    }, [value, editor, setDefaultColor])
+    }, [value, editor])
 
     return (
       <View className={cn('flex-1', className)}>
         <RichText
           editor={editor}
+          onLoad={injectThemeColor}
           className={cn(
             'flex-1 rounded-md border border-input bg-transparent px-3 py-2 text-base !text-foreground',
             !editable && 'opacity-50'
@@ -256,6 +257,7 @@ export const RichTextEditor = forwardRef<
               <View className='flex-1'>
                 <Toolbar editor={editor} />
               </View>
+              {/* Text color picker - commented out for now
               <Pressable
                 onPress={() => {
                   editor.blur()
@@ -295,6 +297,8 @@ export const RichTextEditor = forwardRef<
                 }}
               />
             </BottomSheet>
+              */}
+            </View>
           </KeyboardAvoidingView>
         )}
       </View>

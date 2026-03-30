@@ -83,11 +83,13 @@ export default Sentry.wrap(function RootLayout() {
                       />
                     </Stack.Protected>
                   </Stack>
-                  <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
-                    {isAuthenticated && <SignOutButton />}
-                    <ThemeToggle />
-                    <LanguagePicker asIcon />
-                  </View>
+                  {__DEV__ && (
+                    <View className='absolute bottom-20 end-4 flex-row gap-2 rounded-full bg-muted/80'>
+                      {isAuthenticated && <SignOutButton />}
+                      <ThemeToggle />
+                      <LanguagePicker asIcon />
+                    </View>
+                  )}
                   <StatusBar style={isDark ? 'light' : 'dark'} />
                   <PortalHost />
                   <Toaster />
