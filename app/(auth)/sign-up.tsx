@@ -186,23 +186,6 @@ export default function SignUp() {
                       />
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name='name'
-                    render={({ field }) => (
-                      <FormInput
-                        {...field}
-                        name='name'
-                        label={t`Full Name`}
-                        placeholder={t`Enter your full name`}
-                        autoCapitalize='words'
-                        autoComplete='name'
-                        onSubmitEditing={onNameSubmitEditing}
-                        returnKeyType='next'
-                        submitBehavior='submit'
-                      />
-                    )}
-                  />
 
                   {/* Email Field */}
                   <FormField
